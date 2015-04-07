@@ -14,11 +14,15 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         playerRigidBody = GetComponent<Rigidbody2D>();
+        punView = GetComponent<PhotonView>();
     }
 
     void Update()
     {
-        InputMovement();
+        if (punView.isMine)
+        {
+            InputMovement();
+        }
     }
 
     void InputMovement()
