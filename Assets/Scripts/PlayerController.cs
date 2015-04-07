@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D playerRigidBody;
     private PhotonView punView;
     private bool isGrounded;
+    public GameObject projectile;
 
 
     void Start()
@@ -35,6 +36,11 @@ public class PlayerController : MonoBehaviour
         {
             playerRigidBody.AddForce(new Vector2(0, 14), ForceMode2D.Impulse);
             isGrounded = false;
+        }
+
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            Instantiate(projectile, transform.position, Quaternion.identity);
         }
     }
     void OnCollisionEnter2D(Collision2D col)
