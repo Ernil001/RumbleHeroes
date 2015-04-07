@@ -81,6 +81,15 @@ public class Network : MonoBehaviour
     {
         roomsList = PhotonNetwork.GetRoomList();
     }
+
+    void OnJoinedRoom()
+    {
+        Debug.Log("Connected to Room");
+        Vector3 location = new Vector3(0, 0, 0);
+        //PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up * 5, Quaternion.identity, 0);
+        PhotonNetwork.Instantiate(playerPrefab.name, location, Quaternion.identity, 0);
+    }
+
     /*
     void OnJoinedRoom()
     {
