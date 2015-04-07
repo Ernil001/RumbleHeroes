@@ -43,3 +43,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 Assets/Photon Unity Networking/Resources/PhotonServerSettings.asset
+Assets/Photon Unity Networking/Resources/PhotonServerSettings.asset.meta
