@@ -26,8 +26,16 @@ public abstract class Projectile : MonoBehaviour {
 	}
 	
 	protected virtual void Update () {
-        projectileBody.MovePosition(projectileBody.position + new Vector2(1, 0)  * speed *
+
+        float angle = projectileBody.transform.eulerAngles.magnitude * Mathf.Deg2Rad;
+
+        Vector2 projectileNextPos = new Vector2(Mathf.Cos(angle),
+            Mathf.Sin(angle));
+
+        projectileBody.MovePosition(projectileBody.position + 
+            projectileNextPos * speed *
             Time.deltaTime);
+
 
         //Check if max distance has been reached
 
