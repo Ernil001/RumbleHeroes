@@ -10,12 +10,12 @@ public class Network : MonoBehaviour
     //
     public GameObject playerPrefab;
     private string roomName = "Room - ";
-    /*
+    
     public GameObject playerNameInput;
-    public GameObject roomListUI;
-    public GameObject roomButton;
-    public GameObject roomListLocation;
-     * */
+    //public GameObject roomListUI;
+    //public GameObject roomButton;
+    //public GameObject roomListLocation;
+    
     //
     //
     // Use this for initialization
@@ -57,9 +57,10 @@ public class Network : MonoBehaviour
             }
         }
     }
-    /*
+    
     public void createPhotonRoom()
     {
+        Debug.Log("Starts createPhotonRoom");
         //string roomName = "RandomName" + UnityEngine.Random.Range(gRoomMin, gRoomMax).ToString();
         //Debug.Log(playerNameInput.GetComponent<InputField>().text);
         if (playerNameInput.GetComponent<InputField>().text == "")
@@ -68,13 +69,23 @@ public class Network : MonoBehaviour
         }
         else
         {
-            string roomName = "Room " + playerNameInput.GetComponent<InputField>().text;
-            PhotonNetwork.CreateRoom(roomName, true, true, 2);
+            bool tempRoomCreated = false;
+            int addToName = 0;
+            while (!tempRoomCreated)
+            {
+                Debug.Log("gets in tot he loop");
+                string temp_roomName;
+                if (addToName == 0) temp_roomName = "Room " + playerNameInput.GetComponent<InputField>().text;
+                else temp_roomName = "Room " + playerNameInput.GetComponent<InputField>().text + "(" + addToName.ToString() + ")";
+
+                if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
+            }
+
             //GameObject.FindGameObjectWithTag("LobbyUI").SetActive(false);
-            GameObject.Find("LobbyUI").SetActive(false);
+            //GameObject.Find("LobbyUI").SetActive(false);
         }
     }
-    */
+    
 
 
     void OnReceivedRoomListUpdate()
