@@ -6,11 +6,12 @@ public class PlayerController : MonoBehaviour
 {
 
     public float speed;
+    public int currentHP = 100;
+
     private Rigidbody2D playerRigidBody;
     private PhotonView punView;
     private bool isGrounded;
     public GameObject projectile;
-
 
     void Start()
     {
@@ -22,6 +23,12 @@ public class PlayerController : MonoBehaviour
     {
         if (punView.isMine)
         {
+            // ROFL //
+            if(currentHP <= 0)
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
+            // ENDROFL //
             InputMovement();
         }
     }
@@ -63,9 +70,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    [RPC] void ChangePlayerName(string newName)
+    {
+        Debug.Log("In OnChangePlayerName");
+        gameObject.name = newName;
+    }
+
     [RPC] void FireProjectile(Vector3 pos, Quaternion rot)
     {
-        Instantiate(projectile, pos, rot);
+        Debug.Log("In Projectile");
+        GameObject tmpProjectile = Instantiate(projectile, pos, rot) as GameObject;
+        tmpProjectile.name = PhotonNetwork.player.ID.ToString();
     }
 
     void OnCollisionEnter2D(Collision2D col)

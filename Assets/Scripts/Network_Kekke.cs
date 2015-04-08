@@ -52,6 +52,17 @@ public class Network_Kekke : MonoBehaviour
         Debug.Log("Connected to Room");
         Vector3 location = new Vector3(0, 0, 0);
         //PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up * 5, Quaternion.identity, 0);
-        PhotonNetwork.Instantiate(playerPrefab.name, location, Quaternion.identity, 0);
+        GameObject tmpPlayer = PhotonNetwork.Instantiate(playerPrefab.name, 
+            location, Quaternion.identity, 0);
+
+        string newName = "Player-" + PhotonNetwork.player.ID.ToString();
+
+        //tmpPlayer.name = newName;
+
+        object[] rpcParams = new object[1];
+        rpcParams[0] = newName;
+
+        tmpPlayer.GetComponent<PhotonView>().RPC("ChangePlayerName", PhotonTargets.All,
+            rpcParams);
     }
 }

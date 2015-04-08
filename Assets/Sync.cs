@@ -38,7 +38,7 @@ public class Sync : MonoBehaviour {
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
-            Debug.Log(onUpdatePos + " - " + latestCorrectPos);
+
             latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
             onUpdatePos = transform.localPosition;  // we interpolate from here to latestCorrectPos
             fraction = 0;                           // reset the fraction we alreay moved. see Update()

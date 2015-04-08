@@ -8,15 +8,18 @@ public abstract class Projectile : MonoBehaviour {
     public int speed = 10;
     public int maxDistance = 100;
     public int damage = 100;
+    public int secondsToLive = 10;
 
     public Rigidbody2D projectileBody;
-    public Transform transform;
 
     private Vector3 basePosition;
+    private float timeInstantiated;
 
 	protected virtual void Start () {
+
+        timeInstantiated = Time.time;
+
         projectileBody = GetComponent<Rigidbody2D>();
-        transform = GetComponent<Transform>();
 
         //Get projectile base position
         basePosition = transform.position;
@@ -27,6 +30,14 @@ public abstract class Projectile : MonoBehaviour {
 	
 	protected virtual void Update () {
 
+        //Check if it has surpassed the time to live
+        if(Time.time - timeInstantiated >= secondsToLive)
+        {
+            Destroy(gameObject);
+        }
+
+
+        // Get angle towards mouse position
         float angle = projectileBody.transform.eulerAngles.magnitude * Mathf.Deg2Rad;
 
         Vector2 projectileNextPos = new Vector2(Mathf.Cos(angle),
