@@ -98,19 +98,15 @@ public class Network : MonoBehaviour
     void OnJoinedRoom()
     {
         Debug.Log("Connected to Room");
+        /*
         Vector3 location = new Vector3(0, 0, 0);
         //PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up * 5, Quaternion.identity, 0);
         PhotonNetwork.Instantiate(playerPrefab.name, location, Quaternion.identity, 0);
+        */
+
     }
 
     /*
-    void OnJoinedRoom()
-    {
-        Debug.Log("Connected to Room");
-        Vector3 location = new Vector3(UnityEngine.Random.Range(-5, 5), 0.5f, UnityEngine.Random.Range(-5, 5));
-        //PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up * 5, Quaternion.identity, 0);
-        PhotonNetwork.Instantiate(playerPrefab.name, location, Quaternion.identity, 0);
-    }
     public void joinRoomFromRoomList(GameObject room)
     {
         //PhotonNetwork.JoinRoom();
