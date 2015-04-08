@@ -32,7 +32,7 @@ public class FireBolt : Projectile {
                 paramsForRPC[1] = collidedObject.GetComponent<PhotonView>().ownerId;
 
                 //We hit another player
-                collidedObject.GetComponent<PhotonView>().RPC("hpERNIL", PhotonTargets.All,
+                collidedObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All,
                     paramsForRPC);
             }
 

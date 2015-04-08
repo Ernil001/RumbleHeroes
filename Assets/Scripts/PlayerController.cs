@@ -73,21 +73,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /*[RPC] void ChangePlayerName(string newName)
+    [RPC] void ProjectileHit(int damage, int playerHitId)
     {
-        Debug.Log("In OnChangePlayerName");
-        gameObject.name = newName;
-    }*/
-
-    [RPC] void hpERNIL(int damage, int ownerId)
-    {
-        if(punView.ownerId == ownerId)
+        //If I am the player who got hit
+        if (punView.ownerId == playerHitId)
             this.currentHP -= damage;
     }
 
     [RPC] void FireProjectile(Vector3 pos, Quaternion rot, int ownerId)
     {
-        Debug.Log("In Projectile");
+        Debug.Log("Firing Projectile");
         GameObject tmpProjectile = Instantiate(projectile, pos, rot) as GameObject;
         tmpProjectile.GetComponent<FireBolt>().ownerId = ownerId;
     }
