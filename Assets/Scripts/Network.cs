@@ -52,7 +52,7 @@ public class Network : MonoBehaviour
                     */
 
                     if (GUI.Button(new Rect(20, 200 + (110 * i), 150, 50), roomsList[i].name))
-                        PhotonNetwork.JoinRoom(roomsList[i].name);
+                        photonJoinRoom_prepare(roomsList[i].name);
                 }
             }
         }
@@ -60,7 +60,7 @@ public class Network : MonoBehaviour
     
     public void createPhotonRoom()
     {
-        Debug.Log("Starts createPhotonRoom");
+        //Debug.Log("Starts createPhotonRoom");
         if (playerNameInput.GetComponent<InputField>().text == "")
         {
             GameController.instance.errorDisplay_open("You need to enter your name before Creating a new room !");
@@ -79,26 +79,35 @@ public class Network : MonoBehaviour
 
                 if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
             }
-
             GameController.instance.player1 = playerNameInput.GetComponent<InputField>().text;
         }
     }
-    
-
-
+    //
     void OnReceivedRoomListUpdate()
     {
         roomsList = PhotonNetwork.GetRoomList();
     }
     //
-    void photonJoinRoom_prepare()
+    void photonJoinRoom_prepare(string roomName_photon)
     {
- 
+        /*
+        if(GameController.instance.playerNameInput != "") PhotonNetwork.JoinRoom(roomName_photon);
+        else GameController.instance.disp
+         * */
+        if (playerNameInput.GetComponent<InputField>().text != "")
+        {
+            PhotonNetwork.JoinRoom(roomName_photon);
+        }
+        else
+        {
+            GameController.instance.errorDisplay_open("You need to enter your name before Joining a Room!");
+        }
+
     }
     void OnJoinedRoom()
     {
         Debug.Log("Connected to Room");
-
+        //Here set name on your id.
         GameController.instance.changeActiveStatus(GameController.instance.roomLobby);
         GameController.instance.gameStatus = "roomLobby";
         GameController.instance.roomName.GetComponent<Text>().text = PhotonNetwork.room.name;

@@ -5,7 +5,9 @@ using System.Collections;
 public class GameController : MonoBehaviour 
 {
     public static GameController instance = null;
-    //
+    // Player name input
+    public GameObject playerNameInput;
+
     // Ui Section GameObjects
     public GameObject errorUI;
     public GameObject errorText;
