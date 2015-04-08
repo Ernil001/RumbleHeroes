@@ -6,18 +6,24 @@ public class GameController : MonoBehaviour
 {
     public static GameController instance = null;
     //
-    /*
-    public GameObject errorUI;
-    public GameObject errorText;
-     * */
     // Ui Section GameObjects
     public GameObject errorUI;
     public GameObject errorText;
-
+    //
+    public GameObject roomLobbyConsole;
+    public GameObject roomLobby;
+    public GameObject roomName;
+    public GameObject[] roomUINames;
+    //
 
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
     public string gameStatus = "";
+
+    public string player1 = "";
+    public string player2 = "";
+    public string player3 = "";
+    public string player4 = "";
 
     //
 
@@ -36,6 +42,12 @@ public class GameController : MonoBehaviour
     {
         if (gameStatus == "roomLobby")
         {
+            //Debug.Log("yees");
+            PhotonPlayer[] test = PhotonNetwork.playerList;
+            foreach (PhotonPlayer key in test)
+            {
+                Debug.Log(key.ID);
+            }
 
         }
         else if (gameStatus == "running")
@@ -77,5 +89,13 @@ public class GameController : MonoBehaviour
         }
         else if (force == "open") targetObj.SetActive(true);
         else if(force == "close") targetObj.SetActive(false);
+    }
+    // CLeaning up RoomLobbyUI on leave room.
+    public void cleanRoomLobby()
+    {
+        foreach (GameObject key in roomUINames)
+        {
+            key.GetComponent<Text>().text = "";
+        }
     }
 }

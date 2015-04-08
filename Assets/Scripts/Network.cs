@@ -15,7 +15,7 @@ public class Network : MonoBehaviour
     //public GameObject roomListUI;
     //public GameObject roomButton;
     //public GameObject roomListLocation;
-    
+    //public RoomInfo curRoom = PhotonNetwork.room;
     //
     //
     // Use this for initialization
@@ -79,6 +79,8 @@ public class Network : MonoBehaviour
 
                 if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
             }
+
+            GameController.instance.player1 = playerNameInput.GetComponent<InputField>().text;
         }
     }
     
@@ -88,22 +90,36 @@ public class Network : MonoBehaviour
     {
         roomsList = PhotonNetwork.GetRoomList();
     }
-
+    //
+    void photonJoinRoom_prepare()
+    {
+ 
+    }
     void OnJoinedRoom()
     {
         Debug.Log("Connected to Room");
+
+        GameController.instance.changeActiveStatus(GameController.instance.roomLobby);
+        GameController.instance.gameStatus = "roomLobby";
+        GameController.instance.roomName.GetComponent<Text>().text = PhotonNetwork.room.name;
         /*
         Vector3 location = new Vector3(0, 0, 0);
         //PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up * 5, Quaternion.identity, 0);
         PhotonNetwork.Instantiate(playerPrefab.name, location, Quaternion.identity, 0);
         */
-
     }
-
-    /*
-    public void joinRoomFromRoomList(GameObject room)
+    // On leading a room in photon it should clear all textx inside the RoomLobby UI section.
+    public void leavePhotonRoom()
     {
-        //PhotonNetwork.JoinRoom();
+        if (PhotonNetwork.LeaveRoom())
+        {
+            Debug.Log("You have succesfully leave the room");
+            //Cleans the UI on the client side
+            GameController.instance.cleanRoomLobby();
+            GameController.instance.changeActiveStatus(GameController.instance.roomLobby,"close");
+            GameController.instance.gameStatus = "";
+
+        }
+        else GameController.instance.errorDisplay_open("Error while leaving the joined room");
     }
-    */
 }
