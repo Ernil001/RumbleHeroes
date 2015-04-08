@@ -139,6 +139,7 @@ public class Network : MonoBehaviour
     }
     private void setYourPhotonName(string newName)
     {
-        PhotonNetwork.player.name = newName;
+        PhotonNetwork.playerName = newName;
+        //PhotonNetwork.player.name = newName;
     }
 }
