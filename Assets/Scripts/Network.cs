@@ -53,7 +53,6 @@ public class Network : MonoBehaviour
 
                     if (GUI.Button(new Rect(20, 200 + (110 * i), 150, 50), roomsList[i].name))
                         PhotonNetwork.JoinRoom(roomsList[i].name);
-
                 }
             }
         }
@@ -62,8 +61,6 @@ public class Network : MonoBehaviour
     public void createPhotonRoom()
     {
         Debug.Log("Starts createPhotonRoom");
-        //string roomName = "RandomName" + UnityEngine.Random.Range(gRoomMin, gRoomMax).ToString();
-        //Debug.Log(playerNameInput.GetComponent<InputField>().text);
         if (playerNameInput.GetComponent<InputField>().text == "")
         {
             GameController.instance.errorDisplay_open("You need to enter your name before Creating a new room !");
@@ -75,16 +72,13 @@ public class Network : MonoBehaviour
             int addToName = 0;
             while (!tempRoomCreated)
             {
-                Debug.Log("gets in tot he loop");
+
                 string temp_roomName;
                 if (addToName == 0) temp_roomName = "Room " + playerNameInput.GetComponent<InputField>().text;
                 else temp_roomName = "Room " + playerNameInput.GetComponent<InputField>().text + "(" + addToName.ToString() + ")";
 
                 if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
             }
-
-            //GameObject.FindGameObjectWithTag("LobbyUI").SetActive(false);
-            //GameObject.Find("LobbyUI").SetActive(false);
         }
     }
     

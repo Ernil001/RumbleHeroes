@@ -14,6 +14,11 @@ public class GameController : MonoBehaviour
     public GameObject errorUI;
     public GameObject errorText;
 
+
+    // Predefined possiblities for allowedString 
+    // "","roomLobby","running","endScore", 
+    public string gameStatus = "";
+
     //
 
     void Awake()
@@ -26,6 +31,29 @@ public class GameController : MonoBehaviour
         //this.errorDisplay_open("test");
            
     }
+
+    void Update()
+    {
+        if (gameStatus == "roomLobby")
+        {
+
+        }
+        else if (gameStatus == "running")
+        {
+ 
+        }
+        else if (gameStatus == "endScore")
+        {
+
+        }
+        /*
+        else if (gameStatus == "")
+        {
+ 
+        }
+        */
+    }
+    // Static RPC for GameInfo and updates
 
     //
     public void errorDisplay_open(string errorDescription)
