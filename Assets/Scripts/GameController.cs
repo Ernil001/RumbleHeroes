@@ -21,12 +21,12 @@ public class GameController : MonoBehaviour
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
     public string gameStatus = "";
-
+    /*
     public string player1 = "";
     public string player2 = "";
     public string player3 = "";
     public string player4 = "";
-
+    */
     //
 
     void Awake()
@@ -45,11 +45,14 @@ public class GameController : MonoBehaviour
         if (gameStatus == "roomLobby")
         {
             //Debug.Log("yees");
-            PhotonPlayer[] test = PhotonNetwork.playerList;
-            foreach (PhotonPlayer key in test)
+            PhotonPlayer[] photonList = PhotonNetwork.playerList;
+            foreach (PhotonPlayer key in photonList)
             {
-                //Debug.Log(key.ID + " -- " + key.name);
+                Debug.Log(key.ID + " -- " + key.name);
+                GameController.instance.roomUINames[key.ID].GetComponent<Text>().text = key.name;
+
             }
+
 
         }
         else if (gameStatus == "running")
@@ -99,5 +102,10 @@ public class GameController : MonoBehaviour
         {
             key.GetComponent<Text>().text = "";
         }
+    }
+    // Testing method linked to Testing Button
+    public void testingMethod()
+    {
+        Debug.Log(GameController.instance.roomUINames[1].name.GetType());
     }
 }

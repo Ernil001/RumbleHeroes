@@ -78,8 +78,10 @@ public class Network : MonoBehaviour
                 else temp_roomName = "Room " + playerNameInput.GetComponent<InputField>().text + "(" + addToName.ToString() + ")";
 
                 if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
+
+                //test
             }
-            GameController.instance.player1 = playerNameInput.GetComponent<InputField>().text;
+            //GameController.instance.player1 = playerNameInput.GetComponent<InputField>().text;
         }
     }
     //
@@ -98,7 +100,11 @@ public class Network : MonoBehaviour
         {
             PhotonNetwork.JoinRoom(roomName_photon);
         }
-        else GameController.instance.errorDisplay_open("You need to enter your name before Joining a Room!");
+        else
+        {
+            GameController.instance.errorDisplay_open("You need to enter your name before Joining a Room!");
+            return;
+        }
         
 
     }
