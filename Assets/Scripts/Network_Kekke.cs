@@ -55,7 +55,7 @@ public class Network_Kekke : MonoBehaviour
         GameObject tmpPlayer = PhotonNetwork.Instantiate(playerPrefab.name, 
             location, Quaternion.identity, 0);
 
-        string newName = "Player-" + PhotonNetwork.player.ID.ToString();
+        /*string newName = "Player-" + PhotonNetwork.player.ID.ToString();
 
         //tmpPlayer.name = newName;
 
@@ -63,6 +63,6 @@ public class Network_Kekke : MonoBehaviour
         rpcParams[0] = newName;
 
         tmpPlayer.GetComponent<PhotonView>().RPC("ChangePlayerName", PhotonTargets.All,
-            rpcParams);
+            rpcParams);*/
     }
 }

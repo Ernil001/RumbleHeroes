@@ -3,7 +3,7 @@ using System.Collections;
 
 public class FireBolt : Projectile {
 
-    private GameObject owner;
+    public int ownerId;
 
     protected override void Start()
     {
@@ -13,8 +13,10 @@ public class FireBolt : Projectile {
     void OnTriggerEnter2D(Collider2D col)
     {
         GameObject collidedObject = col.gameObject;
-
-        if (collidedObject.name == "Player-" + this.name || collidedObject.tag == "Projectile")
+        
+        if ((collidedObject.tag == "Player" && 
+            collidedObject.GetComponent<PhotonView>().ownerId == this.ownerId)
+            || collidedObject.tag == "Projectile")
         {
             //If the projectile hit ourself, don't do anything
             return;
@@ -23,10 +25,21 @@ public class FireBolt : Projectile {
         {
             Debug.Log("We hit something other than ourself");
 
+            if(collidedObject.tag == "Player")
+            {
+                object[] paramsForRPC = new object[2];
+                paramsForRPC[0] = this.damage;
+                paramsForRPC[1] = collidedObject.GetComponent<PhotonView>().ownerId;
+
+                //We hit another player
+                collidedObject.GetComponent<PhotonView>().RPC("hpERNIL", PhotonTargets.All,
+                    paramsForRPC);
+            }
+
             //This is where we check if we hit a player, and apply damage if needed
-            PlayerController playerController = collidedObject.GetComponent<PlayerController>();
+            /*PlayerController playerController = collidedObject.GetComponent<PlayerController>();
             playerController.currentHP = playerController.currentHP - this.damage;
-            Debug.Log(playerController.currentHP);
+            Debug.Log(playerController.currentHP);*/
 
             Destroy(gameObject);
         }

@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
             if(currentHP <= 0)
             {
                 PhotonNetwork.Destroy(gameObject);
+                Destroy(gameObject);
             }
             // ENDROFL //
             InputMovement();
@@ -61,26 +62,34 @@ public class PlayerController : MonoBehaviour
             Quaternion projectileRotation = Quaternion.Euler(new Vector3(0, 0, angle));
 
             //PUN RPC Call
-            object[] RPCparams = new object[2];
+            object[] paramsForRPC = new object[3];
 
-            RPCparams[0] = transform.position;
-            RPCparams[1] = projectileRotation;
+            paramsForRPC[0] = transform.position;
+            paramsForRPC[1] = projectileRotation;
+            paramsForRPC[2] = punView.ownerId;
 
-            punView.RPC("FireProjectile", PhotonTargets.All, RPCparams);
+
+            punView.RPC("FireProjectile", PhotonTargets.All, paramsForRPC);
         }
     }
 
-    [RPC] void ChangePlayerName(string newName)
+    /*[RPC] void ChangePlayerName(string newName)
     {
         Debug.Log("In OnChangePlayerName");
         gameObject.name = newName;
+    }*/
+
+    [RPC] void hpERNIL(int damage, int ownerId)
+    {
+        if(punView.ownerId == ownerId)
+            this.currentHP -= damage;
     }
 
-    [RPC] void FireProjectile(Vector3 pos, Quaternion rot)
+    [RPC] void FireProjectile(Vector3 pos, Quaternion rot, int ownerId)
     {
         Debug.Log("In Projectile");
         GameObject tmpProjectile = Instantiate(projectile, pos, rot) as GameObject;
-        tmpProjectile.name = PhotonNetwork.player.ID.ToString();
+        tmpProjectile.GetComponent<FireBolt>().ownerId = ownerId;
     }
 
     void OnCollisionEnter2D(Collision2D col)
