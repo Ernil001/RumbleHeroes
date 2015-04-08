@@ -21,6 +21,7 @@ public class Network : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        //GameController.instance.errorDisplay_open("Testing static method call");
         //This function enables us host and join rooms of our game based on the appID of photon.
         PhotonNetwork.ConnectUsingSettings("0.1");
     }
