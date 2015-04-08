@@ -48,7 +48,7 @@ public class GameController : MonoBehaviour
             PhotonPlayer[] test = PhotonNetwork.playerList;
             foreach (PhotonPlayer key in test)
             {
-                Debug.Log(key.ID);
+                //Debug.Log(key.ID + " -- " + key.name);
             }
 
         }

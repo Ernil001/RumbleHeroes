@@ -98,16 +98,16 @@ public class Network : MonoBehaviour
         {
             PhotonNetwork.JoinRoom(roomName_photon);
         }
-        else
-        {
-            GameController.instance.errorDisplay_open("You need to enter your name before Joining a Room!");
-        }
+        else GameController.instance.errorDisplay_open("You need to enter your name before Joining a Room!");
+        
 
     }
     void OnJoinedRoom()
     {
         Debug.Log("Connected to Room");
         //Here set name on your id.
+        setYourPhotonName(playerNameInput.GetComponent<InputField>().text);
+       
         GameController.instance.changeActiveStatus(GameController.instance.roomLobby);
         GameController.instance.gameStatus = "roomLobby";
         GameController.instance.roomName.GetComponent<Text>().text = PhotonNetwork.room.name;
@@ -122,7 +122,7 @@ public class Network : MonoBehaviour
     {
         if (PhotonNetwork.LeaveRoom())
         {
-            Debug.Log("You have succesfully leave the room");
+            Debug.Log("You have succesfully left the room");
             //Cleans the UI on the client side
             GameController.instance.cleanRoomLobby();
             GameController.instance.changeActiveStatus(GameController.instance.roomLobby,"close");
@@ -130,5 +130,9 @@ public class Network : MonoBehaviour
 
         }
         else GameController.instance.errorDisplay_open("Error while leaving the joined room");
+    }
+    private void setYourPhotonName(string newName)
+    {
+        PhotonNetwork.player.name = newName;
     }
 }
