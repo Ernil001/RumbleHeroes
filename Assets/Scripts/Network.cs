@@ -66,6 +66,7 @@ public class Network : MonoBehaviour
         //Debug.Log(playerNameInput.GetComponent<InputField>().text);
         if (playerNameInput.GetComponent<InputField>().text == "")
         {
+            GameController.instance.errorDisplay_open("You need to enter your name before Creating a new room !");
             return;
         }
         else
