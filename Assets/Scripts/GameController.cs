@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -12,6 +13,7 @@ public class GameController : MonoBehaviour
     // Ui Section GameObjects
     public GameObject errorUI;
     public GameObject errorText;
+    public int[] idList = new int[4];
     //
     public GameObject roomLobbyConsole;
     public GameObject roomLobby;
@@ -69,9 +71,22 @@ public class GameController : MonoBehaviour
             // Clean
             CleanPlayerRoomList();
             // Sorting
-            //PhotonPlayer[] test = PhotonNetwork.playerList;
             
-
+            PhotonPlayer[] test = PhotonNetwork.playerList;
+           
+            //Dictionary<int, string> nameOfDic = new Dictionary<int, string>();
+            //int[] idList;
+            /*
+            int x = 0;
+            foreach (PhotonPlayer key in PhotonNetwork.playerList)
+            {
+                idList[x] = key.ID;
+                x++;
+            }
+            */
+            //Array.Sort(idList);
+            
+           
             //
             int i = 0;
 
@@ -160,6 +175,10 @@ public class GameController : MonoBehaviour
     // Testing method linked to Testing Button
     public void testingMethod()
     {
-        Debug.Log(PhotonNetwork.isMasterClient);
+        foreach (int value in idList)
+        {
+            Debug.Log(value);
+        }
+        //Debug.Log(PhotonNetwork.masterClient.name + " -- " + PhotonNetwork.masterClient.ID.GetType());
     }
 }
