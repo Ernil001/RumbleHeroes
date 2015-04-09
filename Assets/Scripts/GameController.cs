@@ -40,17 +40,23 @@ public class GameController : MonoBehaviour
            
     }
 
+    private void AddPlayerToRoomList(string PlayerName, int playerIndex)
+    {
+        if(GameController.instance.roomUINames.Length > playerIndex)
+            GameController.instance.roomUINames[playerIndex].GetComponent<Text>().text = PlayerName;
+    }
+
     void Update()
     {
         if (gameStatus == "roomLobby")
         {
-            //Debug.Log("yees");
-            PhotonPlayer[] photonList = PhotonNetwork.playerList;
-            foreach (PhotonPlayer key in photonList)
-            {
-                Debug.Log(key.ID + " -- " + key.name);
-                GameController.instance.roomUINames[key.ID].GetComponent<Text>().text = key.name;
+            int i = 0;
 
+            foreach (PhotonPlayer key in PhotonNetwork.playerList)
+            {
+                i++;
+
+                AddPlayerToRoomList(key.name, i);
             }
 
 
