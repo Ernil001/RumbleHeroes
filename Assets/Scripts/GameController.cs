@@ -57,6 +57,8 @@ public class GameController : MonoBehaviour
                 i++;
 
                 AddPlayerToRoomList(key.name, i);
+                // Doesnt clean leaving players because the playerList array automatically shortens and doesnt go through all 4 variables again.
+                //Debug.Log(key.ID + " -- " + key.name);
             }
 
 
