@@ -101,17 +101,6 @@ public class GameController : MonoBehaviour
     {
         if (gameStatus == "roomLobby")
         {
-            int i = 0;
-
-            foreach (PhotonPlayer key in PhotonNetwork.playerList)
-            {
-                i++;
-
-                AddPlayerToRoomList(key.name, i);
-                // Doesnt clean leaving players because the playerList array automatically shortens and doesnt go through all 4 variables again.
-                //Debug.Log(key.ID + " -- " + key.name);
-            }
-
 
         }
         else if (gameStatus == "running")
