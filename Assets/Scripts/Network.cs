@@ -115,7 +115,7 @@ public class Network : MonoBehaviour
         setYourPhotonName(playerNameInput.GetComponent<InputField>().text);
        
         GameController.instance.changeActiveStatus(GameController.instance.roomLobby);
-        GameController.instance.gameStatus = "roomLobby";
+        GameController.instance.GameStatus = "roomLobby";
         GameController.instance.roomName.GetComponent<Text>().text = PhotonNetwork.room.name;
         /*
         Vector3 location = new Vector3(0, 0, 0);
@@ -132,7 +132,7 @@ public class Network : MonoBehaviour
             //Cleans the UI on the client side
             GameController.instance.cleanRoomLobby();
             GameController.instance.changeActiveStatus(GameController.instance.roomLobby,"close");
-            GameController.instance.gameStatus = "";
+            GameController.instance.GameStatus = "";
 
         }
         else GameController.instance.errorDisplay_open("Error while leaving the joined room");

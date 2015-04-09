@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
 
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
-    public string gameStatus = "";
+    private string gameStatus = "";
     /*
     public string player1 = "";
     public string player2 = "";
@@ -28,6 +28,26 @@ public class GameController : MonoBehaviour
     public string player4 = "";
     */
     //
+
+    //gameStatus properties
+    public string GameStatus
+    {
+        set
+        {
+            //Always set the gameStatus to value;
+            this.gameStatus = value;
+
+            //If we enter room lobby, start coroutine
+            if(value == "roomLobby")
+            {
+                StartCoroutine(UpdateGameLobby());
+            }
+        }
+        get
+        {
+            return this.gameStatus;
+        }
+    }
 
     void Awake()
     {
@@ -38,6 +58,39 @@ public class GameController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         //this.errorDisplay_open("test");
            
+    }
+
+    IEnumerator UpdateGameLobby ()
+    {
+        Debug.Log("In coroutine - " + gameStatus);
+        while(this.gameStatus == "roomLobby")
+        {
+            // Clean
+            CleanPlayerRoomList();
+
+            int i = 0;
+
+            foreach (PhotonPlayer key in PhotonNetwork.playerList)
+            {
+                i++;
+
+                AddPlayerToRoomList(key.name, i);
+            }
+
+            //Update once per second
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    private void CleanPlayerRoomList()
+    {
+        Debug.Log("Cleaning");
+        for(int i = 1; i < 5; i++)
+        {
+            if (GameController.instance.roomUINames.Length > i)
+                GameController.instance.roomUINames[i].GetComponent<Text>().text = 
+                    "Player - " + i + " not connected";
+        }
     }
 
     private void AddPlayerToRoomList(string PlayerName, int playerIndex)
