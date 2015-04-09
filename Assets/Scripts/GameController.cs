@@ -193,7 +193,7 @@ public class GameController : MonoBehaviour
     {
         foreach (int value in idList)
         {
-            Debug.Log(value);
+            Debug.Log("Value is " + value);
         }
         //Debug.Log(PhotonNetwork.masterClient.name + " -- " + PhotonNetwork.masterClient.ID.GetType());
     }
