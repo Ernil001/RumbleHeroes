@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GameController : MonoBehaviour 
 {
@@ -73,6 +74,21 @@ public class GameController : MonoBehaviour
             // Sorting
             
             PhotonPlayer[] test = PhotonNetwork.playerList;
+
+            Dictionary<int, PhotonPlayer> diCk = new Dictionary<int, PhotonPlayer>();
+
+            foreach (PhotonPlayer tmpPlayer in PhotonNetwork.playerList)
+            {
+                diCk.Add(tmpPlayer.ID, tmpPlayer);
+            }
+
+            List<int> list = diCk.Keys.ToList();
+            list.Sort();
+
+            foreach(int key in list)
+            {
+                Debug.Log("ID: " + key + " Player Name: " + diCk[key].name + " is master?: " + diCk[key].isMasterClient);
+            }
            
             //Dictionary<int, string> nameOfDic = new Dictionary<int, string>();
             //int[] idList;
