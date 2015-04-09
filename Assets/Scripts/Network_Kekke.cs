@@ -7,6 +7,7 @@ public class Network_Kekke : MonoBehaviour
     private RoomInfo[] roomsList;
 
     public GameObject playerPrefab;
+    public GameObject mainCamera;
 
     void Start()
     {
@@ -54,6 +55,8 @@ public class Network_Kekke : MonoBehaviour
         //PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up * 5, Quaternion.identity, 0);
         GameObject tmpPlayer = PhotonNetwork.Instantiate(playerPrefab.name, 
             location, Quaternion.identity, 0);
+
+        mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
 
         /*string newName = "Player-" + PhotonNetwork.player.ID.ToString();
 

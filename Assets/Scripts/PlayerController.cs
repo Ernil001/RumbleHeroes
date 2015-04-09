@@ -10,10 +10,13 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D playerRigidBody;
     private PhotonView punView;
+    private Animator animator;
     private bool isGrounded;
     public GameObject projectile;
     public GameObject deathParticles;
     public GameObject hitParticles;
+
+    private float someScale;
 
     private float lastFired;
 
@@ -21,6 +24,9 @@ public class PlayerController : MonoBehaviour
     {
         playerRigidBody = GetComponent<Rigidbody2D>();
         punView = GetComponent<PhotonView>();
+        animator = GetComponent<Animator>();
+
+        someScale = transform.localScale.x; // assuming this is facing right
     }
 
     void Update()
@@ -51,10 +57,26 @@ public class PlayerController : MonoBehaviour
         curVel.x = (float)(Input.GetAxis("Horizontal") * speed);
         playerRigidBody.velocity = curVel;
 
+        if(playerRigidBody.velocity.x > 0)
+        {
+            animator.SetBool("Running", true);
+            transform.localScale = new Vector2(someScale, transform.localScale.y);
+        }
+        else if(playerRigidBody.velocity.x < 0)
+        {
+            animator.SetBool("Running", true);
+            transform.localScale = new Vector2(-someScale, transform.localScale.y);
+        }
+        else
+        {
+            animator.SetBool("Running", false);
+        }
+
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             playerRigidBody.AddForce(new Vector2(0, 25), ForceMode2D.Impulse);
             isGrounded = false;
+            animator.SetBool("Jumping", true);
         }
 
         if(Input.GetKeyDown(KeyCode.Mouse1))
@@ -114,6 +136,7 @@ public class PlayerController : MonoBehaviour
         if (col.gameObject.tag == "Ground")
         {
             isGrounded = true;
+            animator.SetBool("Jumping", false);
         }
     }
 }

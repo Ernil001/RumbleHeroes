@@ -7,10 +7,12 @@ public class Sync : MonoBehaviour {
     private Vector3 onUpdatePos;
     private float fraction;
     PhotonView punView;
+    private Animator animator;
 
     void Awake()
     {
         punView = GetComponent<PhotonView>();
+        animator = GetComponent<Animator>();
 
         if (punView.isMine)
         {
@@ -27,22 +29,34 @@ public class Sync : MonoBehaviour {
         {
             Vector3 pos = transform.localPosition;
             Quaternion rot = transform.localRotation;
+            Vector3 scale = transform.localScale;
+
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
+            stream.Serialize(ref scale);
+            stream.SendNext(animator.GetBool("Running"));
+            stream.SendNext(animator.GetBool("Jumping"));
         }
         else
         {
             // Receive latest state information
             Vector3 pos = Vector3.zero;
             Quaternion rot = Quaternion.identity;
+            Vector3 scale = Vector3.zero;
+
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
+            stream.Serialize(ref scale);
+
+            animator.SetBool("Running", (bool)stream.ReceiveNext());
+            animator.SetBool("Jumping", (bool)stream.ReceiveNext());
 
             latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
             onUpdatePos = transform.localPosition;  // we interpolate from here to latestCorrectPos
             fraction = 0;                           // reset the fraction we alreay moved. see Update()
 
+            transform.localScale = scale;
             transform.localRotation = rot;          // this sample doesn't smooth rotation
         }
     }
