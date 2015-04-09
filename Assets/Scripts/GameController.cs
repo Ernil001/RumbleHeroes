@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour 
 {
@@ -16,6 +17,7 @@ public class GameController : MonoBehaviour
     public GameObject roomLobby;
     public GameObject roomName;
     public GameObject[] roomUINames;
+    public GameObject[] roomUIKickButtons;
     //
 
     // Predefined possiblities for allowedString 
@@ -66,21 +68,32 @@ public class GameController : MonoBehaviour
         {
             // Clean
             CleanPlayerRoomList();
+            // Sorting
+            //PhotonPlayer[] test = PhotonNetwork.playerList;
+            
 
+            //
             int i = 0;
 
             foreach (PhotonPlayer key in PhotonNetwork.playerList)
             {
                 i++;
 
-                AddPlayerToRoomList(key.name, i);
+                if(key.isMasterClient) AddPlayerToRoomList(key.name, i, true);
+                else AddPlayerToRoomList(key.name, i);
+                //Debug.Log(key.ID + " -- " + key.name);
             }
 
             //Update once per second
             yield return new WaitForSeconds(1f);
         }
     }
-
+    private void AddPlayerToRoomList(string PlayerName, int playerIndex, bool isMaster = false)
+    {
+        if (isMaster) PlayerName = PlayerName + "*";
+        if (GameController.instance.roomUINames.Length > playerIndex)
+            GameController.instance.roomUINames[playerIndex].GetComponent<Text>().text = PlayerName;
+    }
     private void CleanPlayerRoomList()
     {
         for(int i = 1; i < 5; i++)
@@ -90,13 +103,6 @@ public class GameController : MonoBehaviour
                     "Player - " + i + " not connected";
         }
     }
-
-    private void AddPlayerToRoomList(string PlayerName, int playerIndex)
-    {
-        if(GameController.instance.roomUINames.Length > playerIndex)
-            GameController.instance.roomUINames[playerIndex].GetComponent<Text>().text = PlayerName;
-    }
-
     void Update()
     {
         if (gameStatus == "roomLobby")
@@ -154,6 +160,6 @@ public class GameController : MonoBehaviour
     // Testing method linked to Testing Button
     public void testingMethod()
     {
-        Debug.Log(GameController.instance.roomUINames[1].name.GetType());
+        Debug.Log(PhotonNetwork.isMasterClient);
     }
 }
