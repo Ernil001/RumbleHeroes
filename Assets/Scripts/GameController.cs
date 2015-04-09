@@ -191,9 +191,32 @@ public class GameController : MonoBehaviour
             GameController.instance.roomLobbyConsole.GetComponent<Text>().text += newLineSet + textToAdd;
         else errorDisplay_open("Something is trying to be display in the Console of an open room, however the room is not opened !", "0002");
     }
+    //
     // Testing method linked to Testing Button
     public void testingMethod()
     {
+        //var props : ExitGames.Client.Photon.Hashtable = new ExitGames.Client.Photon.Hashtable();
+
+        /*
+        Hashtable rp = new Hashtable();
+        rp.Add("p1", "a string");
+        rp.Add("p2", "a string");
+        PhotonNetwork.room.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "prop1", "val" }, { "prop2", 10 } }, new string[] { "prop1" });
+        */
+        /*
+        RoomOptions()
+
+        Hashtable rp = new ExitGames.Client.Photon.Hashtable();
+        rp.Add("p1", "a string");
+        rp.Add("p2", "a string");
+        PhotonNetwork.room.SetCustomProperties(rp);
+        */
+        //PhotonNetwork.room.SetCustomProperties(rp);
+         
+        //   
+        //PhotonNetwork.room.SetCustomProperties(1, "test");
+
+
         //Debug.Log(PhotonNetwork.masterClient.name + " -- " + PhotonNetwork.masterClient.ID.GetType());
     }
 }

@@ -8,7 +8,7 @@ public class Network : MonoBehaviour
     private RoomInfo[] roomsList;
     //
     public GameObject playerPrefab;
-    private string roomName = "Room - ";
+    //private string roomName = "Room - ";
     
     public GameObject playerNameInput;
     //
@@ -46,7 +46,6 @@ public class Network : MonoBehaviour
             }
         }
     }
-    
     public void createPhotonRoom()
     {
         //Debug.Log("Starts createPhotonRoom");
@@ -67,10 +66,8 @@ public class Network : MonoBehaviour
                 else temp_roomName = "Room " + playerNameInput.GetComponent<InputField>().text + "(" + addToName.ToString() + ")";
 
                 if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
-
                 //test
             }
-            //GameController.instance.player1 = playerNameInput.GetComponent<InputField>().text;
         }
     }
     //
@@ -169,5 +166,10 @@ public class Network : MonoBehaviour
         GameController.instance.cleanRoomLobby();
         GameController.instance.changeActiveStatus(GameController.instance.roomLobby, "close");
         GameController.instance.GameStatus = "";
+    }
+    // testing 
+    public void OnPhotonCustomRoomPropertiesChanged()
+    {
+        GameController.instance.errorDisplay_open("Something changed !");
     }
 }
