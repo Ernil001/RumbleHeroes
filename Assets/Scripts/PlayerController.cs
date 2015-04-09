@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     private PhotonView punView;
     private bool isGrounded;
     public GameObject projectile;
+    public GameObject deathParticles;
+
+    private float lastFired;
 
     void Start()
     {
@@ -26,8 +29,15 @@ public class PlayerController : MonoBehaviour
             // ROFL //
             if(currentHP <= 0)
             {
+                object[] paramsForRPC = new object[1];
+                paramsForRPC[0] = transform.position;
+
+                punView.RPC("PlayDeathAnimation", PhotonTargets.All, paramsForRPC);
+
                 PhotonNetwork.Destroy(gameObject);
                 Destroy(gameObject);
+
+                PhotonNetwork.Instantiate("ThePlayer", new Vector3(0f, 3.5f, 0f), Quaternion.identity, 0);
             }
             // ENDROFL //
             InputMovement();
@@ -48,29 +58,38 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Mouse1))
         {
-            //Quaternion projectileRotation = Quaternion.FromToRotation(transform.position,
+            if (Time.time - lastFired > 1)
+            {
+                //Quaternion projectileRotation = Quaternion.FromToRotation(transform.position,
                 //Input.mousePosition);
 
-            //Angle the projectile towards the mouse
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 10;
-            Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.position);
-            mousePos.x = mousePos.x - playerPos.x;
-            mousePos.y = mousePos.y - playerPos.y;
-            float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+                //Angle the projectile towards the mouse
+                Vector3 mousePos = Input.mousePosition;
+                mousePos.z = 10;
+                Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.position);
+                mousePos.x = mousePos.x - playerPos.x;
+                mousePos.y = mousePos.y - playerPos.y;
+                float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
 
-            Quaternion projectileRotation = Quaternion.Euler(new Vector3(0, 0, angle));
+                Quaternion projectileRotation = Quaternion.Euler(new Vector3(0, 0, angle));
 
-            //PUN RPC Call
-            object[] paramsForRPC = new object[3];
+                //PUN RPC Call
+                object[] paramsForRPC = new object[3];
 
-            paramsForRPC[0] = transform.position;
-            paramsForRPC[1] = projectileRotation;
-            paramsForRPC[2] = punView.ownerId;
+                paramsForRPC[0] = transform.position;
+                paramsForRPC[1] = projectileRotation;
+                paramsForRPC[2] = punView.ownerId;
 
 
-            punView.RPC("FireProjectile", PhotonTargets.All, paramsForRPC);
+                punView.RPC("FireProjectile", PhotonTargets.All, paramsForRPC);
+                lastFired = Time.time;
+            }
         }
+    }
+
+    [RPC] void PlayDeathAnimation(Vector3 pos)
+    {
+        Instantiate(deathParticles, pos, Quaternion.identity);
     }
 
     [RPC] void ProjectileHit(int damage, int playerHitId)
