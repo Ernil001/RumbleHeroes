@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine.UI;
 public class Network : MonoBehaviour 
 {
-
     //
     //private const string roomName = "RoomName";
     private RoomInfo[] roomsList;
@@ -12,16 +11,11 @@ public class Network : MonoBehaviour
     private string roomName = "Room - ";
     
     public GameObject playerNameInput;
-    //public GameObject roomListUI;
-    //public GameObject roomButton;
-    //public GameObject roomListLocation;
-    //public RoomInfo curRoom = PhotonNetwork.room;
     //
     //
     // Use this for initialization
     void Start()
     {
-        //GameController.instance.errorDisplay_open("Testing static method call");
         //This function enables us host and join rooms of our game based on the appID of photon.
         PhotonNetwork.ConnectUsingSettings("0.1");
     }
@@ -34,11 +28,6 @@ public class Network : MonoBehaviour
         }
         else if (PhotonNetwork.room == null /*&& roomListUI.activeSelf*/)
         {
-            // Create Room
-            /*
-            if (GUI.Button(new Rect(20, 20, 150, 50), "Start Server"))
-                PhotonNetwork.CreateRoom(roomName + UnityEngine.Random.Range(0.00f,100.00f), true, true, 2);
-            */
             // Join Room
 
             if (roomsList != null)
@@ -92,10 +81,6 @@ public class Network : MonoBehaviour
     //
     void photonJoinRoom_prepare(string roomName_photon)
     {
-        /*
-        if(GameController.instance.playerNameInput != "") PhotonNetwork.JoinRoom(roomName_photon);
-        else GameController.instance.disp
-         * */
         if (playerNameInput.GetComponent<InputField>().text != "")
         {
             PhotonNetwork.JoinRoom(roomName_photon);
@@ -110,7 +95,6 @@ public class Network : MonoBehaviour
     }
     void OnJoinedRoom()
     {
-        //Debug.Log("Connected to Room");
         //Here set name on your id.
         setYourPhotonName(playerNameInput.GetComponent<InputField>().text);
        
@@ -118,18 +102,12 @@ public class Network : MonoBehaviour
         GameController.instance.GameStatus = "roomLobby";
         GameController.instance.roomName.GetComponent<Text>().text = PhotonNetwork.room.name;
         GameController.instance.addToRoomConsole("Connected !");
-        /*
-        Vector3 location = new Vector3(0, 0, 0);
-        //PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up * 5, Quaternion.identity, 0);
-        PhotonNetwork.Instantiate(playerPrefab.name, location, Quaternion.identity, 0);
-        */
     }
     // On leading a room in photon it should clear all textx inside the RoomLobby UI section. MANUAL LEAVE
     public void leavePhotonRoom()
     {
         if (PhotonNetwork.LeaveRoom())
         {
-            //Debug.Log("You have succesfully left the room");
             //Cleans the UI on the client side
             cleanAfterRoomLeft();
 
@@ -183,7 +161,6 @@ public class Network : MonoBehaviour
         {
             GameController.instance.errorDisplay_open("You have been Kicked");
             cleanAfterRoomLeft();
-
         }
     }
     // Room has been left one way or another, time to clean up !
@@ -193,5 +170,4 @@ public class Network : MonoBehaviour
         GameController.instance.changeActiveStatus(GameController.instance.roomLobby, "close");
         GameController.instance.GameStatus = "";
     }
-
 }

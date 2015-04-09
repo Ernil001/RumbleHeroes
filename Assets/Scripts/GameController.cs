@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
     public GameObject roomLobbyConsole;
     public GameObject roomLobby;
     public GameObject roomName;
+    public GameObject[] roomUICleaningTexts;
     public GameObject[] roomUINames;
     public GameObject[] roomUIKickButtons;
     //
@@ -25,12 +26,6 @@ public class GameController : MonoBehaviour
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
     private string gameStatus = "";
-    /*
-    public string player1 = "";
-    public string player2 = "";
-    public string player3 = "";
-    public string player4 = "";
-    */
     //
 
     //gameStatus properties
@@ -84,9 +79,9 @@ public class GameController : MonoBehaviour
             int i = 0;
             foreach (int key in list)
             {
-                i++;
                 //Debug.Log("ID: " + key + " Player Name: " + diCk[key].name + " is master?: " + diCk[key].isMasterClient);
                 AddPlayerToRoomList(diCk[key].name, i, diCk[key].isMasterClient);
+                i++;
                 
             }
             setMasterOptionsForRoom();
@@ -96,9 +91,6 @@ public class GameController : MonoBehaviour
     }
     private void AddPlayerToRoomList(string PlayerName, int playerIndex, bool isMaster = false)
     {
-        //if (isMaster) PlayerName = PlayerName + "*";
-
-
         if (GameController.instance.roomUINames.Length > playerIndex)
         {
             if (isMaster)
@@ -116,7 +108,7 @@ public class GameController : MonoBehaviour
     }
     private void CleanPlayerRoomList()
     {
-        for(int i = 1; i < 5; i++)
+        for(int i = 0; i < 4; i++)
         {
             if (GameController.instance.roomUINames.Length > i)
                 GameController.instance.roomUINames[i].GetComponent<Text>().text = "";
@@ -170,30 +162,25 @@ public class GameController : MonoBehaviour
         else if(force == "close") targetObj.SetActive(false);
     }
     // CLeaning up RoomLobbyUI on leave room.
-
     public void cleanRoomLobby()
     {
-        foreach (GameObject key in roomUINames)
+        foreach (GameObject key in roomUICleaningTexts)
         {
             key.GetComponent<Text>().text = "";
         }
-        //Might have to add cleaning off buttons for master options
     }
     // Set master options
     public void setMasterOptionsForRoom()
     {
-
         if (roomLobby.activeSelf)
         {
-            for (int x = 1; x < roomUIKickButtons.Length; x++)
+            for (int x = 0; x < roomUIKickButtons.Length; x++)
             {
                 if (roomUINames[x].GetComponent<Text>().text != "") roomUIKickButtons[x].SetActive(PhotonNetwork.isMasterClient);
                 else roomUIKickButtons[x].SetActive(false);
                 //roomUIKickButtons[x].SetActive(PhotonNetwork.isMasterClient);
-
             }
         }
- 
     }
     // Add to room console
     public void addToRoomConsole(string textToAdd, bool newLine = true)
