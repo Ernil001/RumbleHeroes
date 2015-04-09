@@ -44,7 +44,8 @@ public class PlayerController : MonoBehaviour
                 PhotonNetwork.Destroy(gameObject);
                 Destroy(gameObject);
 
-                PhotonNetwork.Instantiate("ThePlayer", new Vector3(0f, 3.5f, 0f), Quaternion.identity, 0);
+                GameObject tmpPlayer = PhotonNetwork.Instantiate("ThePlayer", new Vector3(0f, 3.5f, 0f), Quaternion.identity, 0);
+                GameObject.Find("Main Camera").GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
             }
             // ENDROFL //
             InputMovement();
