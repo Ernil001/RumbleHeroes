@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     public GameObject projectile;
     public GameObject deathParticles;
+    public GameObject hitParticles;
 
     private float lastFired;
 
@@ -92,8 +93,10 @@ public class PlayerController : MonoBehaviour
         Instantiate(deathParticles, pos, Quaternion.identity);
     }
 
-    [RPC] void ProjectileHit(int damage, int playerHitId)
+    [RPC] void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact)
     {
+        Instantiate(hitParticles, positionOfImpact, Quaternion.identity);
+
         //If I am the player who got hit
         if (punView.ownerId == playerHitId)
             this.currentHP -= damage;

@@ -27,11 +27,13 @@ public class FireBolt : Projectile {
 
             if(collidedObject.tag == "Player")
             {
-                object[] paramsForRPC = new object[2];
+                object[] paramsForRPC = new object[3];
                 paramsForRPC[0] = this.damage;
                 paramsForRPC[1] = collidedObject.GetComponent<PhotonView>().ownerId;
+                paramsForRPC[2] = transform.position;
 
                 //We hit another player
+
                 collidedObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All,
                     paramsForRPC);
             }
