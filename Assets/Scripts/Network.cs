@@ -35,10 +35,10 @@ public class Network : MonoBehaviour
         else if (PhotonNetwork.room == null /*&& roomListUI.activeSelf*/)
         {
             // Create Room
-            
+            /*
             if (GUI.Button(new Rect(20, 20, 150, 50), "Start Server"))
                 PhotonNetwork.CreateRoom(roomName + UnityEngine.Random.Range(0.00f,100.00f), true, true, 2);
-            
+            */
             // Join Room
 
             if (roomsList != null)
@@ -110,29 +110,28 @@ public class Network : MonoBehaviour
     }
     void OnJoinedRoom()
     {
-        Debug.Log("Connected to Room");
+        //Debug.Log("Connected to Room");
         //Here set name on your id.
         setYourPhotonName(playerNameInput.GetComponent<InputField>().text);
        
         GameController.instance.changeActiveStatus(GameController.instance.roomLobby);
         GameController.instance.GameStatus = "roomLobby";
         GameController.instance.roomName.GetComponent<Text>().text = PhotonNetwork.room.name;
+        GameController.instance.addToRoomConsole("Connected !");
         /*
         Vector3 location = new Vector3(0, 0, 0);
         //PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up * 5, Quaternion.identity, 0);
         PhotonNetwork.Instantiate(playerPrefab.name, location, Quaternion.identity, 0);
         */
     }
-    // On leading a room in photon it should clear all textx inside the RoomLobby UI section.
+    // On leading a room in photon it should clear all textx inside the RoomLobby UI section. MANUAL LEAVE
     public void leavePhotonRoom()
     {
         if (PhotonNetwork.LeaveRoom())
         {
-            Debug.Log("You have succesfully left the room");
+            //Debug.Log("You have succesfully left the room");
             //Cleans the UI on the client side
-            GameController.instance.cleanRoomLobby();
-            GameController.instance.changeActiveStatus(GameController.instance.roomLobby,"close");
-            GameController.instance.GameStatus = "";
+            cleanAfterRoomLeft();
 
         }
         else GameController.instance.errorDisplay_open("Error while leaving the joined room");
@@ -142,4 +141,57 @@ public class Network : MonoBehaviour
         PhotonNetwork.playerName = newName;
         //PhotonNetwork.player.name = newName;
     }
+    // Remove player from Room // Kick
+    public void removePhotonPlayer(GameObject targObj)
+    {
+        // Might need to redo the GameObjects array for room lobby to faciliate IDs aswell
+        bool kickSucc = false; 
+        if(PhotonNetwork.isMasterClient)
+        {
+            foreach (PhotonPlayer key in PhotonNetwork.playerList)
+            {
+                if (key.name == targObj.GetComponent<Text>().text)
+                {
+                    if(PhotonNetwork.CloseConnection(PhotonPlayer.Find(key.ID)))
+                        kickSucc = true;
+                    break;
+                }
+            }
+            if (kickSucc)
+            {
+                // Handle area for kick Succ to msg all players maybe.
+                GameController.instance.errorDisplay_open("You have kicked a player " + targObj.GetComponent<Text>().text);
+
+            }
+            else GameController.instance.errorDisplay_open("Error: Occured while trying to kick the player.","0001");
+        }
+        //Debug.Log("removePhotonPlayer named: " + targObj.GetComponent<Text>().text);
+    }
+    // Updates for console while in Photon Room and gameStatus == "roomLobby"
+    public void OnPhotonPlayerConnected()
+    {
+        GameController.instance.addToRoomConsole("Player has connected");
+    }
+    public void OnPhotonPlayerDisconnected()
+    {
+        GameController.instance.addToRoomConsole("Player has disconected");
+    }
+    public void OnLeftRoom()
+    {
+        // CHeck if you were kicked
+        if (GameController.instance.GameStatus != "")
+        {
+            GameController.instance.errorDisplay_open("You have been Kicked");
+            cleanAfterRoomLeft();
+
+        }
+    }
+    // Room has been left one way or another, time to clean up !
+    public void cleanAfterRoomLeft()
+    {
+        GameController.instance.cleanRoomLobby();
+        GameController.instance.changeActiveStatus(GameController.instance.roomLobby, "close");
+        GameController.instance.GameStatus = "";
+    }
+
 }

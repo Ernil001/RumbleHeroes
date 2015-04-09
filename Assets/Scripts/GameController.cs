@@ -14,7 +14,6 @@ public class GameController : MonoBehaviour
     // Ui Section GameObjects
     public GameObject errorUI;
     public GameObject errorText;
-    public int[] idList = new int[4];
     //
     public GameObject roomLobbyConsole;
     public GameObject roomLobby;
@@ -72,9 +71,6 @@ public class GameController : MonoBehaviour
             // Clean
             CleanPlayerRoomList();
             // Sorting
-            
-            PhotonPlayer[] test = PhotonNetwork.playerList;
-
             Dictionary<int, PhotonPlayer> diCk = new Dictionary<int, PhotonPlayer>();
 
             foreach (PhotonPlayer tmpPlayer in PhotonNetwork.playerList)
@@ -85,53 +81,45 @@ public class GameController : MonoBehaviour
             List<int> list = diCk.Keys.ToList();
             list.Sort();
 
-            foreach(int key in list)
-            {
-                Debug.Log("ID: " + key + " Player Name: " + diCk[key].name + " is master?: " + diCk[key].isMasterClient);
-            }
-           
-            //Dictionary<int, string> nameOfDic = new Dictionary<int, string>();
-            //int[] idList;
-            /*
-            int x = 0;
-            foreach (PhotonPlayer key in PhotonNetwork.playerList)
-            {
-                idList[x] = key.ID;
-                x++;
-            }
-            */
-            //Array.Sort(idList);
-            
-           
-            //
             int i = 0;
-
-            foreach (PhotonPlayer key in PhotonNetwork.playerList)
+            foreach (int key in list)
             {
                 i++;
-
-                if(key.isMasterClient) AddPlayerToRoomList(key.name, i, true);
-                else AddPlayerToRoomList(key.name, i);
-                //Debug.Log(key.ID + " -- " + key.name);
+                //Debug.Log("ID: " + key + " Player Name: " + diCk[key].name + " is master?: " + diCk[key].isMasterClient);
+                AddPlayerToRoomList(diCk[key].name, i, diCk[key].isMasterClient);
+                
             }
-
+            setMasterOptionsForRoom();
             //Update once per second
             yield return new WaitForSeconds(1f);
         }
     }
     private void AddPlayerToRoomList(string PlayerName, int playerIndex, bool isMaster = false)
     {
-        if (isMaster) PlayerName = PlayerName + "*";
+        //if (isMaster) PlayerName = PlayerName + "*";
+
+
         if (GameController.instance.roomUINames.Length > playerIndex)
-            GameController.instance.roomUINames[playerIndex].GetComponent<Text>().text = PlayerName;
+        {
+            if (isMaster)
+            {
+                GameController.instance.roomUINames[playerIndex].GetComponent<Text>().color = new Color32(255, 227, 0, 255);
+                GameController.instance.roomUINames[playerIndex].GetComponent<Text>().text = PlayerName;
+            }
+            else
+            {
+                GameController.instance.roomUINames[playerIndex].GetComponent<Text>().color = new Color32(178, 178, 178, 255);
+                GameController.instance.roomUINames[playerIndex].GetComponent<Text>().text = PlayerName;
+            }
+            
+        }
     }
     private void CleanPlayerRoomList()
     {
         for(int i = 1; i < 5; i++)
         {
             if (GameController.instance.roomUINames.Length > i)
-                GameController.instance.roomUINames[i].GetComponent<Text>().text = 
-                    "Player - " + i + " not connected";
+                GameController.instance.roomUINames[i].GetComponent<Text>().text = "";
         }
     }
     void Update()
@@ -158,10 +146,11 @@ public class GameController : MonoBehaviour
     // Static RPC for GameInfo and updates
 
     //
-    public void errorDisplay_open(string errorDescription)
+    public void errorDisplay_open(string errorDescription, string errorId = "")
     {
         changeActiveStatus(errorUI, "open");
-        errorText.GetComponent<Text>().text = errorDescription;
+        if (errorId != "") errorText.GetComponent<Text>().text = "Error Code: " + errorId.ToString() + "\n Error Description:" + errorDescription;
+        else errorText.GetComponent<Text>().text = errorDescription;
     }
     public void errorDisplay_close()
     {
@@ -181,20 +170,43 @@ public class GameController : MonoBehaviour
         else if(force == "close") targetObj.SetActive(false);
     }
     // CLeaning up RoomLobbyUI on leave room.
+
     public void cleanRoomLobby()
     {
         foreach (GameObject key in roomUINames)
         {
             key.GetComponent<Text>().text = "";
         }
+        //Might have to add cleaning off buttons for master options
+    }
+    // Set master options
+    public void setMasterOptionsForRoom()
+    {
+
+        if (roomLobby.activeSelf)
+        {
+            for (int x = 1; x < roomUIKickButtons.Length; x++)
+            {
+                if (roomUINames[x].GetComponent<Text>().text != "") roomUIKickButtons[x].SetActive(PhotonNetwork.isMasterClient);
+                else roomUIKickButtons[x].SetActive(false);
+                //roomUIKickButtons[x].SetActive(PhotonNetwork.isMasterClient);
+
+            }
+        }
+ 
+    }
+    // Add to room console
+    public void addToRoomConsole(string textToAdd, bool newLine = true)
+    {
+        string newLineSet = "\n";
+        if (!newLine) newLineSet = "";
+        if (GameController.instance.GameStatus == "roomLobby")
+            GameController.instance.roomLobbyConsole.GetComponent<Text>().text += newLineSet + textToAdd;
+        else errorDisplay_open("Something is trying to be display in the Console of an open room, however the room is not opened !", "0002");
     }
     // Testing method linked to Testing Button
     public void testingMethod()
     {
-        foreach (int value in idList)
-        {
-            Debug.Log("Value is " + value);
-        }
         //Debug.Log(PhotonNetwork.masterClient.name + " -- " + PhotonNetwork.masterClient.ID.GetType());
     }
 }
