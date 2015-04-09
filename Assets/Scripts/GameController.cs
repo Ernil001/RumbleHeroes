@@ -62,7 +62,6 @@ public class GameController : MonoBehaviour
 
     IEnumerator UpdateGameLobby ()
     {
-        Debug.Log("In coroutine - " + gameStatus);
         while(this.gameStatus == "roomLobby")
         {
             // Clean
@@ -84,7 +83,6 @@ public class GameController : MonoBehaviour
 
     private void CleanPlayerRoomList()
     {
-        Debug.Log("Cleaning");
         for(int i = 1; i < 5; i++)
         {
             if (GameController.instance.roomUINames.Length > i)
