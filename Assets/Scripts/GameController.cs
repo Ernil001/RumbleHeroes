@@ -205,13 +205,22 @@ public class GameController : MonoBehaviour
         */
         /*
         RoomOptions()
-
-        Hashtable rp = new ExitGames.Client.Photon.Hashtable();
-        rp.Add("p1", "a string");
-        rp.Add("p2", "a string");
-        PhotonNetwork.room.SetCustomProperties(rp);
         */
-        //PhotonNetwork.room.SetCustomProperties(rp);
+        ExitGames.Client.Photon.Hashtable rp = new ExitGames.Client.Photon.Hashtable();
+        //Hashtable rp = new ExitGames.Client.Photon.Hashtable();
+        rp.Add("p1", "H01"); // Key is player pos in room, NOT ID, value is hero selected
+        rp.Add("p2", "H02");
+        rp.Add("p3", "H03");
+        rp.Add("p4", "H04");
+        PhotonNetwork.room.SetCustomProperties(rp);
+
+        ExitGames.Client.Photon.Hashtable getHasTable = PhotonNetwork.room.customProperties;
+        foreach (DictionaryEntry row in getHasTable)
+        {
+            Debug.Log(row.Key + "/" + row.Value);
+        }
+        
+        
          
         //   
         //PhotonNetwork.room.SetCustomProperties(1, "test");

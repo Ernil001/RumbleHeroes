@@ -48,7 +48,6 @@ public class Network : MonoBehaviour
     }
     public void createPhotonRoom()
     {
-        //Debug.Log("Starts createPhotonRoom");
         if (playerNameInput.GetComponent<InputField>().text == "")
         {
             GameController.instance.errorDisplay_open("You need to enter your name before Creating a new room !");
@@ -66,7 +65,7 @@ public class Network : MonoBehaviour
                 else temp_roomName = "Room " + playerNameInput.GetComponent<InputField>().text + "(" + addToName.ToString() + ")";
 
                 if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
-                //test
+                //Adding Raw values to server might be after or before not sure yet.
             }
         }
     }
@@ -170,6 +169,6 @@ public class Network : MonoBehaviour
     // testing 
     public void OnPhotonCustomRoomPropertiesChanged()
     {
-        GameController.instance.errorDisplay_open("Something changed !");
+        //GameController.instance.errorDisplay_open("Something changed !");
     }
 }
