@@ -26,8 +26,6 @@ public class GameController : MonoBehaviour
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
     private string gameStatus = "";
-    //
-
     //gameStatus properties
     public string GameStatus
     {
