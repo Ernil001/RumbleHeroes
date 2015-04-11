@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 public class GameController : MonoBehaviour 
 {
@@ -21,6 +22,7 @@ public class GameController : MonoBehaviour
     public GameObject[] roomUICleaningTexts;
     public GameObject[] roomUINames;
     public GameObject[] roomUIKickButtons;
+    public GameObject[] extraOptionsUI;
     //
 
     // Predefined possiblities for allowedString 
@@ -189,7 +191,44 @@ public class GameController : MonoBehaviour
             GameController.instance.roomLobbyConsole.GetComponent<Text>().text += newLineSet + textToAdd;
         else errorDisplay_open("Something is trying to be display in the Console of an open room, however the room is not opened !", "0002");
     }
-    //
+    //Display ExtraRoomUI
+    // Parameter is a string value that invokes a method inside the GameController.instance
+    public void displayExtraRoom(string selectedExtra)
+    {
+        // Hide All
+        foreach (GameObject key in extraOptionsUI)
+        {
+            changeActiveStatus(key,"close");
+        }
+        // Show correct one.
+        Type thisType = this.GetType();
+        MethodInfo theMethod = thisType.GetMethod(selectedExtra);
+        theMethod.Invoke(this, null);
+
+
+    }
+    // Open options panel
+    public void extraRoom_openOptions()
+    {
+        foreach (GameObject key in extraOptionsUI)
+        {
+            if (key.name == "JoinRoomWrap") changeActiveStatus(key, "open");
+        }
+    }
+    public void extraRoom_openJoin()
+    {
+        foreach (GameObject key in extraOptionsUI)
+        {
+            if (key.name == "JoinRoomWrap") changeActiveStatus(key, "open");
+        }
+    }
+    public void extraRoom_openCreate()
+    {
+        foreach (GameObject key in extraOptionsUI)
+        {
+            if (key.name == "JoinRoomWrap") changeActiveStatus(key, "open");
+        }
+    }
     // Testing method linked to Testing Button
     public void testingMethod()
     {
@@ -217,9 +256,6 @@ public class GameController : MonoBehaviour
         {
             Debug.Log(row.Key + "/" + row.Value);
         }
-        
-        
-         
         //   
         //PhotonNetwork.room.SetCustomProperties(1, "test");
 

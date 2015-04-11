@@ -73,6 +73,7 @@ public class Network : MonoBehaviour
     void OnReceivedRoomListUpdate()
     {
         roomsList = PhotonNetwork.GetRoomList();
+        Debug.Log("Get RoomList");
     }
     //
     void photonJoinRoom_prepare(string roomName_photon)
@@ -134,7 +135,7 @@ public class Network : MonoBehaviour
             if (kickSucc)
             {
                 // Handle area for kick Succ to msg all players maybe.
-                GameController.instance.errorDisplay_open("You have kicked a player " + targObj.GetComponent<Text>().text);
+                GameController.instance.addToRoomConsole("You have kicked a player " + targObj.GetComponent<Text>().text);
 
             }
             else GameController.instance.errorDisplay_open("Error: Occured while trying to kick the player.","0001");
