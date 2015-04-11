@@ -23,8 +23,10 @@ public class GameController : MonoBehaviour
     public GameObject[] roomUINames;
     public GameObject[] roomUIKickButtons;
     public GameObject[] extraOptionsUI;
+    // List of Rooms
+    public GameObject ListOfRoomsContent;
+    public GameObject roomRow;
     //
-
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
     private string gameStatus = "";
@@ -56,6 +58,12 @@ public class GameController : MonoBehaviour
         //
         DontDestroyOnLoad(gameObject);
         //this.errorDisplay_open("test");
+        /*
+        GameObject go;
+        go = Instantiate(roomRow, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        go.transform.parent = ListOfRoomsContent.transform;
+        go.transform.localScale = new Vector3(1, 1, 1);
+        */
            
     }
 
@@ -195,38 +203,52 @@ public class GameController : MonoBehaviour
     // Parameter is a string value that invokes a method inside the GameController.instance
     public void displayExtraRoom(string selectedExtra)
     {
+        bool windowStatus = true;
         // Hide All
         foreach (GameObject key in extraOptionsUI)
         {
+            if (key.GetActive() == true && selectedExtra+"Wrap" == key.name)
+            {
+                windowStatus = false;
+            }
+
             changeActiveStatus(key,"close");
         }
         // Show correct one.
-        Type thisType = this.GetType();
-        MethodInfo theMethod = thisType.GetMethod(selectedExtra);
-        theMethod.Invoke(this, null);
-
-
+        if (windowStatus)
+        {
+            Type thisType = this.GetType();
+            MethodInfo theMethod = thisType.GetMethod("extraRoom_open" + selectedExtra);
+            theMethod.Invoke(this, null);
+        }
     }
     // Open options panel
     public void extraRoom_openOptions()
     {
         foreach (GameObject key in extraOptionsUI)
         {
-            if (key.name == "JoinRoomWrap") changeActiveStatus(key, "open");
+            if (key.name == "OptionsWrap") changeActiveStatus(key, "open");
         }
     }
     public void extraRoom_openJoin()
     {
         foreach (GameObject key in extraOptionsUI)
         {
-            if (key.name == "JoinRoomWrap") changeActiveStatus(key, "open");
+            if (key.name == "JoinWrap") changeActiveStatus(key, "open");
         }
+        // What to do on open list of rooms ? List teh rooms ane. baaak.
+        // Call function refreshPhotonRooms
+
+    }
+    public void extraRoom_closeJoin()
+    {
+        // Stopping the loop for finding rooms ?
     }
     public void extraRoom_openCreate()
     {
         foreach (GameObject key in extraOptionsUI)
         {
-            if (key.name == "JoinRoomWrap") changeActiveStatus(key, "open");
+            if (key.name == "CreateWrap") changeActiveStatus(key, "open");
         }
     }
     // Testing method linked to Testing Button

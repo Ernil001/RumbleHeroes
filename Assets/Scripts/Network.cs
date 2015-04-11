@@ -21,6 +21,7 @@ public class Network : MonoBehaviour
     }
     void OnGUI()
     {
+        //Debug.Log("OnGUi call");
         //PhotonNetwork.Connected; BOOL, checks if we are connected to the network AND NOT to another players server.
         if (!PhotonNetwork.connected)
         {
@@ -73,7 +74,6 @@ public class Network : MonoBehaviour
     void OnReceivedRoomListUpdate()
     {
         roomsList = PhotonNetwork.GetRoomList();
-        Debug.Log("Get RoomList");
     }
     //
     void photonJoinRoom_prepare(string roomName_photon)
@@ -89,6 +89,36 @@ public class Network : MonoBehaviour
         }
         
 
+    }
+    // Refresh ListOfRoom
+    public void refreshPhotonRooms()
+    {
+        roomsList = PhotonNetwork.GetRoomList();
+
+        // Clear all rooms first
+        
+
+        //Populate refresh
+        if (roomsList != null)
+        {
+            for (int i = 0; i < roomsList.Length; i++)
+            {
+                GameObject go;
+                go = Instantiate(GameController.instance.roomRow, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                go.transform.parent = GameController.instance.ListOfRoomsContent.transform;
+                go.transform.localScale = new Vector3(1, 1, 1);
+                go.transform.FindChild("RoomName").GetComponent<Text>().text = roomsList[i].name;
+                
+
+            }
+        }
+
+    }
+    //Join room handle
+    public void joinPhotonRoomFromList(GameObject roomName)
+    {
+        // I need the text of the RoomName Sister Object.
+        Debug.Log(roomName.GetComponent<Text>().text);
     }
     void OnJoinedRoom()
     {
