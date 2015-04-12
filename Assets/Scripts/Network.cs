@@ -20,30 +20,6 @@ public class Network : MonoBehaviour
         //This function enables us host and join rooms of our game based on the appID of photon.
         PhotonNetwork.ConnectUsingSettings("0.1");
     }
-    /*
-    void OnGUI()
-    {
-        //Debug.Log("OnGUi call");
-        //PhotonNetwork.Connected; BOOL, checks if we are connected to the network AND NOT to another players server.
-        if (!PhotonNetwork.connected)
-        {
-            GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
-        }
-        else if (PhotonNetwork.room == null )
-        {
-            // Join Room
-
-            if (roomsList != null)
-            {
-                for (int i = 0; i < roomsList.Length; i++)
-                {
-                    if (GUI.Button(new Rect(20, 200 + (110 * i), 150, 50), roomsList[i].name))
-                        photonJoinRoom_prepare(roomsList[i].name);
-                }
-            }
-        }
-    }
-    */
     public void createPhotonRoom()
     {
         if (playerNameInput.GetComponent<InputField>().text == "")
