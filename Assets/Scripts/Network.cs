@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 public class Network : MonoBehaviour 
 {
     //
@@ -96,15 +97,19 @@ public class Network : MonoBehaviour
         roomsList = PhotonNetwork.GetRoomList();
 
         // Clear all rooms first
-        /*
-        var children = new List<GameObject>();
-        foreach (Transform child in transform) children.Add(child.gameObject);
-        children.ForEach(child => Destroy(child));
-        */
-
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform tran in GameController.instance.ListOfRoomsContent.transform)
+        {
+            children.Add(tran.gameObject);
+        }
+        foreach (GameObject key in children)
+        {
+            Destroy(key);
+        }
         //Populate refresh
         if (roomsList != null)
         {
+            string temp_roomNameHold;
             for (int i = 0; i < roomsList.Length; i++)
             {
                 GameObject go;
@@ -112,17 +117,23 @@ public class Network : MonoBehaviour
                 go.transform.parent = GameController.instance.ListOfRoomsContent.transform;
                 go.transform.localScale = new Vector3(1, 1, 1);
                 go.transform.FindChild("RoomName").GetComponent<Text>().text = roomsList[i].name;
-                
+                Debug.Log("i: " + i.ToString() + "/ name:" + roomsList[i].name);
+                temp_roomNameHold = roomsList[i].name;
+                go.transform.FindChild("JoinButton").GetComponent<Button>().onClick.AddListener(() => this.joinPhotonRoomFromList(temp_roomNameHold));
 
+                go.transform.FindChild("Players").GetComponent<Text>().text = roomsList[i].playerCount.ToString()+"/"+roomsList[i].maxPlayers.ToString();
             }
+            // Fix the scrollbar
+            GameController.instance.listOfRoomsScrollBar.GetComponent<Scrollbar>().value = 1;
         }
 
     }
     //Join room handle
-    public void joinPhotonRoomFromList(GameObject roomName)
+    public void joinPhotonRoomFromList(string roomName)
     {
         // I need the text of the RoomName Sister Object.
-        Debug.Log(roomName.GetComponent<Text>().text);
+        //Debug.Log(roomName.GetType());
+        Debug.Log(roomName);
     }
     void OnJoinedRoom()
     {

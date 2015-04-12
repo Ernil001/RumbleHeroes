@@ -25,7 +25,8 @@ public class GameController : MonoBehaviour
     public GameObject[] extraOptionsUI;
     // List of Rooms
     public GameObject ListOfRoomsContent;
-    public GameObject roomRow;
+    public GameObject roomRow;  // prefab RoomRow
+    public GameObject listOfRoomsScrollBar;
     //
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
@@ -57,14 +58,9 @@ public class GameController : MonoBehaviour
         else if (instance != this) Destroy(gameObject);
         //
         DontDestroyOnLoad(gameObject);
-        //this.errorDisplay_open("test");
-        /*
-        GameObject go;
-        go = Instantiate(roomRow, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-        go.transform.parent = ListOfRoomsContent.transform;
-        go.transform.localScale = new Vector3(1, 1, 1);
-        */
-           
+        //tesitng
+        listOfRoomsScrollBar.GetComponent<Scrollbar>().value = 1;
+        //Debug.Log(listOfRoomsScrollBar.GetComponent<Scrollbar>().value.ToString());
     }
 
     IEnumerator UpdateGameLobby ()
