@@ -20,6 +20,7 @@ public class Network : MonoBehaviour
         //This function enables us host and join rooms of our game based on the appID of photon.
         PhotonNetwork.ConnectUsingSettings("0.1");
     }
+    /*
     void OnGUI()
     {
         //Debug.Log("OnGUi call");
@@ -28,7 +29,7 @@ public class Network : MonoBehaviour
         {
             GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
         }
-        else if (PhotonNetwork.room == null /*&& roomListUI.activeSelf*/)
+        else if (PhotonNetwork.room == null )
         {
             // Join Room
 
@@ -36,18 +37,13 @@ public class Network : MonoBehaviour
             {
                 for (int i = 0; i < roomsList.Length; i++)
                 {
-                    /*
-                    GameObject go = Instantiate(roomButton, new Vector3(roomListLocation.GetComponent<Transform>().position.x, roomListLocation.GetComponent<Transform>().position.y - (i * 40), roomListLocation.GetComponent<Transform>().position.z), Quaternion.identity) as GameObject;
-                    go.transform.FindChild("Text").GetComponent<Text>().text = roomsList[i].name;
-                    go.transform.parent = roomListLocation.transform;
-                    */
-
                     if (GUI.Button(new Rect(20, 200 + (110 * i), 150, 50), roomsList[i].name))
                         photonJoinRoom_prepare(roomsList[i].name);
                 }
             }
         }
     }
+    */
     public void createPhotonRoom()
     {
         if (playerNameInput.GetComponent<InputField>().text == "")
@@ -77,20 +73,6 @@ public class Network : MonoBehaviour
         roomsList = PhotonNetwork.GetRoomList();
     }
     //
-    void photonJoinRoom_prepare(string roomName_photon)
-    {
-        if (playerNameInput.GetComponent<InputField>().text != "")
-        {
-            PhotonNetwork.JoinRoom(roomName_photon);
-        }
-        else
-        {
-            GameController.instance.errorDisplay_open("You need to enter your name before Joining a Room!");
-            return;
-        }
-        
-
-    }
     // Refresh ListOfRoom
     public void refreshPhotonRooms()
     {
@@ -117,23 +99,25 @@ public class Network : MonoBehaviour
                 go.transform.parent = GameController.instance.ListOfRoomsContent.transform;
                 go.transform.localScale = new Vector3(1, 1, 1);
                 go.transform.FindChild("RoomName").GetComponent<Text>().text = roomsList[i].name;
-                Debug.Log("i: " + i.ToString() + "/ name:" + roomsList[i].name);
+                //Debug.Log("i: " + i.ToString() + "/ name:" + roomsList[i].name);
                 temp_roomNameHold = roomsList[i].name;
-                go.transform.FindChild("JoinButton").GetComponent<Button>().onClick.AddListener(() => this.joinPhotonRoomFromList(temp_roomNameHold));
-
+                go.transform.FindChild("JoinButton").GetComponent<Button>().onClick.AddListener(() => this.photonJoinRoom_prepare(temp_roomNameHold));
                 go.transform.FindChild("Players").GetComponent<Text>().text = roomsList[i].playerCount.ToString()+"/"+roomsList[i].maxPlayers.ToString();
             }
-            // Fix the scrollbar
-            GameController.instance.listOfRoomsScrollBar.GetComponent<Scrollbar>().value = 1;
         }
-
     }
     //Join room handle
-    public void joinPhotonRoomFromList(string roomName)
+    void photonJoinRoom_prepare(string roomName_photon)
     {
-        // I need the text of the RoomName Sister Object.
-        //Debug.Log(roomName.GetType());
-        Debug.Log(roomName);
+        if (playerNameInput.GetComponent<InputField>().text != "")
+        {
+            PhotonNetwork.JoinRoom(roomName_photon);
+        }
+        else
+        {
+            GameController.instance.errorDisplay_open("You need to enter your name before Joining a Room!");
+            return;
+        }
     }
     void OnJoinedRoom()
     {

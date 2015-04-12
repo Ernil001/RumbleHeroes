@@ -58,9 +58,6 @@ public class GameController : MonoBehaviour
         else if (instance != this) Destroy(gameObject);
         //
         DontDestroyOnLoad(gameObject);
-        //tesitng
-        listOfRoomsScrollBar.GetComponent<Scrollbar>().value = 1;
-        //Debug.Log(listOfRoomsScrollBar.GetComponent<Scrollbar>().value.ToString());
     }
 
     IEnumerator UpdateGameLobby ()
