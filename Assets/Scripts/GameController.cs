@@ -62,6 +62,20 @@ public class GameController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         //Prepare Heroes for character selection
+        //Debug.Log(HeroInformation.instance.FireMage.name);
+
+        //Debug.Log(HeroInformation.instance.heroList);
+        /*
+        for (int i = 0; i < HeroInformation.instance.heroes.Count; i++) // Loop with for.
+        {
+            Debug.Log(HeroInformation.instance.heroes[i].name);
+        }
+        /*
+        foreach ( key in HeroInformation.instance.heroes)
+        {
+            Debug.Log(key.name)
+        }
+         */
     }
 
     IEnumerator UpdateGameLobby ()
@@ -89,7 +103,10 @@ public class GameController : MonoBehaviour
                 i++;
                 
             }
+            //
             setMasterOptionsForRoom();
+            // Depending on the position add either select character or only display character
+            
             //Update once per second
             yield return new WaitForSeconds(1f);
         }
