@@ -27,6 +27,8 @@ public class GameController : MonoBehaviour
     public GameObject ListOfRoomsContent;
     public GameObject roomRow;  // prefab RoomRow
     public GameObject listOfRoomsScrollBar;
+    // Hero selection
+    public GameObject HeroSelectionUI;
     //
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
@@ -58,6 +60,8 @@ public class GameController : MonoBehaviour
         else if (instance != this) Destroy(gameObject);
         //
         DontDestroyOnLoad(gameObject);
+
+        //Prepare Heroes for character selection
     }
 
     IEnumerator UpdateGameLobby ()
