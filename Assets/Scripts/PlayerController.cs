@@ -61,12 +61,12 @@ public class PlayerController : MonoBehaviour
         if(playerRigidBody.velocity.x > 0)
         {
             animator.SetBool("Running", true);
-            transform.localScale = new Vector2(someScale, transform.localScale.y);
+            transform.localScale = new Vector2(-someScale, transform.localScale.y);
         }
         else if(playerRigidBody.velocity.x < 0)
         {
             animator.SetBool("Running", true);
-            transform.localScale = new Vector2(-someScale, transform.localScale.y);
+            transform.localScale = new Vector2(someScale, transform.localScale.y);
         }
         else
         {
@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
         {
             playerRigidBody.AddForce(new Vector2(0, 25), ForceMode2D.Impulse);
             isGrounded = false;
-            animator.SetBool("Jumping", true);
+            //animator.SetBool("Jumping", true);
         }
 
         if(Input.GetKeyDown(KeyCode.Mouse1))
@@ -100,10 +100,11 @@ public class PlayerController : MonoBehaviour
                 //PUN RPC Call
                 object[] paramsForRPC = new object[3];
 
-                paramsForRPC[0] = transform.position;
+                paramsForRPC[0] = transform.FindChild("ProjectileStartingPoint").transform.position;
                 paramsForRPC[1] = projectileRotation;
                 paramsForRPC[2] = punView.ownerId;
 
+                animator.SetTrigger("attack");
 
                 punView.RPC("FireProjectile", PhotonTargets.All, paramsForRPC);
                 lastFired = Time.time;
@@ -137,7 +138,7 @@ public class PlayerController : MonoBehaviour
         if (col.gameObject.tag == "Ground")
         {
             isGrounded = true;
-            animator.SetBool("Jumping", false);
+            //animator.SetBool("Jumping", false);
         }
     }
 }

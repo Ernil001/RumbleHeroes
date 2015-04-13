@@ -13,6 +13,7 @@ public class FireBolt : Projectile {
     void OnTriggerEnter2D(Collider2D col)
     {
         GameObject collidedObject = col.gameObject;
+        Debug.Log(col.name);
         
         if ((collidedObject.tag == "Player" && 
             collidedObject.GetComponent<PhotonView>().ownerId == this.ownerId)
