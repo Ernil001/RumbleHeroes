@@ -88,9 +88,9 @@ public class GameController : MonoBehaviour
             {
                 GameObject bu = Instantiate(heroSelectionButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
                 bu.transform.parent = listOfHeroes.transform;
-                string tempHoldName = HeroInformation.instance.heroes[i].name;
+                string tempHoldName = HeroInformation.instance.heroes[i].ToString();
                 bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(tempHoldName));
-                bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].name + " (" + HeroInformation.instance.heroes[i].heroClass + ")";
+                bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].ToString() + " (" + HeroInformation.instance.heroes[i].Class + ")";
             }
         }
     }
@@ -99,14 +99,14 @@ public class GameController : MonoBehaviour
     {
         for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
         {
-            if (HeroInformation.instance.heroes[i].name == _heroName)
+            if (HeroInformation.instance.heroes[i].ToString() == _heroName)
             {
                 //Add picture or Animated prefab
 
                 //Add Information Text
-                selectedHeroInformation.GetComponent<Text>().text = HeroInformation.instance.heroes[i].information;
+                selectedHeroInformation.GetComponent<Text>().text = HeroInformation.instance.heroes[i].Information;
                 //Add Hero Name
-                selectedHeroName.GetComponent<Text>().text = HeroInformation.instance.heroes[i].name;
+                selectedHeroName.GetComponent<Text>().text = HeroInformation.instance.heroes[i].ToString();
                 break;
             }
         }

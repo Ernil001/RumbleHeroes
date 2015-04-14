@@ -2,26 +2,42 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Hero : MonoBehaviour {
+public class HeroClass : MonoBehaviour {
 
-    private string code; // This code is a 3 char string that goes from H01 to H99.
-    private string name;
-    private string heroClass; // THe class of the hero, example, The Ninja, Fire Mage
+    //private string code; // This code is a 3 char string that goes from H01 to H99.// Pointless
+    private HeroEnum hero;
+    private string sClass; // THe class of the hero, example, The Ninja, Fire Mage
     private int hp; // Health points
     private float movementSpeed;
     private string information;
 
     private List<Ability> abilities;
 
-    public Hero(string _name = "")
+    public string Information
     {
-        this.name = _name;
-
-        switch (this.name)
+        get
         {
-            case "Constantine":
-                this.code = "H01";
-                this.heroClass = "Fire Mage";
+            return this.information;
+        }
+    }
+
+    public string Class
+    {
+        get
+        {
+            return this.sClass;
+        }
+    }
+
+    public HeroClass(HeroEnum hero)
+    {
+        this.hero = hero;
+        this.abilities = new List<Ability>();
+
+        switch (this.hero)
+        {
+            case HeroEnum.Constantine:
+                this.sClass = "Fire Mage";
                 this.hp = 100;
                 this.movementSpeed = 0;
                 this.information = "Information for the FireMage here";
@@ -29,9 +45,9 @@ public class Hero : MonoBehaviour {
                 abilities.Add(new Ability("Fire Arrow", 2, 20));
                 abilities.Add(new Ability("Fireball", 10, 50));
                 break;
-            case "Rolfo":
-                this.heroClass = "The Ranger";
-                this.code = "H02";
+
+            case HeroEnum.Rolfo:
+                this.sClass = "The Ranger";
                 this.hp = 120;
                 this.movementSpeed = 0;
                 this.information = "Information for the The Ranger here";
@@ -39,9 +55,9 @@ public class Hero : MonoBehaviour {
                 abilities.Add(new Ability("Shoot Arrow", 2, 20));
                 abilities.Add(new Ability("Self Healing", 20, 0));
                 break;
-            case "Kreml":
-                this.heroClass = "The Ranger";
-                this.code = "H02";
+
+            case HeroEnum.Kreml:
+                this.sClass = "The Black Knight";
                 this.hp = 120;
                 this.movementSpeed = 0;
                 this.information = "Information for the The Ranger here";
@@ -49,9 +65,9 @@ public class Hero : MonoBehaviour {
                 abilities.Add(new Ability("Shoot Arrow", 2, 20));
                 abilities.Add(new Ability("Self Healing", 20, 0));
                 break;
-            case "Nejito":
-                this.heroClass = "The Ranger";
-                this.code = "H02";
+
+            case HeroEnum.Nejito:
+                this.sClass = "The Ninja";
                 this.hp = 120;
                 this.movementSpeed = 0;
                 this.information = "Information for the The Ranger here";
@@ -59,8 +75,30 @@ public class Hero : MonoBehaviour {
                 abilities.Add(new Ability("Shoot Arrow", 2, 20));
                 abilities.Add(new Ability("Self Healing", 20, 0));
                 break;
+
             default:
                 break;
+        }
+    }
+
+    public override string ToString()
+    {
+        switch(this.hero)
+        {
+            case HeroEnum.Constantine:
+                return "Constantine";
+
+            case HeroEnum.Rolfo:
+                return "Rolfo";
+
+            case HeroEnum.Kreml:
+                return "Kreml";
+
+            case HeroEnum.Nejito:
+                return "Nejito";
+
+            default:
+                return "";
         }
     }
 }

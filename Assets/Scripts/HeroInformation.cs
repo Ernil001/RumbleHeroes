@@ -7,7 +7,7 @@ public class HeroInformation : MonoBehaviour
     //This class will only handle populating heroes as objects to save information;
     public static HeroInformation instance = null;
 
-    public List<Hero> heroes;
+    public List<HeroClass> heroes;
 
     void Awake()
     {
@@ -16,18 +16,19 @@ public class HeroInformation : MonoBehaviour
         else if (instance != this) Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
         // Prepares the objects as references
-        heroes = new List<Hero>();
-        heroes.Add(new Hero("Constantine"));
-        heroes.Add(new Hero("Rolfo"));
-        heroes.Add(new Hero("Kreml"));
-        heroes.Add(new Hero("Nejito"));
-        /*
-        foreach (Hero key in heroes)
+        heroes = new List<HeroClass>();
+        heroes.Add(new HeroClass(HeroEnum.Constantine));
+        heroes.Add(new HeroClass(HeroEnum.Rolfo));
+        heroes.Add(new HeroClass(HeroEnum.Kreml));
+        heroes.Add(new HeroClass(HeroEnum.Nejito));
+
+        
+        foreach (HeroClass tmpHero in heroes)
         {
-            Debug.Log(key.name);
+            Debug.Log(tmpHero.ToString());
         }
-        Debug.Log(heroes[0].name);
-        */
+        
+        
     }
     void Start()
     {
