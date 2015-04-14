@@ -29,6 +29,11 @@ public class GameController : MonoBehaviour
     public GameObject listOfRoomsScrollBar;
     // Hero selection
     public GameObject HeroSelectionUI;
+    public GameObject listOfHeroes;
+    public GameObject heroSelectionButton;
+    public GameObject selectedHeroPortrait;
+    public GameObject selectedHeroInformation;
+    public GameObject selectedHeroName;
     //
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
@@ -60,24 +65,62 @@ public class GameController : MonoBehaviour
         else if (instance != this) Destroy(gameObject);
         //
         DontDestroyOnLoad(gameObject);
-
-        //Prepare Heroes for character selection
-        //Debug.Log(HeroInformation.instance.FireMage.name);
-
-        //Debug.Log(HeroInformation.instance.heroList);
-        /*
-        for (int i = 0; i < HeroInformation.instance.heroes.Count; i++) // Loop with for.
-        {
-            Debug.Log(HeroInformation.instance.heroes[i].name);
-        }
-        /*
-        foreach ( key in HeroInformation.instance.heroes)
-        {
-            Debug.Log(key.name)
-        }
-         */
     }
+    void Start()
+    {
 
+        //Populate the list of Heroes at Hero Selection UI
+        populateHeroSelectionList();
+        
+    }
+    //
+    public void populateHeroSelectionList()
+    {
+        for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
+        {
+            //Check if in active playing room.
+            if (PhotonNetwork.inRoom)
+            {
+                //Disable or prevent of confirming heroes if they are already picked.
+
+            }
+            else 
+            {
+                GameObject bu = Instantiate(heroSelectionButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                bu.transform.parent = listOfHeroes.transform;
+                string tempHoldName = HeroInformation.instance.heroes[i].name;
+                bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(tempHoldName));
+                bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].name + " (" + HeroInformation.instance.heroes[i].heroClass + ")";
+            }
+            // Disable already selected heroes.
+            
+        }
+    }
+    // Select Hero
+    void heroSelection(string _heroName = "", bool heroAvailable = true)
+    {
+        for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
+        {
+            if (HeroInformation.instance.heroes[i].name == _heroName)
+            {
+                //Add picture or Animated prefab
+
+                //Add Information Text
+                selectedHeroInformation.GetComponent<Text>().text = HeroInformation.instance.heroes[i].information;
+                //Add Hero Name
+                selectedHeroName.GetComponent<Text>().text = HeroInformation.instance.heroes[i].name;
+                break;
+            }
+        }
+        //Debug.Log(_heroName);
+    }
+    // Confirm selected Hero
+    public void confirmHeroSelection()
+    {
+        //CHeck if available
+        //Save into room properties
+        //return to roomView
+    }
     IEnumerator UpdateGameLobby ()
     {
         while(this.gameStatus == "roomLobby")
@@ -111,6 +154,8 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
     }
+    
+    //
     private void AddPlayerToRoomList(string PlayerName, int playerIndex, bool isMaster = false)
     {
         if (GameController.instance.roomUINames.Length > playerIndex)
