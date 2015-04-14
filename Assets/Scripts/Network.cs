@@ -13,6 +13,8 @@ public class Network : MonoBehaviour
     
     public GameObject playerNameInput;
     //
+    private IEnumerator setRoomProp;
+    //
     //
     // Use this for initialization
     void Start()
@@ -43,23 +45,41 @@ public class Network : MonoBehaviour
             }
             if (tempRoomCreated && PhotonNetwork.inRoom)
             {
-                // Setting defautl values or set premade values for room
-
-                ExitGames.Client.Photon.Hashtable prop = new ExitGames.Client.Photon.Hashtable();
-                prop.Add("h1", "test1");
-                prop.Add("h2", "test2");
-                prop.Add("h3", "test3");
-                prop.Add("h4", "test4");
-                PhotonNetwork.room.SetCustomProperties(prop);
+                // Prepare all properties for the room
+                setRoomProp_HeroSelection();
 
             }
-            else GameController.instance.errorDisplay_open("kle prie");
+            else
+            {
+                setRoomProp = waitForRoomCreation();
+                StartCoroutine(setRoomProp);
+            } 
+            //GameController.instance.errorDisplay_open("kle prie");
         }
     }
     //
-    public void setRoomProperties()
+    IEnumerator waitForRoomCreation()
     {
-
+        while (true)
+        {
+            if (PhotonNetwork.inRoom)
+            {
+                setRoomProp_HeroSelection();
+                StopCoroutine(setRoomProp);
+                Debug.Log("Working");
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+    // Prepares defaults for hero selection
+    public void setRoomProp_HeroSelection()
+    {
+        ExitGames.Client.Photon.Hashtable prop = new ExitGames.Client.Photon.Hashtable();
+        prop.Add("h1", "");
+        prop.Add("h2", "");
+        prop.Add("h3", "");
+        prop.Add("h4", "");
+        PhotonNetwork.room.SetCustomProperties(prop);
     }
     //
     void OnReceivedRoomListUpdate()

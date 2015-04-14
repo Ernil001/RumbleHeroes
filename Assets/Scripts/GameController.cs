@@ -22,6 +22,7 @@ public class GameController : MonoBehaviour
     public GameObject[] roomUICleaningTexts;
     public GameObject[] roomUINames;
     public GameObject[] roomUIKickButtons;
+    public GameObject[] roomUIClassHolders;
     public GameObject[] extraOptionsUI;
     // List of Rooms
     public GameObject ListOfRoomsContent;
@@ -34,6 +35,11 @@ public class GameController : MonoBehaviour
     public GameObject selectedHeroPortrait;
     public GameObject selectedHeroInformation;
     public GameObject selectedHeroName;
+
+    public GameObject selectHeroButton;
+    public GameObject selectHeroText;
+    //
+
     //
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
@@ -87,7 +93,7 @@ public class GameController : MonoBehaviour
             else 
             {
                 GameObject bu = Instantiate(heroSelectionButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-                bu.transform.parent = listOfHeroes.transform;
+                bu.transform.SetParent(listOfHeroes.transform);
                 string tempHoldName = HeroInformation.instance.heroes[i].ToString();
                 bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(tempHoldName));
                 bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].Name + " (" + HeroInformation.instance.heroes[i].Class + ")";
@@ -154,8 +160,22 @@ public class GameController : MonoBehaviour
             }
             //
             setMasterOptionsForRoom();
-            // Depending on the position add either select character or only display character
-            
+            // Depending on the position UPDATE either select character or only display character
+            int x = 0;
+            foreach (int key in list)
+            {
+                if (diCk[key].isLocal)
+                {
+                    //if(roomUIClassHolders[x].)
+                }
+                else 
+                {
+                    GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                    sht.transform.SetParent(roomUIClassHolders[x].transform);
+
+                }
+                x++;
+            }
             //Update once per second
             yield return new WaitForSeconds(1f);
         }
@@ -330,14 +350,15 @@ public class GameController : MonoBehaviour
         /*
         RoomOptions()
         */
+        /*
         ExitGames.Client.Photon.Hashtable rp = new ExitGames.Client.Photon.Hashtable();
-        //Hashtable rp = new ExitGames.Client.Photon.Hashtable();
+        
         rp.Add("h1", "H01"); // Key is player pos in room, NOT ID, value is hero selected
         rp.Add("h2", "H02");
         rp.Add("h3", "H03");
         rp.Add("h4", "H04");
         PhotonNetwork.room.SetCustomProperties(rp);
-
+        */
         ExitGames.Client.Photon.Hashtable getHasTable = PhotonNetwork.room.customProperties;
         foreach (DictionaryEntry row in getHasTable)
         {
