@@ -172,9 +172,16 @@ public class GameController : MonoBehaviour
                     }
                     else 
                     {
-                        GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                        
+                        GameObject sht = Instantiate(selectHeroButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+
                         sht.transform.SetParent(roomUIClassHolders[x].transform);
-                        sht.GetComponent<Text>().text = x.ToString() + "-PlayerTHIS IS YOU BAAAK";
+                        sht.transform.localScale = Vector3.one;
+                        sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+                        sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                        //sht.GetComponent<Text>().text = x.ToString() + "-PlayerTHIS IS YOU BAAAK";
+                        
+
                     }
                 }
                 else 
@@ -187,6 +194,9 @@ public class GameController : MonoBehaviour
                     {
                         GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
                         sht.transform.SetParent(roomUIClassHolders[x].transform);
+                        sht.transform.localScale = Vector3.one;
+                        sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+                        sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                         sht.GetComponent<Text>().text = x.ToString() + "-Player - not you !";
                     }
 
