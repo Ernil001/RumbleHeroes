@@ -66,7 +66,7 @@ public class Network : MonoBehaviour
             {
                 setRoomProp_HeroSelection();
                 StopCoroutine(setRoomProp);
-                Debug.Log("Working");
+                //Debug.Log("Working");
             }
             yield return new WaitForSeconds(0.5f);
         }

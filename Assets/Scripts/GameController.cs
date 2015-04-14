@@ -166,12 +166,29 @@ public class GameController : MonoBehaviour
             {
                 if (diCk[key].isLocal)
                 {
-                    //if(roomUIClassHolders[x].)
+                    if (roomUIClassHolders[x].transform.childCount > 0)
+                    {
+
+                    }
+                    else 
+                    {
+                        GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                        sht.transform.SetParent(roomUIClassHolders[x].transform);
+                        sht.GetComponent<Text>().text = x.ToString() + "-PlayerTHIS IS YOU BAAAK";
+                    }
                 }
                 else 
                 {
-                    GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-                    sht.transform.SetParent(roomUIClassHolders[x].transform);
+                    if (roomUIClassHolders[x].transform.childCount > 0)
+                    {
+
+                    }
+                    else
+                    {
+                        GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                        sht.transform.SetParent(roomUIClassHolders[x].transform);
+                        sht.GetComponent<Text>().text = x.ToString() + "-Player - not you !";
+                    }
 
                 }
                 x++;
