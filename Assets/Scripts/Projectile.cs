@@ -10,6 +10,8 @@ public abstract class Projectile : MonoBehaviour {
     public int damage = 100;
     public int secondsToLive = 10;
 
+    public int ownerId;
+
     public Rigidbody2D projectileBody;
 
     private Vector3 basePosition;

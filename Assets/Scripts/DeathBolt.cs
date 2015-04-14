@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FireBolt : Projectile {
-
+public class DeathBolt : Projectile
+{
     protected override void Start()
     {
         base.Start();
@@ -12,19 +12,19 @@ public class FireBolt : Projectile {
     {
         GameObject collidedObject = col.gameObject;
         Debug.Log(col.name);
-        
-        if ((collidedObject.tag == "Player" && 
+
+        if ((collidedObject.tag == "Player" &&
             collidedObject.GetComponent<PhotonView>().ownerId == this.ownerId)
             || collidedObject.tag == "Projectile")
         {
             //If the projectile hit ourself, don't do anything
             return;
-        }  
+        }
         else
         {
             Debug.Log("We hit something other than ourself");
 
-            if(collidedObject.tag == "Player")
+            if (collidedObject.tag == "Player")
             {
                 object[] paramsForRPC = new object[3];
                 paramsForRPC[0] = this.damage;

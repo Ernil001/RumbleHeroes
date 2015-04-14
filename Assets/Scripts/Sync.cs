@@ -34,7 +34,7 @@ public class Sync : MonoBehaviour {
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref scale);
-            //stream.SendNext(animator.GetBool("Running"));
+            stream.SendNext(animator.GetBool("Running"));
             //stream.SendNext(animator.GetBool("Jumping"));
         }
         else
@@ -49,7 +49,7 @@ public class Sync : MonoBehaviour {
             stream.Serialize(ref rot);
             stream.Serialize(ref scale);
 
-            //animator.SetBool("Running", (bool)stream.ReceiveNext());
+            animator.SetBool("Running", (bool)stream.ReceiveNext());
             //animator.SetBool("Jumping", (bool)stream.ReceiveNext());
 
             latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
