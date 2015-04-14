@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class HeroClass : MonoBehaviour {
+public class HeroClass {
 
     private string code; // This code is a 3 char string that goes from H01 to H99.
     private HeroEnum hero;
