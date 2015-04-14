@@ -41,7 +41,25 @@ public class Network : MonoBehaviour
                 if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
                 //Adding Raw values to server might be after or before not sure yet.
             }
+            if (tempRoomCreated && PhotonNetwork.inRoom)
+            {
+                // Setting defautl values or set premade values for room
+
+                ExitGames.Client.Photon.Hashtable prop = new ExitGames.Client.Photon.Hashtable();
+                prop.Add("h1", "test1");
+                prop.Add("h2", "test2");
+                prop.Add("h3", "test3");
+                prop.Add("h4", "test4");
+                PhotonNetwork.room.SetCustomProperties(prop);
+
+            }
+            else GameController.instance.errorDisplay_open("kle prie");
         }
+    }
+    //
+    public void setRoomProperties()
+    {
+
     }
     //
     void OnReceivedRoomListUpdate()

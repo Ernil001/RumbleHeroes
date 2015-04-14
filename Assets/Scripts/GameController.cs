@@ -90,7 +90,14 @@ public class GameController : MonoBehaviour
                 bu.transform.parent = listOfHeroes.transform;
                 string tempHoldName = HeroInformation.instance.heroes[i].ToString();
                 bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(tempHoldName));
-                bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].ToString() + " (" + HeroInformation.instance.heroes[i].Class + ")";
+                bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].Name + " (" + HeroInformation.instance.heroes[i].Class + ")";
+                //test 
+                /*
+                if (HeroInformation.instance.heroes[i].Name == "Rolfo")
+                {
+                    bu.GetComponent<Button>().interactable = false;
+                }
+                 * */
             }
         }
     }
@@ -106,7 +113,7 @@ public class GameController : MonoBehaviour
                 //Add Information Text
                 selectedHeroInformation.GetComponent<Text>().text = HeroInformation.instance.heroes[i].Information;
                 //Add Hero Name
-                selectedHeroName.GetComponent<Text>().text = HeroInformation.instance.heroes[i].ToString();
+                selectedHeroName.GetComponent<Text>().text = HeroInformation.instance.heroes[i].Name;
                 break;
             }
         }
@@ -325,10 +332,10 @@ public class GameController : MonoBehaviour
         */
         ExitGames.Client.Photon.Hashtable rp = new ExitGames.Client.Photon.Hashtable();
         //Hashtable rp = new ExitGames.Client.Photon.Hashtable();
-        rp.Add("p1", "H01"); // Key is player pos in room, NOT ID, value is hero selected
-        rp.Add("p2", "H02");
-        rp.Add("p3", "H03");
-        rp.Add("p4", "H04");
+        rp.Add("h1", "H01"); // Key is player pos in room, NOT ID, value is hero selected
+        rp.Add("h2", "H02");
+        rp.Add("h3", "H03");
+        rp.Add("h4", "H04");
         PhotonNetwork.room.SetCustomProperties(rp);
 
         ExitGames.Client.Photon.Hashtable getHasTable = PhotonNetwork.room.customProperties;

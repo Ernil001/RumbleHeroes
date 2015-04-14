@@ -22,12 +22,12 @@ public class HeroInformation : MonoBehaviour
         heroes.Add(new HeroClass(HeroEnum.Kreml));
         heroes.Add(new HeroClass(HeroEnum.Nejito));
 
-        
+        /*
         foreach (HeroClass tmpHero in heroes)
         {
             Debug.Log(tmpHero.ToString());
         }
-        
+        */
         
     }
     void Start()

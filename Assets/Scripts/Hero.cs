@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 public class HeroClass : MonoBehaviour {
 
-    //private string code; // This code is a 3 char string that goes from H01 to H99.// Pointless
+    private string code; // This code is a 3 char string that goes from H01 to H99.
     private HeroEnum hero;
     private string sClass; // THe class of the hero, example, The Ninja, Fire Mage
     private int hp; // Health points
     private float movementSpeed;
     private string information;
+    private string name;
 
     private List<Ability> abilities;
 
@@ -29,6 +30,21 @@ public class HeroClass : MonoBehaviour {
         }
     }
 
+    public string Name
+    {
+        get
+        {
+            return this.name;
+        }
+    }
+    public string Code
+    {
+        get
+        {
+            return this.code;
+        }
+    }
+
     public HeroClass(HeroEnum hero)
     {
         this.hero = hero;
@@ -37,7 +53,9 @@ public class HeroClass : MonoBehaviour {
         switch (this.hero)
         {
             case HeroEnum.Constantine:
+                this.name = "Constantine";
                 this.sClass = "Fire Mage";
+                this.code = "H01";
                 this.hp = 100;
                 this.movementSpeed = 0;
                 this.information = "Information for the FireMage here";
@@ -47,7 +65,9 @@ public class HeroClass : MonoBehaviour {
                 break;
 
             case HeroEnum.Rolfo:
+                this.name = "Rolfo";
                 this.sClass = "The Ranger";
+                this.code = "H02";
                 this.hp = 120;
                 this.movementSpeed = 0;
                 this.information = "Information for the The Ranger here";
@@ -57,7 +77,9 @@ public class HeroClass : MonoBehaviour {
                 break;
 
             case HeroEnum.Kreml:
+                this.name = "Kreml";
                 this.sClass = "The Black Knight";
+                this.code = "H03";
                 this.hp = 120;
                 this.movementSpeed = 0;
                 this.information = "Information for the The Ranger here";
@@ -67,7 +89,9 @@ public class HeroClass : MonoBehaviour {
                 break;
 
             case HeroEnum.Nejito:
+                this.name = "Nejito";
                 this.sClass = "The Ninja";
+                this.code = "H04";
                 this.hp = 120;
                 this.movementSpeed = 0;
                 this.information = "Information for the The Ranger here";
