@@ -92,8 +92,6 @@ public class GameController : MonoBehaviour
                 bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(tempHoldName));
                 bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].name + " (" + HeroInformation.instance.heroes[i].heroClass + ")";
             }
-            // Disable already selected heroes.
-            
         }
     }
     // Select Hero
@@ -117,7 +115,8 @@ public class GameController : MonoBehaviour
     // Confirm selected Hero
     public void confirmHeroSelection()
     {
-        //CHeck if available
+        //CHeck if available in room properties.
+            // If returns false, meaning the players changed their selection during the active selection process, Reloads populateHeroSelectionList()
         //Save into room properties
         //return to roomView
     }

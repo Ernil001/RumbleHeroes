@@ -10,6 +10,8 @@ public class HeroInformation : MonoBehaviour
     public List<Hero> heroes;
     public class Hero
     {
+   
+        public string code; // This code is a 3 char string that goes from H01 to H99.
         public string name;
         public string heroClass; // THe class of the hero, example, The Ninja, Fire Mage
         public int hp; // Health points
@@ -40,6 +42,7 @@ public class HeroInformation : MonoBehaviour
         heroes.Add(new Hero("Rolfo"));
         // Fire Mage
         //heroes[0].name = "Constantine";
+        heroes[0].code = "H01";
         heroes[0].heroClass = "Fire Mage";
         heroes[0].hp = 100;
         heroes[0].movementSpeed = 0;
@@ -53,6 +56,7 @@ public class HeroInformation : MonoBehaviour
         //The Archer
         //heroes[1].name = "Rolfo";
         heroes[1].heroClass = "The Ranger";
+        heroes[0].code = "H02";
         heroes[1].hp = 120;
         heroes[1].movementSpeed = 0;
         heroes[1].information = "Information for the The Ranger here";
