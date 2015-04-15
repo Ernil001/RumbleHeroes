@@ -133,6 +133,64 @@ public class GameController : MonoBehaviour
         //Save into room properties
         //return to roomView
     }
+    public void setPlayerHeroSelection(int pos, PhotonPlayer curClient)
+    {
+        ExitGames.Client.Photon.Hashtable playerCusProp = curClient.allProperties;
+
+        if (roomUIClassHolders[pos].transform.childCount == 1)
+        {
+            if (curClient.isLocal)
+            {
+                if (playerCusProp["h"] != "")
+                {
+
+                    string tempHeroCode = playerCusProp["h"].ToString(); ;
+                    roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = tempHeroCode;
+                }
+                else
+                {
+                    roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = "Select your Hero !";
+                }
+            }
+            else
+            {
+                if (playerCusProp["h"] != "")
+                {
+                    string tempHeroCode = playerCusProp["h"].ToString() ;
+                    roomUIClassHolders[pos].transform.GetChild(0).GetComponent<Text>().text = tempHeroCode;
+                }
+                else
+                {
+                    roomUIClassHolders[pos].transform.GetChild(0).GetComponent<Text>().text = "";
+                }
+            }
+        }
+        else if (roomUIClassHolders[pos].transform.childCount == 0)
+        {
+            if (curClient.isLocal)
+            {
+                GameObject sht = Instantiate(selectHeroButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                sht.transform.SetParent(roomUIClassHolders[pos].transform);
+                sht.transform.localScale = Vector3.one;
+                sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+                sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            }
+            else
+            {
+                GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                sht.transform.SetParent(roomUIClassHolders[pos].transform);
+                sht.transform.localScale = Vector3.one;
+                sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+                sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                sht.GetComponent<Text>().text = "";
+            }
+        }
+        else 
+        {
+            // We have a problem here >X
+            errorDisplay_open("Too many GameObjects in " + roomUIClassHolders[pos].name, "0003");
+        }
+    }
     IEnumerator UpdateGameLobby ()
     {
         while(this.gameStatus == "roomLobby")
@@ -144,6 +202,7 @@ public class GameController : MonoBehaviour
 
             foreach (PhotonPlayer tmpPlayer in PhotonNetwork.playerList)
             {
+                //tmpPlayer.
                 diCk.Add(tmpPlayer.ID, tmpPlayer);
             }
 
@@ -155,54 +214,84 @@ public class GameController : MonoBehaviour
             {
                 //Debug.Log("ID: " + key + " Player Name: " + diCk[key].name + " is master?: " + diCk[key].isMasterClient);
                 AddPlayerToRoomList(diCk[key].name, i, diCk[key].isMasterClient);
+                ExitGames.Client.Photon.Hashtable playerProp = diCk[key].allProperties;
+                setPlayerHeroSelection(i, diCk[key]);
                 i++;
                 
             }
             //
             setMasterOptionsForRoom();
             // Depending on the position UPDATE either select character or only display character
+            /*
             int x = 0;
             foreach (int key in list)
             {
+                //Collect information
+                ExitGames.Client.Photon.Hashtable roomCusProp = PhotonNetwork.room.customProperties;
+                //
                 if (diCk[key].isLocal)
                 {
-                    if (roomUIClassHolders[x].transform.childCount > 0)
+                    if (roomUIClassHolders[x].transform.childCount == 1)
                     {
+                        //Outputs text into the button
+                        if (roomCusProp["h" + (x + 1).ToString()] != "")
+                        {
 
+                            string tempHeroCode = roomCusProp["h" + (x + 1).ToString()].ToString(); ;
+                            roomUIClassHolders[x].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = tempHeroCode;
+                        }
+                        else
+                        {
+                            roomUIClassHolders[x].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = "Select your Hero !";
+                        }
                     }
-                    else 
+                    else if (roomUIClassHolders[x].transform.childCount == 0)
                     {
-                        
                         GameObject sht = Instantiate(selectHeroButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-
                         sht.transform.SetParent(roomUIClassHolders[x].transform);
                         sht.transform.localScale = Vector3.one;
                         sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
                         sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                        //sht.GetComponent<Text>().text = x.ToString() + "-PlayerTHIS IS YOU BAAAK";
-                        
-
+                    }
+                    else
+                    {
+                        // We have a problem here >X
+                        errorDisplay_open("Too many GameObjects in " + roomUIClassHolders[x].name, "0003");
                     }
                 }
                 else 
                 {
-                    if (roomUIClassHolders[x].transform.childCount > 0)
+                    if (roomUIClassHolders[x].transform.childCount == 1)
                     {
-
+                        //Outputs text depending on the char selection
+                        if (roomCusProp["h" + (x + 1).ToString()] != "")
+                        {
+                            string tempHeroCode = roomCusProp["h" + (x + 1).ToString()].ToString(); ;
+                            roomUIClassHolders[x].transform.GetChild(0).GetComponent<Text>().text = tempHeroCode;
+                        }
+                        else
+                        {
+                            roomUIClassHolders[x].transform.GetChild(0).GetComponent<Text>().text = "";
+                        }
                     }
-                    else
+                    else if (roomUIClassHolders[x].transform.childCount == 0)
                     {
                         GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
                         sht.transform.SetParent(roomUIClassHolders[x].transform);
                         sht.transform.localScale = Vector3.one;
                         sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
                         sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                        sht.GetComponent<Text>().text = x.ToString() + "-Player - not you !";
+                        sht.GetComponent<Text>().text = "";
+                    }
+                    else
+                    {
+                        errorDisplay_open("Too many GameObjects in " + roomUIClassHolders[x].name, "0003");
                     }
 
                 }
                 x++;
             }
+            */
             //Update once per second
             yield return new WaitForSeconds(1f);
         }
@@ -287,6 +376,15 @@ public class GameController : MonoBehaviour
         foreach (GameObject key in roomUICleaningTexts)
         {
             key.GetComponent<Text>().text = "";
+        }
+        // Removing GameObjects under Class
+        foreach (GameObject key in roomUIClassHolders)
+        {
+            if (key.transform.childCount > 0)
+            {
+                Destroy(key.transform.GetChild(0).gameObject);
+            }
+            
         }
     }
     // Set master options

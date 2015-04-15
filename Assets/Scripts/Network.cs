@@ -75,10 +75,18 @@ public class Network : MonoBehaviour
     public void setRoomProp_HeroSelection()
     {
         ExitGames.Client.Photon.Hashtable prop = new ExitGames.Client.Photon.Hashtable();
+        // hero selection
+        prop.Add("h1", "H01");
+        prop.Add("h2", "H02");
+        prop.Add("h3", "H03");
+        prop.Add("h4", "H04");
+        /*
         prop.Add("h1", "");
         prop.Add("h2", "");
         prop.Add("h3", "");
         prop.Add("h4", "");
+        */
+        //Saave
         PhotonNetwork.room.SetCustomProperties(prop);
     }
     //
@@ -137,11 +145,20 @@ public class Network : MonoBehaviour
     {
         //Here set name on your id.
         setYourPhotonName(playerNameInput.GetComponent<InputField>().text);
-       
+        //Set player properties.
+        setNewPlayerCusProperties(/*playerNameInput.GetComponent<InputField>().text*/);
         GameController.instance.changeActiveStatus(GameController.instance.roomLobby);
         GameController.instance.GameStatus = "roomLobby";
         GameController.instance.roomName.GetComponent<Text>().text = PhotonNetwork.room.name;
         GameController.instance.addToRoomConsole("Connected !");
+        
+    }
+    void setNewPlayerCusProperties()
+    {
+        //Set default values for custom properties
+        ExitGames.Client.Photon.Hashtable cusProp = new ExitGames.Client.Photon.Hashtable();
+        cusProp.Add("h", "");
+        PhotonNetwork.player.SetCustomProperties(cusProp);
     }
     // On leading a room in photon it should clear all textx inside the RoomLobby UI section. MANUAL LEAVE
     public void leavePhotonRoom()
