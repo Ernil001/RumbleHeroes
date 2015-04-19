@@ -21,7 +21,6 @@ public class HeroClass {
             return this.information;
         }
     }
-
     public string Class
     {
         get
@@ -29,7 +28,6 @@ public class HeroClass {
             return this.sClass;
         }
     }
-
     public string Name
     {
         get
@@ -70,7 +68,7 @@ public class HeroClass {
                 this.code = "H02";
                 this.hp = 120;
                 this.movementSpeed = 0;
-                this.information = "Information for the The Ranger here";
+                this.information = "Information for The Ranger here";
 
                 abilities.Add(new Ability("Shoot Arrow", 2, 20));
                 abilities.Add(new Ability("Self Healing", 20, 0));
@@ -82,7 +80,7 @@ public class HeroClass {
                 this.code = "H03";
                 this.hp = 120;
                 this.movementSpeed = 0;
-                this.information = "Information for the The Ranger here";
+                this.information = "Information for The Black Knight here";
 
                 abilities.Add(new Ability("Shoot Arrow", 2, 20));
                 abilities.Add(new Ability("Self Healing", 20, 0));
@@ -94,7 +92,7 @@ public class HeroClass {
                 this.code = "H04";
                 this.hp = 120;
                 this.movementSpeed = 0;
-                this.information = "Information for the The Ranger here";
+                this.information = "Information for The Ninja here";
 
                 abilities.Add(new Ability("Shoot Arrow", 2, 20));
                 abilities.Add(new Ability("Self Healing", 20, 0));

@@ -101,15 +101,7 @@ public class Network : MonoBehaviour
         roomsList = PhotonNetwork.GetRoomList();
 
         // Clear all rooms first
-        List<GameObject> children = new List<GameObject>();
-        foreach (Transform tran in GameController.instance.ListOfRoomsContent.transform)
-        {
-            children.Add(tran.gameObject);
-        }
-        foreach (GameObject key in children)
-        {
-            Destroy(key);
-        }
+        GameController.instance.listOfRooms_clearList();
         //Populate refresh
         if (roomsList != null)
         {
@@ -194,9 +186,7 @@ public class Network : MonoBehaviour
             }
             if (kickSucc)
             {
-                // Handle area for kick Succ to msg all players maybe.
                 GameController.instance.addToRoomConsole("You have kicked a player " + targObj.GetComponent<Text>().text);
-
             }
             else GameController.instance.errorDisplay_open("Error: Occured while trying to kick the player.","0001");
         }

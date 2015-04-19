@@ -34,4 +34,29 @@ public class HeroInformation : MonoBehaviour
     {
       
     }
+    // DUnno how to do this yet.
+    public string return_HeroName_OnCode(string heroCode)
+    {
+        string heroName = "";
+        for (int x = 0; x < HeroInformation.instance.heroes.Count; x++)
+        {
+            if (heroCode == HeroInformation.instance.heroes[x].Code)
+                heroName = HeroInformation.instance.heroes[x].Name;
+
+        }
+        if (heroName == "") GameController.instance.errorDisplay_open("Hero with the code: " + heroCode + ", does not exist !");
+        return heroName;
+    }
+    public string return_HeroCode_OnName(string heroName)
+    {
+        string heroCode = "";
+        for (int x = 0; x < HeroInformation.instance.heroes.Count; x++)
+        {
+            if (heroName == HeroInformation.instance.heroes[x].Name)
+                heroCode = HeroInformation.instance.heroes[x].Code;
+
+        }
+        if (heroCode == "") GameController.instance.errorDisplay_open("Hero with the name: " + heroName + ", does not exist !");
+        return heroCode;
+    }
 }

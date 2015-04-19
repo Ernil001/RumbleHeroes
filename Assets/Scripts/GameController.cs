@@ -82,29 +82,50 @@ public class GameController : MonoBehaviour
     //
     public void populateHeroSelectionList()
     {
-        for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
+        //Clean all childreen in the listOfHeroes
+        destroyAllChildGameObjects(listOfHeroes);
+        //
+        if (PhotonNetwork.inRoom)
         {
-            //Check if in active playing room.
-            if (PhotonNetwork.inRoom)
+            List<string> takenHeroes = new List<string>();
+            foreach (PhotonPlayer tarPlayer in PhotonNetwork.playerList)
             {
-                //Disable or prevent of confirming heroes if they are already picked.
-
+                //Disables taken or unavailable heroes
+                if (!tarPlayer.isLocal)
+                {
+                    ExitGames.Client.Photon.Hashtable tm = tarPlayer.customProperties;
+                    if (tm["h"] != "")
+                    {
+                        takenHeroes.Add(tm["h"].ToString());
+                    }
+                }
             }
-            else 
+            for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
             {
                 GameObject bu = Instantiate(heroSelectionButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
                 bu.transform.SetParent(listOfHeroes.transform);
                 string tempHoldName = HeroInformation.instance.heroes[i].ToString();
                 bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(tempHoldName));
                 bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].Name + " (" + HeroInformation.instance.heroes[i].Class + ")";
-                //test 
-                /*
-                if (HeroInformation.instance.heroes[i].Name == "Rolfo")
-                {
+                
+                if (takenHeroes.Contains(HeroInformation.instance.heroes[i].Code))
                     bu.GetComponent<Button>().interactable = false;
-                }
-                 * */
+                else
+                    bu.GetComponent<Button>().interactable = true;
             }
+
+        }
+        else
+        {
+            for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
+            {
+                GameObject bu = Instantiate(heroSelectionButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                bu.transform.SetParent(listOfHeroes.transform);
+                string tempHoldName = HeroInformation.instance.heroes[i].ToString();
+                bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(tempHoldName));
+                bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].Name + " (" + HeroInformation.instance.heroes[i].Class + ")";
+            }
+
         }
     }
     // Select Hero
@@ -130,8 +151,56 @@ public class GameController : MonoBehaviour
     {
         //CHeck if available in room properties.
             // If returns false, meaning the players changed their selection during the active selection process, Reloads populateHeroSelectionList()
-        //Save into room properties
-        //return to roomView
+        List<string> takenHeroes = new List<string>();
+        foreach (PhotonPlayer tarPlayer in PhotonNetwork.playerList)
+        {
+            //Disables taken or unavailable heroes
+            if (!tarPlayer.isLocal)
+            {
+                ExitGames.Client.Photon.Hashtable tm = tarPlayer.customProperties;
+                if (tm["h"] != "")
+                {
+                    takenHeroes.Add(tm["h"].ToString());
+                }
+            }
+        }
+        string tmpSelectedHeroCode = "";
+        // I wonder if this part could be rewritten to ask directly into the references of the objects inside the list, instead of looping through them ?
+        string heroName = selectedHeroName.GetComponent<Text>().text;
+        for(int x = 0; x < HeroInformation.instance.heroes.Count; x++)
+        {
+            if(heroName == HeroInformation.instance.heroes[x].Name)
+                tmpSelectedHeroCode = HeroInformation.instance.heroes[x].Code;
+        }
+        // Asks if Hero Code is available to take.
+        if(takenHeroes.Contains(tmpSelectedHeroCode))
+        {
+            // Populate the list again, Display Error that the hero is taken
+            errorDisplay_open("This hero has been taken !");
+            populateHeroSelectionList();
+        }
+        else
+        {
+            //Save into player properties (Rewrite)
+            ExitGames.Client.Photon.Hashtable tmpTab = new ExitGames.Client.Photon.Hashtable();
+            tmpTab.Add("h",tmpSelectedHeroCode);
+            PhotonNetwork.player.SetCustomProperties(tmpTab);
+            //return to roomView
+            closeHeroSelectionPanel();
+        }
+    }
+    // Opens heroSelection UI
+    public void openHeroSelectionPanel()
+    {
+        //Debug.Log("Pride not");
+        changeActiveStatus(HeroSelectionUI, "open");
+        // List heroes again, check if there should be some disabled.
+        populateHeroSelectionList();
+
+    }
+    public void closeHeroSelectionPanel()
+    {
+        changeActiveStatus(HeroSelectionUI, "close");
     }
     public void setPlayerHeroSelection(int pos, PhotonPlayer curClient)
     {
@@ -145,7 +214,7 @@ public class GameController : MonoBehaviour
                 {
 
                     string tempHeroCode = playerCusProp["h"].ToString(); ;
-                    roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = tempHeroCode;
+                    roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(tempHeroCode);
                 }
                 else
                 {
@@ -156,8 +225,8 @@ public class GameController : MonoBehaviour
             {
                 if (playerCusProp["h"] != "")
                 {
-                    string tempHeroCode = playerCusProp["h"].ToString() ;
-                    roomUIClassHolders[pos].transform.GetChild(0).GetComponent<Text>().text = tempHeroCode;
+                    string tempHeroCode = playerCusProp["h"].ToString();
+                    roomUIClassHolders[pos].transform.GetChild(0).GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(tempHeroCode);
                 }
                 else
                 {
@@ -174,6 +243,7 @@ public class GameController : MonoBehaviour
                 sht.transform.localScale = Vector3.one;
                 sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
                 sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                sht.GetComponent<Button>().onClick.AddListener(() => openHeroSelectionPanel());
             }
             else
             {
@@ -181,7 +251,7 @@ public class GameController : MonoBehaviour
                 sht.transform.SetParent(roomUIClassHolders[pos].transform);
                 sht.transform.localScale = Vector3.one;
                 sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-                sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                sht.GetComponent<RectTransform>().anchoredPosition =new Vector2(50,0);
                 sht.GetComponent<Text>().text = "";
             }
         }
@@ -221,77 +291,6 @@ public class GameController : MonoBehaviour
             }
             //
             setMasterOptionsForRoom();
-            // Depending on the position UPDATE either select character or only display character
-            /*
-            int x = 0;
-            foreach (int key in list)
-            {
-                //Collect information
-                ExitGames.Client.Photon.Hashtable roomCusProp = PhotonNetwork.room.customProperties;
-                //
-                if (diCk[key].isLocal)
-                {
-                    if (roomUIClassHolders[x].transform.childCount == 1)
-                    {
-                        //Outputs text into the button
-                        if (roomCusProp["h" + (x + 1).ToString()] != "")
-                        {
-
-                            string tempHeroCode = roomCusProp["h" + (x + 1).ToString()].ToString(); ;
-                            roomUIClassHolders[x].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = tempHeroCode;
-                        }
-                        else
-                        {
-                            roomUIClassHolders[x].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = "Select your Hero !";
-                        }
-                    }
-                    else if (roomUIClassHolders[x].transform.childCount == 0)
-                    {
-                        GameObject sht = Instantiate(selectHeroButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-                        sht.transform.SetParent(roomUIClassHolders[x].transform);
-                        sht.transform.localScale = Vector3.one;
-                        sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-                        sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                    }
-                    else
-                    {
-                        // We have a problem here >X
-                        errorDisplay_open("Too many GameObjects in " + roomUIClassHolders[x].name, "0003");
-                    }
-                }
-                else 
-                {
-                    if (roomUIClassHolders[x].transform.childCount == 1)
-                    {
-                        //Outputs text depending on the char selection
-                        if (roomCusProp["h" + (x + 1).ToString()] != "")
-                        {
-                            string tempHeroCode = roomCusProp["h" + (x + 1).ToString()].ToString(); ;
-                            roomUIClassHolders[x].transform.GetChild(0).GetComponent<Text>().text = tempHeroCode;
-                        }
-                        else
-                        {
-                            roomUIClassHolders[x].transform.GetChild(0).GetComponent<Text>().text = "";
-                        }
-                    }
-                    else if (roomUIClassHolders[x].transform.childCount == 0)
-                    {
-                        GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-                        sht.transform.SetParent(roomUIClassHolders[x].transform);
-                        sht.transform.localScale = Vector3.one;
-                        sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-                        sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                        sht.GetComponent<Text>().text = "";
-                    }
-                    else
-                    {
-                        errorDisplay_open("Too many GameObjects in " + roomUIClassHolders[x].name, "0003");
-                    }
-
-                }
-                x++;
-            }
-            */
             //Update once per second
             yield return new WaitForSeconds(1f);
         }
@@ -430,6 +429,8 @@ public class GameController : MonoBehaviour
             Type thisType = this.GetType();
             MethodInfo theMethod = thisType.GetMethod("extraRoom_open" + selectedExtra);
             theMethod.Invoke(this, null);
+            // Clears the Join ROom List on all  method calls
+            listOfRooms_clearList();
         }
     }
     // Open options panel
@@ -439,6 +440,7 @@ public class GameController : MonoBehaviour
         {
             if (key.name == "OptionsWrap") changeActiveStatus(key, "open");
         }
+
     }
     public void extraRoom_openJoin()
     {
@@ -446,7 +448,9 @@ public class GameController : MonoBehaviour
         {
             if (key.name == "JoinWrap") changeActiveStatus(key, "open");
         }
+
         // What to do on open list of rooms ? List teh rooms ane. baaak.
+
         // Call function refreshPhotonRooms
 
     }
@@ -459,6 +463,32 @@ public class GameController : MonoBehaviour
         foreach (GameObject key in extraOptionsUI)
         {
             if (key.name == "CreateWrap") changeActiveStatus(key, "open");
+        }
+
+    }
+    // Clear all rooms in List Of Rooms
+    public void listOfRooms_clearList()
+    {
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform tran in ListOfRoomsContent.transform)
+        {
+            children.Add(tran.gameObject);
+        }
+        foreach (GameObject key in children)
+        {
+            Destroy(key);
+        }
+    }
+    public void destroyAllChildGameObjects(GameObject parentObj)
+    {
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform tran in parentObj.transform)
+        {
+            children.Add(tran.gameObject);
+        }
+        foreach (GameObject key in children)
+        {
+            Destroy(key);
         }
     }
     // Testing method linked to Testing Button
@@ -484,11 +514,17 @@ public class GameController : MonoBehaviour
         rp.Add("h4", "H04");
         PhotonNetwork.room.SetCustomProperties(rp);
         */
+        /*
         ExitGames.Client.Photon.Hashtable getHasTable = PhotonNetwork.room.customProperties;
         foreach (DictionaryEntry row in getHasTable)
         {
             Debug.Log(row.Key + "/" + row.Value);
         }
+         * */
+
+        //
+        Debug.Log(HeroInformation.instance.return_HeroName_OnCode("H02"));
+        Debug.Log(HeroInformation.instance.return_HeroCode_OnName("Constantine"));
         //   
         //PhotonNetwork.room.SetCustomProperties(1, "test");
 
