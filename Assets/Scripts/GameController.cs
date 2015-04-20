@@ -12,6 +12,9 @@ public class GameController : MonoBehaviour
     // Player name input
     public GameObject playerNameInput;
 
+    // MAX possible players in lobby for cleaning or setting purposes
+    public int maxPlayerPossible = 4;
+    //
     // Ui Section GameObjects
     public GameObject errorUI;
     public GameObject errorText;
@@ -88,6 +91,7 @@ public class GameController : MonoBehaviour
         if (PhotonNetwork.inRoom)
         {
             List<string> takenHeroes = new List<string>();
+            // Adds already selected heroes.
             foreach (PhotonPlayer tarPlayer in PhotonNetwork.playerList)
             {
                 //Disables taken or unavailable heroes
@@ -100,6 +104,7 @@ public class GameController : MonoBehaviour
                     }
                 }
             }
+            // Adds heroes that the player does not own - Possible later on with player accounting.
             for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
             {
                 GameObject bu = Instantiate(heroSelectionButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
@@ -129,6 +134,9 @@ public class GameController : MonoBehaviour
         }
     }
     // Select Hero
+    // Parameters:
+    //  -_heroName  - String value of the hero name. Example: Constantine
+    //  - heroAvailable - Bool, true if he can select the hero, false if hero select is not possible. (Account for later when hero selecting will be limited. Might be deprecated since i might just populate the takenHero array isntead)
     void heroSelection(string _heroName = "", bool heroAvailable = true)
     {
         for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
@@ -136,6 +144,16 @@ public class GameController : MonoBehaviour
             if (HeroInformation.instance.heroes[i].ToString() == _heroName)
             {
                 //Add picture or Animated prefab
+                foreach (GameObject key in HeroInformation.instance.heroSelectionPrefabs_heroes)
+                {
+                    if (key.name == _heroName)
+                    {
+                        GameObject heroPortrait = Instantiate(key, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                        heroPortrait.transform.SetParent(selectedHeroPortrait.transform);
+                        heroPortrait.GetComponent<Transform>().localPosition = new Vector3(0, -20, 0);
+                    }
+                }
+                
 
                 //Add Information Text
                 selectedHeroInformation.GetComponent<Text>().text = HeroInformation.instance.heroes[i].Information;
@@ -265,7 +283,7 @@ public class GameController : MonoBehaviour
     {
         while(this.gameStatus == "roomLobby")
         {
-            // Clean
+            // Clean Players
             CleanPlayerRoomList();
             // Sorting
             Dictionary<int, PhotonPlayer> diCk = new Dictionary<int, PhotonPlayer>();
@@ -287,7 +305,14 @@ public class GameController : MonoBehaviour
                 ExitGames.Client.Photon.Hashtable playerProp = diCk[key].allProperties;
                 setPlayerHeroSelection(i, diCk[key]);
                 i++;
-                
+            }
+            // Cleans class selections
+            if (i < maxPlayerPossible) // ?
+            {
+                for (int k = i; k < maxPlayerPossible; k++)
+                {
+                    destroyAllChildGameObjects(this.roomUIClassHolders[k]);
+                }
             }
             //
             setMasterOptionsForRoom();
@@ -316,7 +341,7 @@ public class GameController : MonoBehaviour
     }
     private void CleanPlayerRoomList()
     {
-        for(int i = 0; i < 4; i++)
+        for (int i = 0; i < maxPlayerPossible; i++)
         {
             if (GameController.instance.roomUINames.Length > i)
                 GameController.instance.roomUINames[i].GetComponent<Text>().text = "";

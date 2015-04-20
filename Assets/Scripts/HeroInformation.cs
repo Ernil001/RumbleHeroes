@@ -6,7 +6,9 @@ public class HeroInformation : MonoBehaviour
 {
     //This class will only handle populating heroes as objects to save information;
     public static HeroInformation instance = null;
-
+    //
+    public GameObject[] heroSelectionPrefabs_heroes;
+    //
     public List<HeroClass> heroes;
 
     void Awake()
