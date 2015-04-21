@@ -137,13 +137,17 @@ public class GameController : MonoBehaviour
     // Parameters:
     //  -_heroName  - String value of the hero name. Example: Constantine
     //  - heroAvailable - Bool, true if he can select the hero, false if hero select is not possible. (Account for later when hero selecting will be limited. Might be deprecated since i might just populate the takenHero array isntead)
-    void heroSelection(string _heroName = "", bool heroAvailable = true)
+    void heroSelection(string _heroName = ""/*, bool heroAvailable = true*/)
     {
         for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
         {
             if (HeroInformation.instance.heroes[i].ToString() == _heroName)
             {
                 //Add picture or Animated prefab
+                // CURRENTLY NOT WORKING DUE TO NO CORRECT PREFABS HUE HUE >X
+                
+                //Clear parent GameObject
+                destroyAllChildGameObjects(selectedHeroPortrait);
                 foreach (GameObject key in HeroInformation.instance.heroSelectionPrefabs_heroes)
                 {
                     if (key.name == _heroName)
@@ -153,8 +157,6 @@ public class GameController : MonoBehaviour
                         heroPortrait.GetComponent<Transform>().localPosition = new Vector3(0, -20, 0);
                     }
                 }
-                
-
                 //Add Information Text
                 selectedHeroInformation.GetComponent<Text>().text = HeroInformation.instance.heroes[i].Information;
                 //Add Hero Name
@@ -514,6 +516,44 @@ public class GameController : MonoBehaviour
         foreach (GameObject key in children)
         {
             Destroy(key);
+        }
+    }
+    //
+    public void startGame()
+    {
+        bool continueLoad = true;
+        string errorMsg = "";
+        // Verifies needed data if 4 players ^^ if all players have set heroes
+        foreach (PhotonPlayer pl in PhotonNetwork.playerList)
+        {
+            if (!continueLoad) break;
+            ExitGames.Client.Photon.Hashtable ch = new ExitGames.Client.Photon.Hashtable();
+            ch = pl.customProperties;
+            if (ch["h"] == "")
+            {
+                errorMsg += "All players must choose a hero ! \n";
+                continueLoad = false;
+            }
+        }
+        /* Disabled for testing purposes.
+        if (continueLoad)
+        {
+            if (PhotonNetwork.room.playerCount != PhotonNetwork.room.maxPlayers)
+            {
+                errorMsg += "The room needs " + PhotonNetwork.room.maxPlayers.ToString() + " players !\n";
+                continueLoad = false;
+            }
+        }
+         * */
+        //
+        if (continueLoad)
+        {
+            //Start game
+        }
+        else
+        {
+            // Game cannot continue
+            errorDisplay_open(errorMsg);
         }
     }
     // Testing method linked to Testing Button
