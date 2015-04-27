@@ -230,55 +230,89 @@ public class GameController : MonoBehaviour
         {
             if (curClient.isLocal)
             {
-                if (playerCusProp["h"] != "")
+                // CHeck if proper exists, prevents error // Gotta fix this proper at some point
+                // this fucking code. Fyck uy. NIGGER ASS CODE. Cant do it in the same loop it recognizes still 2 childreen.
+                if (roomUIClassHolders[pos].transform.GetChild(0).name == "SelectedHeroesText(Clone)")
                 {
-
-                    string tempHeroCode = playerCusProp["h"].ToString(); ;
-                    roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(tempHeroCode);
+                    setPlayerHeroSelection_createChild(curClient.isLocal, pos);
                 }
                 else
                 {
-                    roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = "Select your Hero !";
+                    if (playerCusProp["h"] != "")
+                    {
+                        string tempHeroCode = playerCusProp["h"].ToString();
+                        // Check if correct child exists to populate information, otherwise create it.
+                        Debug.Log(roomUIClassHolders[pos].transform.GetChildCount().ToString());
+                        roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(tempHeroCode);
+                    }
+                    else
+                    {
+                        roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = "Select your Hero !";
+                    }
                 }
             }
             else
             {
-                if (playerCusProp["h"] != "")
+                //Checks if proper child exists, prevents errors
+                if (roomUIClassHolders[pos].transform.GetChild(0).name != "SelectedHeroesText(Clone)")
                 {
-                    string tempHeroCode = playerCusProp["h"].ToString();
-                    roomUIClassHolders[pos].transform.GetChild(0).GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(tempHeroCode);
+                    setPlayerHeroSelection_createChild(curClient.isLocal, pos);
                 }
                 else
                 {
-                    roomUIClassHolders[pos].transform.GetChild(0).GetComponent<Text>().text = "";
+
+                    //
+                    if (playerCusProp["h"] != "")
+                    {
+                        string tempHeroCode = playerCusProp["h"].ToString();
+                        roomUIClassHolders[pos].transform.GetChild(0).GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(tempHeroCode);
+                    }
+                    else
+                    {
+                        roomUIClassHolders[pos].transform.GetChild(0).GetComponent<Text>().text = "";
+                    }
                 }
             }
         }
         else if (roomUIClassHolders[pos].transform.childCount == 0)
         {
-            if (curClient.isLocal)
-            {
-                GameObject sht = Instantiate(selectHeroButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-                sht.transform.SetParent(roomUIClassHolders[pos].transform);
-                sht.transform.localScale = Vector3.one;
-                sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-                sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                sht.GetComponent<Button>().onClick.AddListener(() => openHeroSelectionPanel());
-            }
-            else
-            {
-                GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-                sht.transform.SetParent(roomUIClassHolders[pos].transform);
-                sht.transform.localScale = Vector3.one;
-                sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-                sht.GetComponent<RectTransform>().anchoredPosition =new Vector2(50,0);
-                sht.GetComponent<Text>().text = "";
-            }
+            setPlayerHeroSelection_createChild(curClient.isLocal, pos);
         }
         else 
         {
             // We have a problem here >X
             errorDisplay_open("Too many GameObjects in " + roomUIClassHolders[pos].name, "0003");
+        }
+    }
+    // Functions for creating correct child.
+    public void setPlayerHeroSelection_createChild(bool isLocal, int pos)
+    {
+        // Delete child if exists
+        destroyAllChildGameObjects(roomUIClassHolders[pos]);
+        // Repopulate with correct child
+        if (isLocal)
+        {
+            Debug.Log("Creates new Local button");
+            GameObject sht = Instantiate(selectHeroButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            sht.transform.SetParent(roomUIClassHolders[pos].transform);
+            sht.transform.localScale = Vector3.one;
+            sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+            sht.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            sht.GetComponent<Button>().onClick.AddListener(() => openHeroSelectionPanel());
+
+
+            Debug.Log(roomUIClassHolders[pos].transform.GetChild(0).name + " / " + roomUIClassHolders[pos].transform.GetChildCount().ToString());
+        }
+        //
+        else 
+        {
+            Debug.Log("Creates new text");
+            GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            sht.transform.SetParent(roomUIClassHolders[pos].transform);
+            sht.transform.localScale = Vector3.one;
+            sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+            sht.GetComponent<RectTransform>().anchoredPosition = new Vector2(50, 0);
+            sht.GetComponent<Text>().text = "";
         }
     }
     IEnumerator UpdateGameLobby ()
