@@ -13,7 +13,9 @@ public class GameController : MonoBehaviour
     // r - roomLobby
     public Color32 rRegBack = new Color32(255,255,255,0);
     public Color32 rDifBack = new Color32(67, 88, 70, 255);
-
+    //Main UI layers
+    public GameObject UI_mainMenu;
+    public GameObject UI_game;
     // Player name input
     public GameObject playerNameInput;
 
@@ -65,6 +67,10 @@ public class GameController : MonoBehaviour
             if(value == "roomLobby")
             {
                 StartCoroutine(UpdateGameLobby());
+            }
+            else if (value == "running")
+            {
+                StartCoroutine(UpdateGameScreen());
             }
         }
         get
@@ -318,10 +324,22 @@ public class GameController : MonoBehaviour
             sht.GetComponent<Text>().text = "";
         }
     }
+    IEnumerator UpdateGameScreen()
+    {
+        while (this.gameStatus == "running")
+        {
+            //Debug.Log("running");
+            //Displaying PlayerIconTop
+            
+            yield return new WaitForSeconds(1f);
+        }
+    }
+    //
     IEnumerator UpdateGameLobby ()
     {
         while(this.gameStatus == "roomLobby")
         {
+            //Debug.Log("roomLobby");
             // Clean Players
             CleanPlayerRoomList();
             // Sorting
@@ -589,7 +607,7 @@ public class GameController : MonoBehaviour
         }
     }
     //
-    public void startGame()
+    public void startGame_host()
     {
         bool continueLoad = true;
         string errorMsg = "";
@@ -614,18 +632,37 @@ public class GameController : MonoBehaviour
                 continueLoad = false;
             }
         }
-         * */
+        */
         //
         if (continueLoad)
         {
             //Start game
-            Debug.Log("Starting the game !");
+            // Must send RPC call to all players.
+            startGame_client();
         }
         else
         {
             // Game cannot continue
             errorDisplay_open(errorMsg);
         }
+    }
+    public void startGame_client()
+    {
+
+        // Hide the UI
+        changeActiveStatus(this.UI_mainMenu, false);
+        // Display game UI
+        changeActiveStatus(this.UI_game, true);
+        // Stopping the lobby loop with changin gameStatus
+        this.GameStatus = "running";
+        // Loads the GameMode // sets default since there is no options for this yet while creating server.
+        GameMode.Mode = "Death Match";
+        GameMode.PlayerCount = 4;
+        // Load the map
+
+        // Load the player prefab
+
+        //
     }
     // Testing method linked to Testing Button
     public void testingMethod()
