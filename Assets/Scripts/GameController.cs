@@ -9,6 +9,11 @@ using System.Reflection;
 public class GameController : MonoBehaviour 
 {
     public static GameController instance = null;
+    // Design color variables tbh dunno why, just felt like it :D
+    // r - roomLobby
+    public Color32 rRegBack = new Color32(255,255,255,0);
+    public Color32 rDifBack = new Color32(67, 88, 70, 255);
+
     // Player name input
     public GameObject playerNameInput;
 
@@ -27,6 +32,7 @@ public class GameController : MonoBehaviour
     public GameObject[] roomUIKickButtons;
     public GameObject[] roomUIClassHolders;
     public GameObject[] extraOptionsUI;
+    public GameObject roomLobbyStartButton;
     // List of Rooms
     public GameObject ListOfRoomsContent;
     public GameObject roomRow;  // prefab RoomRow
@@ -242,7 +248,7 @@ public class GameController : MonoBehaviour
                     {
                         string tempHeroCode = playerCusProp["h"].ToString();
                         // Check if correct child exists to populate information, otherwise create it.
-                        Debug.Log(roomUIClassHolders[pos].transform.GetChildCount().ToString());
+                        //Debug.Log(roomUIClassHolders[pos].transform.GetChildCount().ToString());
                         roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(tempHeroCode);
                     }
                     else
@@ -260,7 +266,6 @@ public class GameController : MonoBehaviour
                 }
                 else
                 {
-
                     //
                     if (playerCusProp["h"] != "")
                     {
@@ -292,7 +297,6 @@ public class GameController : MonoBehaviour
         // Repopulate with correct child
         if (isLocal)
         {
-            Debug.Log("Creates new Local button");
             GameObject sht = Instantiate(selectHeroButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             sht.transform.SetParent(roomUIClassHolders[pos].transform);
             sht.transform.localScale = Vector3.one;
@@ -301,12 +305,11 @@ public class GameController : MonoBehaviour
             sht.GetComponent<Button>().onClick.AddListener(() => openHeroSelectionPanel());
 
 
-            Debug.Log(roomUIClassHolders[pos].transform.GetChild(0).name + " / " + roomUIClassHolders[pos].transform.GetChildCount().ToString());
+            //Debug.Log(roomUIClassHolders[pos].transform.GetChild(0).name + " / " + roomUIClassHolders[pos].transform.GetChildCount().ToString());
         }
         //
         else 
         {
-            Debug.Log("Creates new text");
             GameObject sht = Instantiate(selectHeroText, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             sht.transform.SetParent(roomUIClassHolders[pos].transform);
             sht.transform.localScale = Vector3.one;
@@ -340,6 +343,11 @@ public class GameController : MonoBehaviour
                 AddPlayerToRoomList(diCk[key].name, i, diCk[key].isMasterClient);
                 ExitGames.Client.Photon.Hashtable playerProp = diCk[key].allProperties;
                 setPlayerHeroSelection(i, diCk[key]);
+                // Visual difference for you and other players
+                setDifferentDisplayForPlayers(i, diCk[key]);
+                
+                //if(diCk[key].isLocal) 
+
                 i++;
             }
             // Cleans class selections
@@ -348,6 +356,8 @@ public class GameController : MonoBehaviour
                 for (int k = i; k < maxPlayerPossible; k++)
                 {
                     destroyAllChildGameObjects(this.roomUIClassHolders[k]);
+                    //Sets default color
+
                 }
             }
             //
@@ -356,7 +366,18 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
     }
-    
+    //
+    public void setDifferentDisplayForPlayers(int playerIndex, PhotonPlayer player)
+    {
+        if (player.isLocal)
+        {
+            roomUINames[playerIndex].transform.parent.GetComponent<Image>().color = this.rDifBack;
+        }
+        else
+        {
+            roomUINames[playerIndex].transform.parent.GetComponent<Image>().color = this.rRegBack;
+        }
+    }
     //
     private void AddPlayerToRoomList(string PlayerName, int playerIndex, bool isMaster = false)
     {
@@ -430,6 +451,16 @@ public class GameController : MonoBehaviour
         else if (force == "open") targetObj.SetActive(true);
         else if(force == "close") targetObj.SetActive(false);
     }
+    public void changeActiveStatus(GameObject targetObj, bool force)
+    {
+        if (force == null)
+        {
+            if (targetObj.activeSelf == true) targetObj.SetActive(false);
+            else targetObj.SetActive(true);
+        }
+        else if (force == true) targetObj.SetActive(true);
+        else if (force == false) targetObj.SetActive(false);
+    }
     // CLeaning up RoomLobbyUI on leave room.
     public void cleanRoomLobby()
     {
@@ -452,13 +483,18 @@ public class GameController : MonoBehaviour
     {
         if (roomLobby.activeSelf)
         {
+            // hides or shows kick buttons
             for (int x = 0; x < roomUIKickButtons.Length; x++)
             {
                 if (roomUINames[x].GetComponent<Text>().text != "") roomUIKickButtons[x].SetActive(PhotonNetwork.isMasterClient);
                 else roomUIKickButtons[x].SetActive(false);
                 //roomUIKickButtons[x].SetActive(PhotonNetwork.isMasterClient);
             }
+            // If master display start button || if not hides
+            if(PhotonNetwork.isMasterClient) changeActiveStatus(roomLobbyStartButton, "open");
+            else changeActiveStatus(roomLobbyStartButton, "close");
         }
+        
     }
     // Add to room console
     public void addToRoomConsole(string textToAdd, bool newLine = true)
@@ -583,6 +619,7 @@ public class GameController : MonoBehaviour
         if (continueLoad)
         {
             //Start game
+            Debug.Log("Starting the game !");
         }
         else
         {

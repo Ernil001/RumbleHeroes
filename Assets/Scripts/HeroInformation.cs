@@ -18,6 +18,7 @@ public class HeroInformation : MonoBehaviour
         else if (instance != this) Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
         // Prepares the objects as references
+        // Create an object here and add the needed information in the hero.cs script.
         heroes = new List<HeroClass>();
         heroes.Add(new HeroClass(HeroEnum.Constantine));
         heroes.Add(new HeroClass(HeroEnum.Rolfo));
