@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-public class GameController : MonoBehaviour 
+public class GameController : Photon.MonoBehaviour 
 {
     public static GameController instance = null;
     // Design color variables tbh dunno why, just felt like it :D
@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour
     // Ui Section GameObjects
     public GameObject errorUI;
     public GameObject errorText;
+    public GameObject UI_GameUI_Top;
     //
     public GameObject roomLobbyConsole;
     public GameObject roomLobby;
@@ -35,6 +36,13 @@ public class GameController : MonoBehaviour
     public GameObject[] roomUIClassHolders;
     public GameObject[] extraOptionsUI;
     public GameObject roomLobbyStartButton;
+    public GameObject gamePlayerIcon;
+    // Maps
+    public GameObject[] mapsFolder;
+    // Heroes
+    public GameObject[] heroesFolder;
+    // Main Camera
+    public GameObject mainCamera;
     // List of Rooms
     public GameObject ListOfRoomsContent;
     public GameObject roomRow;  // prefab RoomRow
@@ -330,7 +338,16 @@ public class GameController : MonoBehaviour
         {
             //Debug.Log("running");
             //Displaying PlayerIconTop
-            
+            if (UI_GameUI_Top.transform.childCount > 0)
+            {
+                int x = 0;
+                foreach (PhotonPlayer pl in PhotonNetwork.playerList)
+                {
+                    UI_GameUI_Top.transform.GetChild(x).FindChild("PlayerName").GetComponent<Text>().text = pl.name;
+                    x++;
+                }
+            }
+
             yield return new WaitForSeconds(1f);
         }
     }
@@ -611,15 +628,36 @@ public class GameController : MonoBehaviour
     {
         bool continueLoad = true;
         string errorMsg = "";
-        // Verifies needed data if 4 players ^^ if all players have set heroes
-        foreach (PhotonPlayer pl in PhotonNetwork.playerList)
+        //Checks if room still exists
+        if(PhotonNetwork.room == null)
         {
-            if (!continueLoad) break;
-            ExitGames.Client.Photon.Hashtable ch = new ExitGames.Client.Photon.Hashtable();
-            ch = pl.customProperties;
-            if (ch["h"] == "")
+            errorMsg += "ERROR: Room does not exist anymore. \nCreate a new room or join another !\n";
+            continueLoad = false;
+
+        }
+        // Verifies needed data if 4 players ^^ if all players have set heroes
+        if(continueLoad)
+        {
+            List<string> selHeroes = new List<string>();
+            foreach (PhotonPlayer pl in PhotonNetwork.playerList)
             {
-                errorMsg += "All players must choose a hero ! \n";
+                if (!continueLoad) break;
+                ExitGames.Client.Photon.Hashtable ch = new ExitGames.Client.Photon.Hashtable();
+                ch = pl.customProperties;
+                if (ch["h"] == "")
+                {
+                    errorMsg += "All players must choose a hero ! \n";
+                    continueLoad = false;
+                }
+                else
+                {
+                    selHeroes.Add(ch["h"].ToString());
+                }
+            }
+            // check for if characters are same
+            if (selHeroes.Distinct().Count() != selHeroes.Count())
+            {
+                errorMsg += "ERROR: 2 players are more have selected the same hero. \n\nCreate a new room ! \n";
                 continueLoad = false;
             }
         }
@@ -637,8 +675,13 @@ public class GameController : MonoBehaviour
         if (continueLoad)
         {
             //Start game
+
+            //Disable joining into room and make it invisible
+            PhotonNetwork.room.open = false;
+            PhotonNetwork.room.visible = false;
             // Must send RPC call to all players.
-            startGame_client();
+            photonView.RPC("startGame_client", PhotonTargets.All);
+            //startGame_client();
         }
         else
         {
@@ -646,23 +689,32 @@ public class GameController : MonoBehaviour
             errorDisplay_open(errorMsg);
         }
     }
-    public void startGame_client()
+    [RPC] public void startGame_client()
     {
-
+      
         // Hide the UI
         changeActiveStatus(this.UI_mainMenu, false);
         // Display game UI
         changeActiveStatus(this.UI_game, true);
         // Stopping the lobby loop with changin gameStatus
         this.GameStatus = "running";
-        // Loads the GameMode // sets default since there is no options for this yet while creating server.
+        // Loads the GameMode // sets default since there is no options for this yet while creating server. This will be taken from customRoomProperties photon
         GameMode.Mode = "Death Match";
         GameMode.PlayerCount = 4;
-        // Load the map
-
+        GameMode.map = this.mapsFolder[0];
+        // Load the map // Presumes files have not been tempered with
+        Instantiate(GameMode.map, new Vector3(0, 0, 0), Quaternion.identity);
         // Load the player prefab
+        GameObject tmpPlayer = PhotonNetwork.Instantiate(this.heroesFolder[0].name, new Vector3(0, 0, 0), Quaternion.identity, 0);
+        mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
+        // Load the UI // Might change this to load the number of listed players and not the players that actually exists
+        foreach(PhotonPlayer pl in PhotonNetwork.playerList)
+        {
+            GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            temp_PlayerIconTop.transform.SetParent(UI_GameUI_Top.transform);
+            //temp_PlayerIconTop.transform.FindChild("PlayerName").GetComponent<Text>().text = pl.name;
+        }
 
-        //
     }
     // Testing method linked to Testing Button
     public void testingMethod()

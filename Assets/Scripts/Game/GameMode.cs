@@ -1,10 +1,13 @@
-﻿//using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System;
 
 public static class GameMode 
 {
     private static int playerCount;
+    private static string mode;
+    public static GameObject map;
+    //
     public static int PlayerCount
     {
         set
@@ -17,7 +20,6 @@ public static class GameMode
         }
     }
     //
-    private static string mode = "";
     public static string Mode 
     {
         set
@@ -29,4 +31,5 @@ public static class GameMode
             return mode;
         }
     }
+    //
 }
