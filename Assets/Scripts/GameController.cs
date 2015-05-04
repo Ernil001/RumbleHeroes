@@ -347,7 +347,6 @@ public class GameController : Photon.MonoBehaviour
                     x++;
                 }
             }
-
             yield return new WaitForSeconds(1f);
         }
     }
@@ -715,6 +714,11 @@ public class GameController : Photon.MonoBehaviour
             //temp_PlayerIconTop.transform.FindChild("PlayerName").GetComponent<Text>().text = pl.name;
         }
 
+    }
+    //Application quit
+    public void gameQuit()
+    {
+        Application.Quit();
     }
     // Testing method linked to Testing Button
     public void testingMethod()
