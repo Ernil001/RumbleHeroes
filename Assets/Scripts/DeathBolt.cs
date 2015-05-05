@@ -30,6 +30,7 @@ public class DeathBolt : Projectile
                 paramsForRPC[0] = this.damage;
                 paramsForRPC[1] = collidedObject.GetComponent<PhotonView>().ownerId;
                 paramsForRPC[2] = transform.position;
+                
 
                 //We hit another player
 
@@ -41,7 +42,6 @@ public class DeathBolt : Projectile
             /*PlayerController playerController = collidedObject.GetComponent<PlayerController>();
             playerController.currentHP = playerController.currentHP - this.damage;
             Debug.Log(playerController.currentHP);*/
-
             Destroy(gameObject);
         }
     }

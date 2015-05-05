@@ -47,7 +47,7 @@ public abstract class Projectile : MonoBehaviour {
 
         projectileBody.MovePosition(projectileBody.position + 
             projectileNextPos * speed *
-            Time.deltaTime);
+            Time.fixedDeltaTime);
 
 
         //Check if max distance has been reached
