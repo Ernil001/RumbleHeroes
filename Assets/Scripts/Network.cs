@@ -15,7 +15,7 @@ public class Network : MonoBehaviour
     //
     private IEnumerator setRoomProp;
     //
-    //
+
     // Use this for initialization
     void Start()
     {
@@ -149,7 +149,12 @@ public class Network : MonoBehaviour
     {
         //Set default values for custom properties
         ExitGames.Client.Photon.Hashtable cusProp = new ExitGames.Client.Photon.Hashtable();
+        // Selected hero
         cusProp.Add("h", "");
+        // Kills
+        cusProp.Add("k", "");
+        // Deaths
+        cusProp.Add("d", "");
         PhotonNetwork.player.SetCustomProperties(cusProp);
     }
     // On leading a room in photon it should clear all textx inside the RoomLobby UI section. MANUAL LEAVE

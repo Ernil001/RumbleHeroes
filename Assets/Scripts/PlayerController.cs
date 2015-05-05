@@ -73,7 +73,16 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("Running", false);
         }
-
+        //
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, true);
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, false);
+        }
+        //
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             playerRigidBody.AddForce(new Vector2(0, 25), ForceMode2D.Impulse);

@@ -26,6 +26,8 @@ public class GameController : Photon.MonoBehaviour
     public GameObject errorUI;
     public GameObject errorText;
     public GameObject UI_GameUI_Top;
+    public GameObject UI_GameUI_ScoreBoard;
+    public GameObject UI_GameUI_ScoreBoard_Score;
     //
     public GameObject roomLobbyConsole;
     public GameObject roomLobby;
@@ -35,8 +37,10 @@ public class GameController : Photon.MonoBehaviour
     public GameObject[] roomUIKickButtons;
     public GameObject[] roomUIClassHolders;
     public GameObject[] extraOptionsUI;
+    // Prefabs
     public GameObject roomLobbyStartButton;
     public GameObject gamePlayerIcon;
+    public GameObject score_PlayerWrap;
     // Maps
     public GameObject[] mapsFolder;
     // Heroes
@@ -343,7 +347,16 @@ public class GameController : Photon.MonoBehaviour
                 int x = 0;
                 foreach (PhotonPlayer pl in PhotonNetwork.playerList)
                 {
+                    // Future problem with displaying content in the ones that have left the game.
+                    ExitGames.Client.Photon.Hashtable plInfo = new ExitGames.Client.Photon.Hashtable();
+                    plInfo = pl.customProperties;
+
                     UI_GameUI_Top.transform.GetChild(x).FindChild("PlayerName").GetComponent<Text>().text = pl.name;
+
+                    UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Name").GetComponent<Text>().text = pl.name;
+                    UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Hero").GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString());
+                    UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Kills").GetComponent<Text>().text = plInfo["k"].ToString();
+                    UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Deaths").GetComponent<Text>().text = plInfo["d"].ToString();
                     x++;
                 }
             }
@@ -533,11 +546,14 @@ public class GameController : Photon.MonoBehaviour
     // Add to room console
     public void addToRoomConsole(string textToAdd, bool newLine = true)
     {
-        string newLineSet = "\n";
-        if (!newLine) newLineSet = "";
-        if (GameController.instance.GameStatus == "roomLobby")
-            GameController.instance.roomLobbyConsole.GetComponent<Text>().text += newLineSet + textToAdd;
-        else errorDisplay_open("Something is trying to be display in the Console of an open room, however the room is not opened !", "0002");
+        if (gameStatus == "roomLobby")
+        {
+            string newLineSet = "\n";
+            if (!newLine) newLineSet = "";
+            if (GameController.instance.GameStatus == "roomLobby")
+                GameController.instance.roomLobbyConsole.GetComponent<Text>().text += newLineSet + textToAdd;
+            else errorDisplay_open("Something is trying to be display in the Console of an open room, however the room is not opened !", "0002");
+        }
     }
     //Display ExtraRoomUI
     // Parameter is a string value that invokes a method inside the GameController.instance
@@ -707,12 +723,25 @@ public class GameController : Photon.MonoBehaviour
         GameObject tmpPlayer = PhotonNetwork.Instantiate(this.heroesFolder[0].name, new Vector3(0, 0, 0), Quaternion.identity, 0);
         mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
         // Load the UI // Might change this to load the number of listed players and not the players that actually exists
+            // TopPlayerIcons && ScoreBoard info for players
         foreach(PhotonPlayer pl in PhotonNetwork.playerList)
+        {
+            GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            temp_PlayerIconTop.transform.SetParent(UI_GameUI_Top.transform);
+
+            GameObject temp_scorePlayer = Instantiate(this.score_PlayerWrap, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            temp_scorePlayer.transform.SetParent(UI_GameUI_ScoreBoard_Score.transform);
+
+            //temp_PlayerIconTop.transform.FindChild("PlayerName").GetComponent<Text>().text = pl.name;
+        }
+        /*
+        foreach (PhotonPlayer pl in PhotonNetwork.playerList)
         {
             GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             temp_PlayerIconTop.transform.SetParent(UI_GameUI_Top.transform);
             //temp_PlayerIconTop.transform.FindChild("PlayerName").GetComponent<Text>().text = pl.name;
         }
+        */
 
     }
     //Application quit
