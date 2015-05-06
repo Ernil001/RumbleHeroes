@@ -5,6 +5,7 @@ using System;
 public static class GameMode 
 {
     private static int playerCount;
+    private static int winKillCondition;
     private static string mode;
     public static GameObject map;
     //
@@ -29,6 +30,18 @@ public static class GameMode
         get 
         {
             return mode;
+        }
+    }
+    //
+    public static int WinKillCondition
+    {
+        set
+        {
+            winKillCondition = value;
+        }
+        get
+        {
+            return winKillCondition;
         }
     }
     //

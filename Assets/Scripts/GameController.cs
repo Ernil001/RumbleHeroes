@@ -707,6 +707,9 @@ public class GameController : Photon.MonoBehaviour
     [RPC] public void startGame_client()
     {
       
+        // Get player settings
+        ExitGames.Client.Photon.Hashtable plInfo = new ExitGames.Client.Photon.Hashtable();
+        plInfo = PhotonNetwork.player.customProperties;
         // Hide the UI
         changeActiveStatus(this.UI_mainMenu, false);
         // Display game UI
@@ -716,11 +719,12 @@ public class GameController : Photon.MonoBehaviour
         // Loads the GameMode // sets default since there is no options for this yet while creating server. This will be taken from customRoomProperties photon
         GameMode.Mode = "Death Match";
         GameMode.PlayerCount = 4;
+        GameMode.WinKillCondition = 100;
         GameMode.map = this.mapsFolder[0];
         // Load the map // Presumes files have not been tempered with
         Instantiate(GameMode.map, new Vector3(0, 0, 0), Quaternion.identity);
         // Load the player prefab
-        GameObject tmpPlayer = PhotonNetwork.Instantiate(this.heroesFolder[0].name, new Vector3(0, 0, 0), Quaternion.identity, 0);
+        GameObject tmpPlayer = PhotonNetwork.Instantiate(HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString()), new Vector3(0, 0, 0), Quaternion.identity, 0);
         mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
         // Load the UI // Might change this to load the number of listed players and not the players that actually exists
             // TopPlayerIcons && ScoreBoard info for players
@@ -728,20 +732,33 @@ public class GameController : Photon.MonoBehaviour
         {
             GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             temp_PlayerIconTop.transform.SetParent(UI_GameUI_Top.transform);
-
             GameObject temp_scorePlayer = Instantiate(this.score_PlayerWrap, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             temp_scorePlayer.transform.SetParent(UI_GameUI_ScoreBoard_Score.transform);
+        }
 
-            //temp_PlayerIconTop.transform.FindChild("PlayerName").GetComponent<Text>().text = pl.name;
-        }
-        /*
-        foreach (PhotonPlayer pl in PhotonNetwork.playerList)
-        {
-            GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-            temp_PlayerIconTop.transform.SetParent(UI_GameUI_Top.transform);
-            //temp_PlayerIconTop.transform.FindChild("PlayerName").GetComponent<Text>().text = pl.name;
-        }
-        */
+
+    }
+    // Add KILL point to local client
+    public void addKillPoint()
+    {
+        ExitGames.Client.Photon.Hashtable getKill = new ExitGames.Client.Photon.Hashtable();
+        getKill = PhotonNetwork.player.customProperties;
+        getKill["k"] = (Convert.ToInt32(getKill["k"]) + 1).ToString();
+        PhotonNetwork.player.SetCustomProperties(getKill);
+    }
+    // Add DEATH point to local client
+    public void addDeathPoint()
+    {
+        ExitGames.Client.Photon.Hashtable getKill = new ExitGames.Client.Photon.Hashtable();
+        getKill = PhotonNetwork.player.customProperties;
+        getKill["d"] = (Convert.ToInt32(getKill["d"]) + 1).ToString();
+        PhotonNetwork.player.SetCustomProperties(getKill);
+    }
+    // End the game and return to mainMenu
+    public void endGame_client()
+    {
+        //Ends the proccess and shows the ending screen // Could just freeze everything and lock the scoreboard on active // Shows extra button to quit Maybe ESC ?
+
 
     }
     //Application quit

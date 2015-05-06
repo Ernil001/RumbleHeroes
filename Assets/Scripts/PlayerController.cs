@@ -82,6 +82,10 @@ public class PlayerController : MonoBehaviour
         {
             GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, false);
         }
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            GameController.instance.addKillPoint();
+        }
         //
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
@@ -168,7 +172,7 @@ public class PlayerController : MonoBehaviour
         if (punView.ownerId == playerHitId)
             this.currentHP -= damage;
 
-        Destroy()
+        //Destroy()
     }
 
     [RPC] void FireProjectile(Vector3 pos, Quaternion rot, int ownerId, string projectileName)
