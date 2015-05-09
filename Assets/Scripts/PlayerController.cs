@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("Running", false);
         }
         //
+        /*
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, true);
@@ -82,10 +83,17 @@ public class PlayerController : MonoBehaviour
         {
             GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, false);
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            //Show Main Menu UI if game is running
+            GameController.instance.changeActiveStatus(GameController.instance.UI_mainMenu);
+        }
+        // For Testing
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             GameController.instance.addKillPoint();
         }
+        */
         //
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {

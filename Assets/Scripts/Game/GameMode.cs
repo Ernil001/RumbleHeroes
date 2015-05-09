@@ -4,6 +4,7 @@ using System;
 
 public static class GameMode 
 {
+    //
     private static int playerCount;
     private static int winKillCondition;
     private static string mode;

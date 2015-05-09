@@ -28,6 +28,11 @@ public class GameController : Photon.MonoBehaviour
     public GameObject UI_GameUI_Top;
     public GameObject UI_GameUI_ScoreBoard;
     public GameObject UI_GameUI_ScoreBoard_Score;
+    public GameObject UI_MainMenuUI_MainMenuWrap_InputField; //This will be remade later.
+    public GameObject UI_MainMenuUI_MainMenuWrap_CreateRoom;
+    public GameObject UI_MainMenuUI_MainMenuWrap_JoinRoom;
+    public GameObject UI_MainMenuUI_MainMenuWrap_ReturnToGame;
+    public GameObject UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu;
     //
     public GameObject roomLobbyConsole;
     public GameObject roomLobby;
@@ -556,8 +561,8 @@ public class GameController : Photon.MonoBehaviour
         }
     }
     //Display ExtraRoomUI
-    // Parameter is a string value that invokes a method inside the GameController.instance
-    public void displayExtraRoom(string selectedExtra)
+    // Parameter is a string value that invokes a method inside the GameController.instance Its optional if no string value it hides all
+    public void displayExtraRoom(string selectedExtra = "")
     {
         bool windowStatus = true;
         // Hide All
@@ -568,10 +573,10 @@ public class GameController : Photon.MonoBehaviour
                 windowStatus = false;
             }
 
-            changeActiveStatus(key,"close");
+            changeActiveStatus(key, false);
         }
         // Show correct one.
-        if (windowStatus)
+        if (windowStatus && selectedExtra != "")
         {
             Type thisType = this.GetType();
             MethodInfo theMethod = thisType.GetMethod("extraRoom_open" + selectedExtra);
@@ -704,14 +709,30 @@ public class GameController : Photon.MonoBehaviour
             errorDisplay_open(errorMsg);
         }
     }
+    //
+    // Main function to go from idle game in main menu and lobbies to an active game with evetything set up.
+    //
     [RPC] public void startGame_client()
-    {
-      
+    { 
+        // All the proccesses here should be synched and displayed only when all players have loaded their side.
+        /////////////////////////
         // Get player settings
         ExitGames.Client.Photon.Hashtable plInfo = new ExitGames.Client.Photon.Hashtable();
         plInfo = PhotonNetwork.player.customProperties;
         // Hide the UI
         changeActiveStatus(this.UI_mainMenu, false);
+        displayExtraRoom();
+        // Clean room UI
+        this.cleanRoomLobby();
+        changeActiveStatus(GameController.instance.roomLobby, false);
+        // Sets InputKeys
+        InputKeys.instance.InputType = "Game";
+        // Hide unnecessary buttons and show the neccesarry ones
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_CreateRoom, false);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_JoinRoom, false);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, false);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToGame, true);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu, true);
         // Display game UI
         changeActiveStatus(this.UI_game, true);
         // Stopping the lobby loop with changin gameStatus
@@ -735,8 +756,42 @@ public class GameController : Photon.MonoBehaviour
             GameObject temp_scorePlayer = Instantiate(this.score_PlayerWrap, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             temp_scorePlayer.transform.SetParent(UI_GameUI_ScoreBoard_Score.transform);
         }
-
-
+        
+    }
+    //
+    // Main function for returning from active game to idle main menu
+    //
+    public void endGame_client()
+    {
+        if (PhotonNetwork.LeaveRoom())
+        {
+            //
+            InputKeys.instance.InputType = "MainMenu";
+            // Hide unnecessary buttons and show the neccesarry ones
+            changeActiveStatus(UI_MainMenuUI_MainMenuWrap_CreateRoom, true);
+            changeActiveStatus(UI_MainMenuUI_MainMenuWrap_JoinRoom, true);
+            changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, true);
+            changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToGame, false);
+            changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu, false);
+            //
+            this.GameStatus = "";
+            //
+            changeActiveStatus(this.UI_mainMenu, true);
+            changeActiveStatus(this.UI_game, false);
+            //Destroy all unnecessary GameObjects - Map, Players, etc...
+            
+            //
+        }
+        else
+        {
+            //Crit Error i need a way to do this.
+            errorDisplay_open("ERROR while leaving the photon room.");
+        }
+    }
+    // Close Main Menu and return to game
+    public void returnToGame_fromMainMenu()
+    {
+        changeActiveStatus(GameController.instance.UI_mainMenu, false);
     }
     // Add KILL point to local client
     public void addKillPoint()
@@ -753,13 +808,6 @@ public class GameController : Photon.MonoBehaviour
         getKill = PhotonNetwork.player.customProperties;
         getKill["d"] = (Convert.ToInt32(getKill["d"]) + 1).ToString();
         PhotonNetwork.player.SetCustomProperties(getKill);
-    }
-    // End the game and return to mainMenu
-    public void endGame_client()
-    {
-        //Ends the proccess and shows the ending screen // Could just freeze everything and lock the scoreboard on active // Shows extra button to quit Maybe ESC ?
-
-
     }
     //Application quit
     public void gameQuit()
