@@ -9,6 +9,7 @@ public static class GameMode
     private static int winKillCondition;
     private static string mode;
     public static GameObject map;
+    public static GameObject instantiatedMap;
     //
     public static int PlayerCount
     {
