@@ -743,7 +743,7 @@ public class GameController : Photon.MonoBehaviour
         GameMode.WinKillCondition = 100;
         GameMode.map = this.mapsFolder[0];
         // Load the map // Presumes files have not been tempered with
-        Instantiate(GameMode.map, new Vector3(0, 0, 0), Quaternion.identity);
+        GameMode.instantiatedMap = Instantiate(GameMode.map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         // Load the player prefab
         GameObject tmpPlayer = PhotonNetwork.Instantiate(HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString()), new Vector3(0, 0, 0), Quaternion.identity, 0);
         mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
@@ -779,7 +779,8 @@ public class GameController : Photon.MonoBehaviour
             changeActiveStatus(this.UI_mainMenu, true);
             changeActiveStatus(this.UI_game, false);
             //Destroy all unnecessary GameObjects - Map, Players, etc...
-            
+            destroyAllChildGameObjects(UI_GameUI_Top);
+            Destroy(GameMode.instantiatedMap.gameObject);
             //
         }
         else
