@@ -37,16 +37,20 @@ public class PlayerController : MonoBehaviour
             // ROFL //
             if(currentHP <= 0)
             {
+                //
                 object[] paramsForRPC = new object[1];
                 paramsForRPC[0] = transform.position;
-
                 punView.RPC("PlayDeathAnimation", PhotonTargets.All, paramsForRPC);
-
+                //
                 PhotonNetwork.Destroy(gameObject);
                 Destroy(gameObject);
-
+                // Depending on the GameMode this will be changed Spawning or well staying dead
+                GameController.instance.spawnPlayerHero();
+                /*
                 GameObject tmpPlayer = PhotonNetwork.Instantiate("BlackKnight", new Vector3(0f, 3.5f, 0f), Quaternion.identity, 0);
+                // Camera follow
                 GameObject.Find("Main Camera").GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
+                */
             }
             // ENDROFL //
             InputMovement();
@@ -172,14 +176,16 @@ public class PlayerController : MonoBehaviour
         Instantiate(deathParticles, pos, Quaternion.identity);
     }
 
-    [RPC] void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact, int objectId)
+    [RPC]public void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact/*, int objectId*/)
     {
         Instantiate(hitParticles, positionOfImpact, Quaternion.identity);
 
         //If I am the player who got hit
         if (punView.ownerId == playerHitId)
+        {
             this.currentHP -= damage;
-
+        
+        }
         //Destroy()
     }
 

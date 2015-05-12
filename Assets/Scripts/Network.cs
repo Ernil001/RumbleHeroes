@@ -46,7 +46,7 @@ public class Network : MonoBehaviour
             if (tempRoomCreated && PhotonNetwork.inRoom)
             {
                 // Prepare all properties for the room
-                setRoomProp_HeroSelection();
+                setRoomProperties();
 
             }
             else
@@ -64,7 +64,7 @@ public class Network : MonoBehaviour
         {
             if (PhotonNetwork.inRoom)
             {
-                setRoomProp_HeroSelection();
+                setRoomProperties();
                 StopCoroutine(setRoomProp);
                 //Debug.Log("Working");
             }
@@ -72,14 +72,17 @@ public class Network : MonoBehaviour
         }
     }
     // Prepares defaults for hero selection
-    public void setRoomProp_HeroSelection()
+    public void setRoomProperties()
     {
         ExitGames.Client.Photon.Hashtable prop = new ExitGames.Client.Photon.Hashtable();
         // hero selection
-        prop.Add("h1", "H01");
-        prop.Add("h2", "H02");
-        prop.Add("h3", "H03");
-        prop.Add("h4", "H04");
+        prop.Add("h1", "");
+        prop.Add("h2", "");
+        prop.Add("h3", "");
+        prop.Add("h4", "");
+        // Room Mode Settings // These settings will be taken from the UI later, now it will set default as Round Match // 10 kills
+        prop.Add("gm", "RoundMatch"); // game mode
+        prop.Add("sc", ""); // score to obtain to win
         /*
         prop.Add("h1", "");
         prop.Add("h2", "");
@@ -155,6 +158,10 @@ public class Network : MonoBehaviour
         cusProp.Add("k", "0");
         // Deaths
         cusProp.Add("d", "0");
+        // Hero Status
+        // - a - Alive
+        // - d - Dead
+        cusProp.Add("hs", "a");
         PhotonNetwork.player.SetCustomProperties(cusProp);
     }
     // On leading a room in photon it should clear all textx inside the RoomLobby UI section. MANUAL LEAVE

@@ -10,6 +10,8 @@ public class InputKeys : MonoBehaviour {
     //  - MainMenu
     //  - Game
     //  - GameMainMenu
+    //  - GameDead // When a player is dead and is either waiting for respawn or waiting for round restart, same thing iknit >X
+    //  - 
     public string inputType = "MainMenu";
     public string InputType
     {
@@ -45,6 +47,10 @@ public class InputKeys : MonoBehaviour {
         {
             InputGameMainMenu();
         }
+        else if (this.InputType == "GameDead")
+        {
+            InputGameDead();
+        }
         
 	}
     //
@@ -79,6 +85,15 @@ public class InputKeys : MonoBehaviour {
     }
     //
     public void InputGameMainMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            this.InputType = "Game";
+            GameController.instance.changeActiveStatus(GameController.instance.UI_mainMenu);
+        }
+    }
+    //
+    public void InputGameDead()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {

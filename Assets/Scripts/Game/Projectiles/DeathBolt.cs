@@ -30,19 +30,16 @@ public class DeathBolt : Projectile
                 paramsForRPC[0] = this.damage;
                 paramsForRPC[1] = collidedObject.GetComponent<PhotonView>().ownerId;
                 paramsForRPC[2] = transform.position;
-                
-
                 //We hit another player
 
-                collidedObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All,
-                    paramsForRPC);
+                collidedObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All, paramsForRPC);
             }
 
             //This is where we check if we hit a player, and apply damage if needed
             /*PlayerController playerController = collidedObject.GetComponent<PlayerController>();
             playerController.currentHP = playerController.currentHP - this.damage;
             Debug.Log(playerController.currentHP);*/
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
     }
 }

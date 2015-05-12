@@ -28,6 +28,7 @@ public class GameController : Photon.MonoBehaviour
     public GameObject UI_GameUI_Top;
     public GameObject UI_GameUI_ScoreBoard;
     public GameObject UI_GameUI_ScoreBoard_Score;
+    public GameObject UI_GameUI_ScoreBoard_GameModeDescription;
     public GameObject UI_MainMenuUI_MainMenuWrap_InputField; //This will be remade later.
     public GameObject UI_MainMenuUI_MainMenuWrap_CreateRoom;
     public GameObject UI_MainMenuUI_MainMenuWrap_JoinRoom;
@@ -355,13 +356,16 @@ public class GameController : Photon.MonoBehaviour
                     // Future problem with displaying content in the ones that have left the game.
                     ExitGames.Client.Photon.Hashtable plInfo = new ExitGames.Client.Photon.Hashtable();
                     plInfo = pl.customProperties;
-
+                    // UI ScoreBoard Loading
                     UI_GameUI_Top.transform.GetChild(x).FindChild("PlayerName").GetComponent<Text>().text = pl.name;
-
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Name").GetComponent<Text>().text = pl.name;
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Hero").GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString());
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Kills").GetComponent<Text>().text = plInfo["k"].ToString();
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Deaths").GetComponent<Text>().text = plInfo["d"].ToString();
+                    // GameMode Checking
+
+
+                    //
                     x++;
                 }
             }
@@ -737,16 +741,16 @@ public class GameController : Photon.MonoBehaviour
         changeActiveStatus(this.UI_game, true);
         // Stopping the lobby loop with changin gameStatus
         this.GameStatus = "running";
-        // Loads the GameMode // sets default since there is no options for this yet while creating server. This will be taken from customRoomProperties photon
-        GameMode.Mode = "Death Match";
+        // Loads the GameMode // sets default or room customRoomProperties photon
+        ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
+        GameMode.Mode = roomCusInfo["gm"].ToString();
         GameMode.PlayerCount = 4;
-        GameMode.WinKillCondition = 100;
+        //GameMode.ScoreCondition = Convert.ToInt32(roomCusInfo["sc"]);
         GameMode.map = this.mapsFolder[0];
         // Load the map // Presumes files have not been tempered with
         GameMode.instantiatedMap = Instantiate(GameMode.map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         // Load the player prefab
-        GameObject tmpPlayer = PhotonNetwork.Instantiate(HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString()), new Vector3(0, 0, 0), Quaternion.identity, 0);
-        mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
+        spawnPlayerHero(HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString()));
         // Load the UI // Might change this to load the number of listed players and not the players that actually exists
             // TopPlayerIcons && ScoreBoard info for players
         foreach(PhotonPlayer pl in PhotonNetwork.playerList)
@@ -756,7 +760,8 @@ public class GameController : Photon.MonoBehaviour
             GameObject temp_scorePlayer = Instantiate(this.score_PlayerWrap, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             temp_scorePlayer.transform.SetParent(UI_GameUI_ScoreBoard_Score.transform);
         }
-        
+        // Load the GameMode Description
+        UI_GameUI_ScoreBoard_GameModeDescription.GetComponent<Text>().text = GameMode.ModeDescription;
     }
     //
     // Main function for returning from active game to idle main menu
@@ -788,6 +793,23 @@ public class GameController : Photon.MonoBehaviour
             //Crit Error i need a way to do this.
             errorDisplay_open("ERROR while leaving the photon room.");
         }
+    }
+    // Spawn the player hero
+    public void spawnPlayerHero(string playerHeroName = "")
+    {
+        // Rules for map and game mode
+
+        // Set keyInput
+        InputKeys.instance.InputType = "Game";
+        // Check if parameter playerHeroName is set if not, get hero name value for resource load
+        if (playerHeroName == "")
+        {
+            ExitGames.Client.Photon.Hashtable plInfo = PhotonNetwork.player.customProperties;
+            playerHeroName = HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString());
+        }
+        // Create player on location and set camera
+        GameObject tmpPlayer = PhotonNetwork.Instantiate(playerHeroName, new Vector3(0, 0, 0), Quaternion.identity, 0);
+        mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
     }
     // Close Main Menu and return to game
     public void returnToGame_fromMainMenu()

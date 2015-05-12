@@ -6,8 +6,11 @@ public static class GameMode
 {
     //
     private static int playerCount;
-    private static int winKillCondition;
+    private static int scoreCondition; // Each gamemode is limited by an objective. This is that objective.
+    // Options for mode
+    //  - RoundMatch - A player must get a certain amount of kills before the game ends, When 1 player survives each round the round restarts.
     private static string mode;
+    private static string modeDescription;
     public static GameObject map;
     public static GameObject instantiatedMap;
     //
@@ -28,6 +31,8 @@ public static class GameMode
         set
         {
             mode = value;
+            if (mode == "RoundMatch")
+                ModeDescription = " Round based game \n- Each round is played until 1 player is left alive \n- Game ends when a player reaches the needed score";
         }
         get 
         {
@@ -35,16 +40,27 @@ public static class GameMode
         }
     }
     //
-    public static int WinKillCondition
+    public static int ScoreCondition
     {
         set
         {
-            winKillCondition = value;
+            scoreCondition = value;
         }
         get
         {
-            return winKillCondition;
+            return scoreCondition;
         }
     }
     //
+    public static string ModeDescription
+    {
+        set
+        {
+            modeDescription = value;
+        }
+        get
+        {
+            return modeDescription;
+        }
+    }
 }
