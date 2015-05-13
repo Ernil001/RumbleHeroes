@@ -869,8 +869,9 @@ public class GameController : Photon.MonoBehaviour
     // Spawn the player hero
     public void spawnPlayerHero(string playerHeroName = "")
     {
-        // Rules for map and game mode
-
+        // Set playerHeroStatus to alive /a
+        ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable()
+        chInfo = PhotonNetwork.player.customProperties;
         // Set keyInput
         InputKeys.instance.InputType = "Game";
         // Check if parameter playerHeroName is set if not, get hero name value for resource load
