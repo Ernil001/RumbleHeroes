@@ -8,6 +8,9 @@ using System.Reflection;
 
 public class GameController : Photon.MonoBehaviour 
 {
+    //Private vars, cuz i can'
+    private List<Vector3> spawnPositions = new List<Vector3>();
+
     public static GameController instance = null;
     // Design color variables tbh dunno why, just felt like it :D
     // r - roomLobby
@@ -797,6 +800,15 @@ public class GameController : Photon.MonoBehaviour
         GameMode.map = this.mapsFolder[0];
         // Load the map // Presumes files have not been tempered with
         GameMode.instantiatedMap = Instantiate(GameMode.map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+
+        // Initialise the spawn points
+        spawnPositions.Add(GameObject.Find("SpawnPoint1").transform.position);
+        spawnPositions.Add(GameObject.Find("SpawnPoint2").transform.position);
+        spawnPositions.Add(GameObject.Find("SpawnPoint3").transform.position);
+        spawnPositions.Add(GameObject.Find("SpawnPoint4").transform.position);
+        spawnPositions.Add(GameObject.Find("SpawnPoint5").transform.position);
+        spawnPositions.Add(GameObject.Find("SpawnPoint6").transform.position);
+
         // Load the player prefab
         spawnPlayerHero(HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString()));
         // Load the UI // Might change this to load the number of listed players and not the players that actually exists
@@ -842,6 +854,18 @@ public class GameController : Photon.MonoBehaviour
             errorDisplay_open("ERROR while leaving the photon room.");
         }
     }
+
+    private Vector3 GetRandomSpawnPoint()
+    {
+        int randomPos = UnityEngine.Random.Range(0, spawnPositions.Count);
+        Debug.Log(randomPos);
+
+        Vector3 returnPos = spawnPositions[randomPos];
+        spawnPositions.RemoveAt(randomPos);
+
+        return returnPos;
+    }
+
     // Spawn the player hero
     public void spawnPlayerHero(string playerHeroName = "")
     {
@@ -856,7 +880,7 @@ public class GameController : Photon.MonoBehaviour
             playerHeroName = HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString());
         }
         // Create player on location and set camera
-        GameObject tmpPlayer = PhotonNetwork.Instantiate(playerHeroName, new Vector3(0, 0, 0), Quaternion.identity, 0);
+        GameObject tmpPlayer = PhotonNetwork.Instantiate(playerHeroName, GetRandomSpawnPoint(), Quaternion.identity, 0);
         mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
     }
     // Close Main Menu and return to game
