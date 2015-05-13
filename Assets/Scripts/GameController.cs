@@ -347,6 +347,10 @@ public class GameController : Photon.MonoBehaviour
             sht.GetComponent<Text>().text = "";
         }
     }
+    [RPC] public void GameMode_RoundMatch_RoundEnd()
+    {
+        //spawnPlayerHero();
+    }
     // Prepare to spawn your local Client Hero in a time interval and do the needed 
     /*
     IEnumerator GameMode_RoundMatch_PrepareToSpawn()
