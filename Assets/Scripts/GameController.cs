@@ -422,7 +422,7 @@ public class GameController : Photon.MonoBehaviour
                         spawnPlayerHero();
                      */
                     spawnPlayerHero();
-                    }
+                    
                 }
                 else
                 {
