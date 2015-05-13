@@ -42,6 +42,13 @@ public class PlayerController : MonoBehaviour
                 paramsForRPC[0] = transform.position;
                 punView.RPC("PlayDeathAnimation", PhotonTargets.All, paramsForRPC);
                 //
+                ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
+                chInfo = PhotonNetwork.player.customProperties;
+                chInfo["hs"] = "d";
+                PhotonNetwork.player.SetCustomProperties(chInfo);
+                //
+                GameController.instance.addDeathPoint();
+                //
                 PhotonNetwork.Destroy(gameObject);
                 Destroy(gameObject);
                 // Depending on the GameMode this will be changed Spawning or well staying dead
@@ -162,6 +169,7 @@ public class PlayerController : MonoBehaviour
         if (punView.ownerId == playerHitId)
         {
             this.currentHP -= damage;
+            //if(this.currentHP < 0)
         
         }
         //Destroy()

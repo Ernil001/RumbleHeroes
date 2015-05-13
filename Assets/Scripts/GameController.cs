@@ -348,6 +348,7 @@ public class GameController : Photon.MonoBehaviour
         }
     }
     // Prepare to spawn your local Client Hero in a time interval and do the needed 
+    /*
     IEnumerator GameMode_RoundMatch_PrepareToSpawn()
     {
         //Set KeyBinds
@@ -358,7 +359,7 @@ public class GameController : Photon.MonoBehaviour
         int x = 0;
         while (true)
         {
-            Debug.Log("Loop");
+            Debug.Log("Loop " + x.ToString());
             if (x == 0)
             {
 
@@ -376,6 +377,7 @@ public class GameController : Photon.MonoBehaviour
             yield return new WaitForSeconds(3f);
         }
     }
+     * */
     //
     IEnumerator UpdateGameScreen()
     {
@@ -409,10 +411,17 @@ public class GameController : Photon.MonoBehaviour
                 // Check for Gamemode Things
                 if (GameMode.Mode == "RoundMatch")
                 {
+                    /*
                     if (aliveCount < 2)
                     {
                         // End Round - Prepare to spawn.
+                        
+                        prepareNextRound = GameMode_RoundMatch_PrepareToSpawn();
                         StartCoroutine(prepareNextRound);
+                         
+                        spawnPlayerHero();
+                     */
+                    spawnPlayerHero();
                     }
                 }
                 else
@@ -870,19 +879,26 @@ public class GameController : Photon.MonoBehaviour
     public void spawnPlayerHero(string playerHeroName = "")
     {
         // Set playerHeroStatus to alive /a
-        ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable()
+        ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
         chInfo = PhotonNetwork.player.customProperties;
-        // Set keyInput
-        InputKeys.instance.InputType = "Game";
-        // Check if parameter playerHeroName is set if not, get hero name value for resource load
-        if (playerHeroName == "")
+        if (chInfo["hs"].ToString() == "d")
         {
-            ExitGames.Client.Photon.Hashtable plInfo = PhotonNetwork.player.customProperties;
-            playerHeroName = HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString());
+            //
+            chInfo["hs"] = "a";
+            PhotonNetwork.player.SetCustomProperties(chInfo);
+            // Set keyInput
+            InputKeys.instance.InputType = "Game";
+            // Check if parameter playerHeroName is set if not, get hero name value for resource load
+            if (playerHeroName == "")
+            {
+                ExitGames.Client.Photon.Hashtable plInfo = PhotonNetwork.player.customProperties;
+                playerHeroName = HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString());
+            }
+            // Create player on location and set camera
+            GameObject tmpPlayer = PhotonNetwork.Instantiate(playerHeroName, GetRandomSpawnPoint(), Quaternion.identity, 0);
+            mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
         }
-        // Create player on location and set camera
-        GameObject tmpPlayer = PhotonNetwork.Instantiate(playerHeroName, GetRandomSpawnPoint(), Quaternion.identity, 0);
-        mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
+        else Debug.Log("No spawn Hero Alive");
     }
     // Close Main Menu and return to game
     public void returnToGame_fromMainMenu()

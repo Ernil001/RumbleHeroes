@@ -82,6 +82,7 @@ public class Network : MonoBehaviour
         prop.Add("h4", "");
         // Room Mode Settings // These settings will be taken from the UI later, now it will set default as Round Match // 10 kills
         prop.Add("gm", "RoundMatch"); // game mode
+        prop.Add("rk", ""); // RoundKills
         prop.Add("sc", ""); // score to obtain to win
         /*
         prop.Add("h1", "");
@@ -161,7 +162,7 @@ public class Network : MonoBehaviour
         // Hero Status
         // - a - Alive
         // - d - Dead
-        cusProp.Add("hs", "a");
+        cusProp.Add("hs", "d");
         PhotonNetwork.player.SetCustomProperties(cusProp);
     }
     // On leading a room in photon it should clear all textx inside the RoomLobby UI section. MANUAL LEAVE
