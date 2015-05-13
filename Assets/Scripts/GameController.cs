@@ -906,12 +906,12 @@ public class GameController : Photon.MonoBehaviour
         changeActiveStatus(GameController.instance.UI_mainMenu, false);
     }
     // Add KILL point to local client
-    public void addKillPoint()
+    public void addKillPoint(int playerId)
     {
         ExitGames.Client.Photon.Hashtable getKill = new ExitGames.Client.Photon.Hashtable();
-        getKill = PhotonNetwork.player.customProperties;
+        getKill = PhotonNetwork.otherPlayers[playerId].customProperties;
         getKill["k"] = (Convert.ToInt32(getKill["k"]) + 1).ToString();
-        PhotonNetwork.player.SetCustomProperties(getKill);
+        PhotonNetwork.otherPlayers[playerId].SetCustomProperties(getKill);
     }
     // Add DEATH point to local client
     public void addDeathPoint()

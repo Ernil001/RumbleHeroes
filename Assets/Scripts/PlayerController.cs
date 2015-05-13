@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour
         Instantiate(deathParticles, pos, Quaternion.identity);
     }
 
-    [RPC]public void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact/*, int objectId*/)
+    [RPC]public void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)
     {
         Instantiate(hitParticles, positionOfImpact, Quaternion.identity);
 
@@ -169,7 +169,10 @@ public class PlayerController : MonoBehaviour
         if (punView.ownerId == playerHitId)
         {
             this.currentHP -= damage;
-            //if(this.currentHP < 0)
+            if(this.currentHP <= 0)
+            {
+                GameController.instance.addKillPoint(projectileOwnerPlayerId);
+            }
         
         }
         //Destroy()
