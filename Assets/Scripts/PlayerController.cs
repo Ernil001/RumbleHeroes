@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
                 // Depending on the GameMode this will be changed Spawning or well staying dead
                 if (GameMode.Mode == "RoundMatch")
                 {
-                    
+                    /*
                     ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
                     int x = Convert.ToInt32(roomCusInfo["rk"]);
                     x++;
@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
                         // Add the round kill to room properties
                         roomCusInfo["rk"] = x.ToString();
                     }
-                    
+                    */
                 }
                 else GameController.instance.spawnPlayerHero();
             }
