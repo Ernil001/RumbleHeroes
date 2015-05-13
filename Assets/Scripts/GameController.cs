@@ -8,9 +8,7 @@ using System.Reflection;
 
 public class GameController : Photon.MonoBehaviour 
 {
-    //
-    private IEnumerator prepareNextRound;
-    //
+    
     public static GameController instance = null;
     // Design color variables tbh dunno why, just felt like it :D
     // r - roomLobby
@@ -71,7 +69,9 @@ public class GameController : Photon.MonoBehaviour
     public GameObject selectHeroButton;
     public GameObject selectHeroText;
     //
-
+    //
+    private IEnumerator prepareNextRound;
+    //
     //
     // Predefined possiblities for allowedString 
     // "","roomLobby","running","endScore", 
