@@ -80,7 +80,7 @@ public class InputKeys : MonoBehaviour {
         // For Testing
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
-            GameController.instance.addKillPoint();
+            //GameController.instance.addKillPoint();
         }
     }
     //
