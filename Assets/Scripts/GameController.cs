@@ -8,6 +8,9 @@ using System.Reflection;
 
 public class GameController : Photon.MonoBehaviour 
 {
+    //
+    private IEnumerator prepareNextRound;
+    //
     public static GameController instance = null;
     // Design color variables tbh dunno why, just felt like it :D
     // r - roomLobby
@@ -342,6 +345,36 @@ public class GameController : Photon.MonoBehaviour
             sht.GetComponent<Text>().text = "";
         }
     }
+    // Prepare to spawn your local Client Hero in a time interval and do the needed 
+    IEnumerator GameMode_RoundMatch_PrepareToSpawn()
+    {
+        //Set KeyBinds
+        InputKeys.instance.InputType = "MainMenu";
+        //
+        changeActiveStatus(UI_GameUI_ScoreBoard, true);
+        //
+        int x = 0;
+        while (true)
+        {
+            Debug.Log("Loop");
+            if (x == 0)
+            {
+
+            }
+            else 
+            {
+
+                InputKeys.instance.InputType = "Game";
+                changeActiveStatus(UI_GameUI_ScoreBoard, false);
+                spawnPlayerHero();
+                StopCoroutine(prepareNextRound);
+
+            }
+            x++;
+            yield return new WaitForSeconds(3f);
+        }
+    }
+    //
     IEnumerator UpdateGameScreen()
     {
         while (this.gameStatus == "running")
@@ -351,6 +384,7 @@ public class GameController : Photon.MonoBehaviour
             if (UI_GameUI_Top.transform.childCount > 0)
             {
                 int x = 0;
+                int aliveCount = 0;
                 foreach (PhotonPlayer pl in PhotonNetwork.playerList)
                 {
                     // Future problem with displaying content in the ones that have left the game.
@@ -363,10 +397,25 @@ public class GameController : Photon.MonoBehaviour
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Kills").GetComponent<Text>().text = plInfo["k"].ToString();
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Deaths").GetComponent<Text>().text = plInfo["d"].ToString();
                     // GameMode Checking
-
-
+                    if (plInfo["hs"].ToString() == "a")
+                    {
+                        aliveCount++;
+                    }
                     //
                     x++;
+                }
+                // Check for Gamemode Things
+                if (GameMode.Mode == "RoundMatch")
+                {
+                    if (aliveCount < 2)
+                    {
+                        // End Round - Prepare to spawn.
+                        StartCoroutine(prepareNextRound);
+                    }
+                }
+                else
+                {
+                    
                 }
             }
             yield return new WaitForSeconds(1f);

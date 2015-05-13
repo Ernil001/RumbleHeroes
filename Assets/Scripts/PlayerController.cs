@@ -45,12 +45,11 @@ public class PlayerController : MonoBehaviour
                 PhotonNetwork.Destroy(gameObject);
                 Destroy(gameObject);
                 // Depending on the GameMode this will be changed Spawning or well staying dead
-                GameController.instance.spawnPlayerHero();
-                /*
-                GameObject tmpPlayer = PhotonNetwork.Instantiate("BlackKnight", new Vector3(0f, 3.5f, 0f), Quaternion.identity, 0);
-                // Camera follow
-                GameObject.Find("Main Camera").GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
-                */
+                if (GameMode.Mode == "RoundMatch")
+                {
+                    
+                }
+                else GameController.instance.spawnPlayerHero();
             }
             // ENDROFL //
             InputMovement();
@@ -77,27 +76,6 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("Running", false);
         }
-        //
-        /*
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, true);
-        }
-        if (Input.GetKeyUp(KeyCode.Tab))
-        {
-            GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, false);
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            //Show Main Menu UI if game is running
-            GameController.instance.changeActiveStatus(GameController.instance.UI_mainMenu);
-        }
-        // For Testing
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            GameController.instance.addKillPoint();
-        }
-        */
         //
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
