@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
                 if (GameMode.Mode == "RoundMatch")
                 {
 
-                    ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
+                    /*ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
                     int x = Convert.ToInt32(roomCusInfo["rk"]);
                     x++;
                     if ((GameMode.PlayerCount - 1) <= x)
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
                     {
                         // Add the round kill to room properties
                         roomCusInfo["rk"] = x.ToString();
-                    }
+                    }*/
                 }
                 else GameController.instance.spawnPlayerHero();
             }
