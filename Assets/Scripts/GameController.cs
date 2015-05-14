@@ -347,12 +347,14 @@ public class GameController : Photon.MonoBehaviour
             sht.GetComponent<Text>().text = "";
         }
     }
+    // Prepare to start the next round when Objectives are met, for all players
     [RPC] public void GameMode_RoundMatch_RoundEnd()
     {
         //spawnPlayerHero();
+        prepareNextRound = GameMode_RoundMatch_PrepareToSpawn();
+        StartCoroutine(prepareNextRound);
     }
     // Prepare to spawn your local Client Hero in a time interval and do the needed 
-    /*
     IEnumerator GameMode_RoundMatch_PrepareToSpawn()
     {
         //Set KeyBinds
@@ -360,28 +362,26 @@ public class GameController : Photon.MonoBehaviour
         //
         changeActiveStatus(UI_GameUI_ScoreBoard, true);
         //
+        spawnPlayerHero();
+        //
+
         int x = 0;
-        while (true)
+        //Debug.Log("Loop " + x.ToString());
+        while (x<2)
         {
             Debug.Log("Loop " + x.ToString());
-            if (x == 0)
+            if (x == 1)
             {
-
-            }
-            else 
-            {
-
+                Debug.Log("Starting new round!");
                 InputKeys.instance.InputType = "Game";
                 changeActiveStatus(UI_GameUI_ScoreBoard, false);
-                spawnPlayerHero();
+                //spawnPlayerHero();
                 StopCoroutine(prepareNextRound);
-
             }
             x++;
             yield return new WaitForSeconds(3f);
         }
     }
-     * */
     //
     IEnumerator UpdateGameScreen()
     {
@@ -411,26 +411,6 @@ public class GameController : Photon.MonoBehaviour
                     }
                     //
                     x++;
-                }
-                // Check for Gamemode Things
-                if (GameMode.Mode == "RoundMatch")
-                {
-                    /*
-                    if (aliveCount < 2)
-                    {
-                        // End Round - Prepare to spawn.
-                        
-                        prepareNextRound = GameMode_RoundMatch_PrepareToSpawn();
-                        StartCoroutine(prepareNextRound);
-                         
-                        spawnPlayerHero();
-                     */
-                    spawnPlayerHero();
-                    
-                }
-                else
-                {
-                    
                 }
             }
             yield return new WaitForSeconds(1f);
@@ -808,12 +788,11 @@ public class GameController : Photon.MonoBehaviour
         // Loads the GameMode // sets default or room customRoomProperties photon
         ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
         GameMode.Mode = roomCusInfo["gm"].ToString();
-        GameMode.PlayerCount = 4;
-        //GameMode.ScoreCondition = Convert.ToInt32(roomCusInfo["sc"]);
+        GameMode.PlayerCount = PhotonNetwork.room.playerCount;
+        GameMode.ScoreCondition = Convert.ToInt32(roomCusInfo["sc"]);
         GameMode.map = this.mapsFolder[0];
         // Load the map // Presumes files have not been tempered with
         GameMode.instantiatedMap = Instantiate(GameMode.map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-
         // Initialise the spawn points
         spawnPositions.Add(GameObject.Find("SpawnPoint1").transform.position);
         spawnPositions.Add(GameObject.Find("SpawnPoint2").transform.position);
@@ -860,6 +839,7 @@ public class GameController : Photon.MonoBehaviour
             destroyAllChildGameObjects(UI_GameUI_Top);
             Destroy(GameMode.instantiatedMap.gameObject);
             //
+            destroyAllChildGameObjects(UI_GameUI_ScoreBoard_Score);
         }
         else
         {
@@ -878,15 +858,19 @@ public class GameController : Photon.MonoBehaviour
 
         return returnPos;
     }
-
+    ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
     // Spawn the player hero
     public void spawnPlayerHero(string playerHeroName = "")
     {
         // Set playerHeroStatus to alive /a
+        Debug.Log("You have launched the spawn method!");
         ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
         chInfo = PhotonNetwork.player.customProperties;
-        if (chInfo["hs"].ToString() == "d")
+        Debug.Log("HeroStatus: " + chInfo["hs"].ToString());
+        if (chInfo["hs"].ToString() != "a")
         {
+            Debug.Log("You The character is indeed dead !");
             //
             chInfo["hs"] = "a";
             PhotonNetwork.player.SetCustomProperties(chInfo);
@@ -904,6 +888,42 @@ public class GameController : Photon.MonoBehaviour
         }
         else Debug.Log("No spawn Hero Alive");
     }
+    // Kill the player hero resource // DOESNT WORK FROM HERE YET
+    public void destroyPlayerHero(GameObject heroToDestroy)
+    {
+        ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
+        chInfo = PhotonNetwork.player.customProperties;
+        chInfo["hs"] = "d";
+        PhotonNetwork.player.SetCustomProperties(chInfo);
+        //
+        this.addDeathPoint();
+        //
+        PhotonNetwork.Destroy(gameObject);
+        Destroy(gameObject);
+        // Depending on the GameMode this will be changed Spawning or well staying dead
+        if (GameMode.Mode == "RoundMatch")
+        {
+            /*
+            ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
+            int x = Convert.ToInt32(roomCusInfo["rk"]);
+            x++;
+            if ((GameMode.PlayerCount - 1) <= x)
+            {
+                // Start new Round
+
+            }
+            else
+            {
+                // Add the round kill to room properties
+                roomCusInfo["rk"] = x.ToString();
+            }
+            */
+            //this.spawnPlayerHero();
+        }
+        //else this.spawnPlayerHero();
+    }
+    ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
     // Close Main Menu and return to game
     public void returnToGame_fromMainMenu()
     {

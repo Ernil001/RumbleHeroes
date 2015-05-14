@@ -43,10 +43,19 @@ public class PlayerController : MonoBehaviour
                 paramsForRPC[0] = transform.position;
                 punView.RPC("PlayDeathAnimation", PhotonTargets.All, paramsForRPC);
                 //
+                //GameController.instance.destroyPlayerHero(gameObject); 
+                /*
                 ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
                 chInfo = PhotonNetwork.player.customProperties;
                 chInfo["hs"] = "d";
+                 * */
+                ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
+                chInfo.Add("hs", "d");
                 PhotonNetwork.player.SetCustomProperties(chInfo);
+                //Testing
+                ExitGames.Client.Photon.Hashtable chInfo1 = new ExitGames.Client.Photon.Hashtable();
+                chInfo1 = PhotonNetwork.player.customProperties;
+                Debug.Log("HeroStatus in PlayerController: " + chInfo1["hs"].ToString());
                 //
                 GameController.instance.addDeathPoint();
                 //
@@ -55,21 +64,31 @@ public class PlayerController : MonoBehaviour
                 // Depending on the GameMode this will be changed Spawning or well staying dead
                 if (GameMode.Mode == "RoundMatch")
                 {
-                    /*
+                    
                     ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
-                    int x = Convert.ToInt32(roomCusInfo["rk"]);
+                    //string testa = roomCusInfo["rk"].ToString();
+                    //Debug.Log(roomCusInfo["rk"] + " -- " + roomCusInfo["rk"].GetType());
+                    int x = Convert.ToInt32(roomCusInfo["rk"].ToString());
                     x++;
                     if ((GameMode.PlayerCount - 1) <= x)
                     {
                         // Start new Round
-
+                        Debug.Log("New round has started");
+                        // Call RPC
+                        GameController.instance.photonView.RPC("GameMode_RoundMatch_RoundEnd", PhotonTargets.All);
+                        // Set Round deaths to 0
+                        roomCusInfo["rk"] = "0";
                     }
                     else
                     {
                         // Add the round kill to room properties
                         roomCusInfo["rk"] = x.ToString();
                     }
-                    */
+                    // Transfer only one parameter
+                    ExitGames.Client.Photon.Hashtable sInfoToTransfer = new ExitGames.Client.Photon.Hashtable();
+                    sInfoToTransfer.Add("rk", roomCusInfo["rk"].ToString());
+                    PhotonNetwork.room.SetCustomProperties(sInfoToTransfer);
+                    //GameController.instance.spawnPlayerHero();
                 }
                 else GameController.instance.spawnPlayerHero();
             }
