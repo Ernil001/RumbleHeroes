@@ -33,8 +33,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
         if (punView.isMine)
         {
+            //Testing
+            ExitGames.Client.Photon.Hashtable chInfo2 = new ExitGames.Client.Photon.Hashtable();
+            chInfo2 = PhotonNetwork.player.customProperties;
+            Debug.Log("HeroStatus in PlayerController: " + chInfo2["hs"].ToString());
             // ROFL //
             if(currentHP <= 0)
             {
@@ -61,8 +66,9 @@ public class PlayerController : MonoBehaviour
                 //
                 PhotonNetwork.Destroy(gameObject);
                 Destroy(gameObject);
+                Debug.Log("HeroStatus in PlayerController AFTER DESTROY: " + chInfo1["hs"].ToString());
                 // Depending on the GameMode this will be changed Spawning or well staying dead
-                if (GameMode.Mode == "RoundMatch")
+                if (GameMode.Mode == "RoundMatch") 
                 {
                     
                     ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
@@ -85,12 +91,12 @@ public class PlayerController : MonoBehaviour
                         roomCusInfo["rk"] = x.ToString();
                     }
                     // Transfer only one parameter
-                    ExitGames.Client.Photon.Hashtable sInfoToTransfer = new ExitGames.Client.Photon.Hashtable();
+                    /*ExitGames.Client.Photon.Hashtable sInfoToTransfer = new ExitGames.Client.Photon.Hashtable();
                     sInfoToTransfer.Add("rk", roomCusInfo["rk"].ToString());
-                    PhotonNetwork.room.SetCustomProperties(sInfoToTransfer);
+                    PhotonNetwork.room.SetCustomProperties(sInfoToTransfer);*/
                     //GameController.instance.spawnPlayerHero();
                 }
-                else GameController.instance.spawnPlayerHero();
+                //else GameController.instance.spawnPlayerHero();
             }
             // ENDROFL //
             InputMovement();

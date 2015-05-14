@@ -350,6 +350,9 @@ public class GameController : Photon.MonoBehaviour
     // Prepare to start the next round when Objectives are met, for all players
     [RPC] public void GameMode_RoundMatch_RoundEnd()
     {
+        ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
+        chInfo = PhotonNetwork.player.customProperties;
+        Debug.Log("HeroStatus in RPC: " + chInfo["hs"].ToString());
         //spawnPlayerHero();
         prepareNextRound = GameMode_RoundMatch_PrepareToSpawn();
         StartCoroutine(prepareNextRound);
@@ -357,7 +360,11 @@ public class GameController : Photon.MonoBehaviour
     // Prepare to spawn your local Client Hero in a time interval and do the needed 
     IEnumerator GameMode_RoundMatch_PrepareToSpawn()
     {
-        //Set KeyBinds
+        ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
+        chInfo = PhotonNetwork.player.customProperties;
+        Debug.Log("HeroStatus IN COROUTINE START: " + chInfo["hs"].ToString());
+
+        /*//Set KeyBinds
         InputKeys.instance.InputType = "MainMenu";
         //
         changeActiveStatus(UI_GameUI_ScoreBoard, true);
@@ -380,7 +387,24 @@ public class GameController : Photon.MonoBehaviour
             }
             x++;
             yield return new WaitForSeconds(3f);
-        }
+        }*/
+
+        InputKeys.instance.InputType = "MainMenu";
+        changeActiveStatus(UI_GameUI_ScoreBoard, true);
+
+        chInfo = PhotonNetwork.player.customProperties;
+        Debug.Log("HeroStatus IN COROUTINE BEFORE YIELD: " + chInfo["hs"].ToString());
+
+        yield return new WaitForSeconds(3f);
+
+        chInfo = PhotonNetwork.player.customProperties;
+        Debug.Log("HeroStatus IN COROUTINE LATER: " + chInfo["hs"].ToString());
+
+        Debug.Log("Starting new round!");
+        InputKeys.instance.InputType = "Game";
+        changeActiveStatus(UI_GameUI_ScoreBoard, false);
+        spawnPlayerHero();
+        StopCoroutine(prepareNextRound);
     }
     //
     IEnumerator UpdateGameScreen()
