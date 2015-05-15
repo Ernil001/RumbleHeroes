@@ -8,7 +8,7 @@ using System.Reflection;
 
 public class GameController : Photon.MonoBehaviour 
 {
-    //Private vars, cuz i can'
+    //Private vars, cuz i can' // private is private no more ! Private ! Sir Yes Sir !
     private List<Vector3> spawnPositions = new List<Vector3>();
 
     public static GameController instance = null;
@@ -54,6 +54,7 @@ public class GameController : Photon.MonoBehaviour
     public GameObject[] mapsFolder;
     // Heroes
     public GameObject[] heroesFolder;
+    public GameObject activeLocalHero = null;
     // Main Camera
     public GameObject mainCamera;
     // List of Rooms
@@ -72,7 +73,7 @@ public class GameController : Photon.MonoBehaviour
     public GameObject selectHeroText;
     //
     //
-    private IEnumerator prepareNextRound;
+    //private IEnumerator prepareNextRound;
     //
     //
     // Predefined possiblities for allowedString 
@@ -350,30 +351,16 @@ public class GameController : Photon.MonoBehaviour
     // Prepare to start the next round when Objectives are met, for all players
     [RPC] public void GameMode_RoundMatch_RoundEnd()
     {
-        ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
-        chInfo = PhotonNetwork.player.customProperties;
-        Debug.Log("HeroStatus in RPC: " + chInfo["hs"].ToString());
-        //spawnPlayerHero();
         StartCoroutine(GameMode_RoundMatch_PrepareToSpawn());
-
     }
     // Prepare to spawn your local Client Hero in a time interval and do the needed 
     IEnumerator GameMode_RoundMatch_PrepareToSpawn()
     {
-        ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
-        chInfo = PhotonNetwork.player.customProperties;
-        Debug.Log("HeroStatus IN COROUTINE START: " + chInfo["hs"].ToString());
-
-        /*//Set KeyBinds
+        //Set KeyBinds
         InputKeys.instance.InputType = "MainMenu";
         //
         changeActiveStatus(UI_GameUI_ScoreBoard, true);
-        //
-        spawnPlayerHero();
-        //
-
         int x = 0;
-        //Debug.Log("Loop " + x.ToString());
         while (x<2)
         {
             Debug.Log("Loop " + x.ToString());
@@ -382,30 +369,11 @@ public class GameController : Photon.MonoBehaviour
                 Debug.Log("Starting new round!");
                 InputKeys.instance.InputType = "Game";
                 changeActiveStatus(UI_GameUI_ScoreBoard, false);
-                //spawnPlayerHero();
-                StopCoroutine(prepareNextRound);
+                spawnPlayerHero("",true);
             }
             x++;
             yield return new WaitForSeconds(3f);
-        }*/
-
-        InputKeys.instance.InputType = "MainMenu";
-        changeActiveStatus(UI_GameUI_ScoreBoard, true);
-
-        chInfo = PhotonNetwork.player.customProperties;
-        Debug.Log("HeroStatus IN COROUTINE BEFORE YIELD: " + chInfo["hs"].ToString());
-
-        yield return new WaitForSeconds(3f);
-
-        chInfo = PhotonNetwork.player.customProperties;
-        Debug.Log("HeroStatus IN COROUTINE LATER: " + chInfo["hs"].ToString());
-
-        Debug.Log("Starting new round!");
-        InputKeys.instance.InputType = "Game";
-        changeActiveStatus(UI_GameUI_ScoreBoard, false);
-        spawnPlayerHero();
-       // StopCoroutine(prepareNextRound);
-
+        }
     }
     //
     IEnumerator UpdateGameScreen()
@@ -437,6 +405,30 @@ public class GameController : Photon.MonoBehaviour
                     //
                     x++;
                 }
+                //Clear needed UI if a player leaves
+                /*
+                int temp_roomPlayerCount = PhotonNetwork.room.playerCount;
+                if (UI_GameUI_Top.transform.childCount != temp_roomPlayerCount)
+                {
+                    for (int a = (x - 1); a < GameMode.PlayerCount; a++)
+                    {
+                        if (UI_GameUI_Top.transform.GetChild(a) != null)
+                        {
+                            Destroy(UI_GameUI_Top.transform.GetChild(a).gameObject);
+                        }
+                    }
+                }
+                if (UI_GameUI_ScoreBoard_Score.transform.childCount != temp_roomPlayerCount)
+                {
+                    for (int a = (x - 1); a < GameMode.PlayerCount; a++)
+                    {
+                        if (UI_GameUI_ScoreBoard_Score.transform.GetChild(a) != null)
+                        {
+                            Destroy(UI_GameUI_ScoreBoard_Score.transform.GetChild(a).gameObject);
+                        }
+                    }
+                }
+                */ 
             }
             yield return new WaitForSeconds(1f);
         }
@@ -886,14 +878,23 @@ public class GameController : Photon.MonoBehaviour
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
     // Spawn the player hero
-    public void spawnPlayerHero(string playerHeroName = "")
+    public void spawnPlayerHero(string playerHeroName = "", bool forceSpawn = false)
     {
+        // Check if forceSpawn is true, deletes the old spawn first
+        if (forceSpawn)
+        {
+            if (activeLocalHero != null)
+            {
+                PhotonNetwork.Destroy(activeLocalHero.gameObject);
+                Destroy(activeLocalHero.gameObject);
+            }
+        }
         // Set playerHeroStatus to alive /a
         Debug.Log("You have launched the spawn method!");
         ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
         chInfo = PhotonNetwork.player.customProperties;
         Debug.Log("HeroStatus: " + chInfo["hs"].ToString());
-        if (chInfo["hs"].ToString() != "a")
+        if (chInfo["hs"].ToString() != "a" || forceSpawn == true)
         {
             Debug.Log("You The character is indeed dead !");
             //
@@ -908,44 +909,46 @@ public class GameController : Photon.MonoBehaviour
                 playerHeroName = HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString());
             }
             // Create player on location and set camera
-            GameObject tmpPlayer = PhotonNetwork.Instantiate(playerHeroName, GetRandomSpawnPoint(), Quaternion.identity, 0);
-            mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
+            this.activeLocalHero = PhotonNetwork.Instantiate(playerHeroName, GetRandomSpawnPoint(), Quaternion.identity, 0);
+            mainCamera.GetComponent<SmoothCameraFollow>().target = this.activeLocalHero.transform;
         }
         else Debug.Log("No spawn Hero Alive");
     }
     // Kill the player hero resource // DOESNT WORK FROM HERE YET
-    public void destroyPlayerHero(GameObject heroToDestroy)
+    public void destroyPlayerHero()
     {
+
         ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
-        chInfo = PhotonNetwork.player.customProperties;
-        chInfo["hs"] = "d";
+        chInfo.Add("hs", "d");
         PhotonNetwork.player.SetCustomProperties(chInfo);
         //
-        this.addDeathPoint();
-        //
-        PhotonNetwork.Destroy(gameObject);
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(this.activeLocalHero.gameObject);
+        Destroy(this.activeLocalHero.gameObject);
         // Depending on the GameMode this will be changed Spawning or well staying dead
         if (GameMode.Mode == "RoundMatch")
         {
-            /*
             ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
-            int x = Convert.ToInt32(roomCusInfo["rk"]);
+            int x = Convert.ToInt32(roomCusInfo["rk"].ToString());
             x++;
             if ((GameMode.PlayerCount - 1) <= x)
             {
                 // Start new Round
-
+                Debug.Log("New round has started");
+                // Call RPC
+                this.photonView.RPC("GameMode_RoundMatch_RoundEnd", PhotonTargets.All);
+                // Set Round deaths to 0
+                roomCusInfo["rk"] = "0";
             }
             else
             {
                 // Add the round kill to room properties
                 roomCusInfo["rk"] = x.ToString();
             }
-            */
-            //this.spawnPlayerHero();
+            // Transfer only one parameter
+            ExitGames.Client.Photon.Hashtable sInfoToTransfer = new ExitGames.Client.Photon.Hashtable();
+            sInfoToTransfer.Add("rk", roomCusInfo["rk"].ToString());
+            PhotonNetwork.room.SetCustomProperties(sInfoToTransfer);
         }
-        //else this.spawnPlayerHero();
     }
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////

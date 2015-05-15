@@ -231,7 +231,7 @@ public class Network : MonoBehaviour
         GameController.instance.GameStatus = "";
     }
     // testing 
-    public void OnPhotonCustomRoomPropertiesChanged(object[] playerAndUpdatedProps)
+    public void OnPhotonCustomRoomPropertiesChanged()
     {
         /*
         Hashtable props = playerAndUpdatedProps[1] as Hashtable;
