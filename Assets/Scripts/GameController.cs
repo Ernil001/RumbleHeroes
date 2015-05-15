@@ -354,8 +354,8 @@ public class GameController : Photon.MonoBehaviour
         chInfo = PhotonNetwork.player.customProperties;
         Debug.Log("HeroStatus in RPC: " + chInfo["hs"].ToString());
         //spawnPlayerHero();
-        prepareNextRound = GameMode_RoundMatch_PrepareToSpawn();
-        StartCoroutine(prepareNextRound);
+        StartCoroutine(GameMode_RoundMatch_PrepareToSpawn());
+
     }
     // Prepare to spawn your local Client Hero in a time interval and do the needed 
     IEnumerator GameMode_RoundMatch_PrepareToSpawn()
@@ -404,7 +404,8 @@ public class GameController : Photon.MonoBehaviour
         InputKeys.instance.InputType = "Game";
         changeActiveStatus(UI_GameUI_ScoreBoard, false);
         spawnPlayerHero();
-        StopCoroutine(prepareNextRound);
+       // StopCoroutine(prepareNextRound);
+
     }
     //
     IEnumerator UpdateGameScreen()
