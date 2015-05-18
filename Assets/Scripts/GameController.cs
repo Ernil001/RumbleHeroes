@@ -393,6 +393,7 @@ public class GameController : Photon.MonoBehaviour
                     plInfo = pl.customProperties;
                     // UI ScoreBoard Loading
                     UI_GameUI_Top.transform.GetChild(x).FindChild("PlayerName").GetComponent<Text>().text = pl.name;
+                    UI_GameUI_Top.transform.GetChild(x).FindChild("HealthBar").GetComponent<Text>().text = plInfo["hp"].ToString() + " / " + plInfo["mhp"].ToString() + " / ID: " + pl.ID;
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Name").GetComponent<Text>().text = pl.name;
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Hero").GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString());
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Kills").GetComponent<Text>().text = plInfo["k"].ToString();
@@ -405,30 +406,6 @@ public class GameController : Photon.MonoBehaviour
                     //
                     x++;
                 }
-                //Clear needed UI if a player leaves
-                /*
-                int temp_roomPlayerCount = PhotonNetwork.room.playerCount;
-                if (UI_GameUI_Top.transform.childCount != temp_roomPlayerCount)
-                {
-                    for (int a = (x - 1); a < GameMode.PlayerCount; a++)
-                    {
-                        if (UI_GameUI_Top.transform.GetChild(a) != null)
-                        {
-                            Destroy(UI_GameUI_Top.transform.GetChild(a).gameObject);
-                        }
-                    }
-                }
-                if (UI_GameUI_ScoreBoard_Score.transform.childCount != temp_roomPlayerCount)
-                {
-                    for (int a = (x - 1); a < GameMode.PlayerCount; a++)
-                    {
-                        if (UI_GameUI_ScoreBoard_Score.transform.GetChild(a) != null)
-                        {
-                            Destroy(UI_GameUI_ScoreBoard_Score.transform.GetChild(a).gameObject);
-                        }
-                    }
-                }
-                */ 
             }
             yield return new WaitForSeconds(1f);
         }
@@ -858,7 +835,7 @@ public class GameController : Photon.MonoBehaviour
             errorDisplay_open("ERROR while leaving the photon room.");
         }
     }
-
+    // An error with spawning i believe
     private Vector3 GetRandomSpawnPoint()
     {
         int randomPos = UnityEngine.Random.Range(0, spawnPositions.Count);
@@ -965,6 +942,15 @@ public class GameController : Photon.MonoBehaviour
     public void returnToGame_fromMainMenu()
     {
         changeActiveStatus(GameController.instance.UI_mainMenu, false);
+    }
+    //
+    public void setHpValues_toPlayerCustomProp(int currentHP, int maxHP = 0)
+    {
+        if (currentHP < 0) currentHP = 0;
+        ExitGames.Client.Photon.Hashtable newHpVal = new ExitGames.Client.Photon.Hashtable();
+        newHpVal.Add("hp", currentHP.ToString());
+        if(maxHP != 0 ) newHpVal.Add("mhp", maxHP.ToString());
+        PhotonNetwork.player.SetCustomProperties(newHpVal);
     }
     // Add KILL point to local client
     public void addKillPoint(int playerId)

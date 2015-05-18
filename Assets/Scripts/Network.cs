@@ -163,8 +163,9 @@ public class Network : MonoBehaviour
         // - a - Alive
         // - d - Dead
         cusProp.Add("hs", "");
-        // Hero HP
+        // Hero HP MAX
         cusProp.Add("hp", "0");
+        cusProp.Add("mhp", "0");
         PhotonNetwork.player.SetCustomProperties(cusProp);
     }
     // On leading a room in photon it should clear all textx inside the RoomLobby UI section. MANUAL LEAVE

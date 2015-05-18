@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 
     public float speed;
     public int currentHP = 100;
-
+    public int maxHP = 100;
     private Rigidbody2D playerRigidBody;
     private PhotonView punView;
     private Animator animator;
@@ -28,7 +28,10 @@ public class PlayerController : MonoBehaviour
         punView = GetComponent<PhotonView>();
         animator = GetComponent<Animator>();
 
-        someScale = transform.localScale.x; 
+        someScale = transform.localScale.x;
+        // Sets starting HP values for Hero
+        GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
+        //
     }
 
     void Update()
@@ -157,7 +160,8 @@ public class PlayerController : MonoBehaviour
         if (punView.ownerId == playerHitId)
         {
             this.currentHP -= damage;
-
+            GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
+            Debug.Log("My HP was reduced");
             if(this.currentHP <= 0)
             {
                 Debug.Log("My ID: " + punView.owner.ID);
