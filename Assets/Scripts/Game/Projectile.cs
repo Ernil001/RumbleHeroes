@@ -27,7 +27,6 @@ public abstract class Projectile : MonoBehaviour {
             return this.networkOwnerId;
         }
     }
-
 	protected virtual void Start () {
 
         timeInstantiated = Time.time;

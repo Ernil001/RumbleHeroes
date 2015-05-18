@@ -143,10 +143,10 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
     [RPC] void PlayDeathAnimation(Vector3 pos)
     {
         Instantiate(deathParticles, pos, Quaternion.identity);
+
     }
 
     [RPC]public void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)

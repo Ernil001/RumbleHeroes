@@ -163,6 +163,8 @@ public class Network : MonoBehaviour
         // - a - Alive
         // - d - Dead
         cusProp.Add("hs", "");
+        // Hero HP
+        cusProp.Add("hp", "0");
         PhotonNetwork.player.SetCustomProperties(cusProp);
     }
     // On leading a room in photon it should clear all textx inside the RoomLobby UI section. MANUAL LEAVE
@@ -213,6 +215,12 @@ public class Network : MonoBehaviour
     public void OnPhotonPlayerDisconnected()
     {
         GameController.instance.addToRoomConsole("Player has disconected");
+
+        if (GameController.instance.GameStatus == "running")
+        {
+            //reload the UI elements.
+
+        }
     }
     public void OnLeftRoom()
     {
