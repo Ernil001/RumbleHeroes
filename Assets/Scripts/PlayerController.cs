@@ -141,7 +141,18 @@ public class PlayerController : MonoBehaviour
 
                 //animator.SetTrigger("attack");
 
-                punView.RPC("FireProjectile", PhotonTargets.All, paramsForRPC);
+                //punView.RPC("FireProjectile", PhotonTargets.All, paramsForRPC);
+
+                /* KEKKE TEST */
+                GameObject tmpProjectile = null;
+
+                tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, projectileRotation, 0) as GameObject;
+
+                animator.SetTrigger("attack");
+
+                tmpProjectile.GetComponent<Projectile>().Owner = punView.owner.ID;
+                /* KEKKE TEST*/
+
                 lastFired = Time.time;
             }
         }

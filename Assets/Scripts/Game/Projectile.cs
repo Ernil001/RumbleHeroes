@@ -14,7 +14,7 @@ public abstract class Projectile : MonoBehaviour {
 
     private Vector3 basePosition;
     private float timeInstantiated;
-    private int networkOwnerId;
+    public int networkOwnerId;
 
     public int Owner
     {
@@ -35,7 +35,6 @@ public abstract class Projectile : MonoBehaviour {
 
         //Get projectile base position
         basePosition = transform.position;
-
         
         Debug.Log(basePosition);
 	}
@@ -75,26 +74,27 @@ public abstract class Projectile : MonoBehaviour {
     {
         if (PhotonNetwork.player.isMasterClient)
         {
+            Debug.Log(col.gameObject.tag);
+
             GameObject collidedObject = col.gameObject;
-            //Debug.Log(col.name);
 
-            if (collidedObject.tag != "Projectile" &&
-                collidedObject.GetComponent<PhotonView>().owner.ID != this.Owner)
+            if ((collidedObject.tag == "Player" &&
+                collidedObject.GetComponent<PhotonView>().owner.ID != this.Owner))
             {
-                Debug.Log("We hit: " + collidedObject.tag);
+                object[] paramsForRPC = new object[4];
+                paramsForRPC[0] = this.damage;
+                paramsForRPC[1] = collidedObject.GetComponent<PhotonView>().ownerId;
+                paramsForRPC[2] = transform.position;
+                paramsForRPC[3] = this.Owner;
 
-                if (collidedObject.tag == "Player")
-                {
-                    object[] paramsForRPC = new object[4];
-                    paramsForRPC[0] = this.damage;
-                    paramsForRPC[1] = collidedObject.GetComponent<PhotonView>().ownerId;
-                    paramsForRPC[2] = transform.position;
-                    paramsForRPC[3] = this.Owner;
-
-                    collidedObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All, paramsForRPC);
-                }
+                collidedObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All, paramsForRPC);
 
                 //Remove projectiles from all clients
+                this.GetComponent<PhotonView>().RPC("RemoveProjectileFromGame", PhotonTargets.All, null);
+            }
+            else if(col.tag == "Ground")
+            {
+                //We hit ground, remove projectile
                 this.GetComponent<PhotonView>().RPC("RemoveProjectileFromGame", PhotonTargets.All, null);
             }
         }
