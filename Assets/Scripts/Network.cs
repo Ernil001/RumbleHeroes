@@ -219,7 +219,7 @@ public class Network : MonoBehaviour
         if (GameController.instance.GameStatus == "running")
         {
             //reload the UI elements.
-
+            GameController.instance.gameUI_loadElements();
         }
     }
     public void OnLeftRoom()

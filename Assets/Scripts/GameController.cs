@@ -822,13 +822,7 @@ public class GameController : Photon.MonoBehaviour
         spawnPlayerHero(HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString()));
         // Load the UI // Might change this to load the number of listed players and not the players that actually exists
             // TopPlayerIcons && ScoreBoard info for players
-        foreach(PhotonPlayer pl in PhotonNetwork.playerList)
-        {
-            GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-            temp_PlayerIconTop.transform.SetParent(UI_GameUI_Top.transform);
-            GameObject temp_scorePlayer = Instantiate(this.score_PlayerWrap, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-            temp_scorePlayer.transform.SetParent(UI_GameUI_ScoreBoard_Score.transform);
-        }
+        gameUI_loadElements();
         // Load the GameMode Description
         UI_GameUI_ScoreBoard_GameModeDescription.GetComponent<Text>().text = GameMode.ModeDescription;
     }
@@ -877,6 +871,21 @@ public class GameController : Photon.MonoBehaviour
     }
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
+    // Load the Game UI elements for running game
+    public void gameUI_loadElements()
+    {
+        //Destroy childreen if any.
+        destroyAllChildGameObjects(UI_GameUI_Top);
+        destroyAllChildGameObjects(UI_GameUI_ScoreBoard_Score);
+        // Load the needed ui
+        foreach (PhotonPlayer pl in PhotonNetwork.playerList)
+        {
+            GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            temp_PlayerIconTop.transform.SetParent(UI_GameUI_Top.transform);
+            GameObject temp_scorePlayer = Instantiate(this.score_PlayerWrap, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            temp_scorePlayer.transform.SetParent(UI_GameUI_ScoreBoard_Score.transform);
+        }
+    }
     // Spawn the player hero
     public void spawnPlayerHero(string playerHeroName = "", bool forceSpawn = false)
     {
