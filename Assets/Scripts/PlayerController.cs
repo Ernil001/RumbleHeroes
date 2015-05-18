@@ -28,26 +28,25 @@ public class PlayerController : MonoBehaviour
         punView = GetComponent<PhotonView>();
         animator = GetComponent<Animator>();
 
-        someScale = transform.localScale.x; // assuming this is facing right
+        someScale = transform.localScale.x; 
     }
 
     void Update()
     {
         if (punView.isMine)
         {
-            // ROFL //
             if(currentHP <= 0)
             {
                 //
                 object[] paramsForRPC = new object[1];
                 paramsForRPC[0] = transform.position;
                 punView.RPC("PlayDeathAnimation", PhotonTargets.All, paramsForRPC);
-                // Add death point
+
                 GameController.instance.addDeathPoint();
-                // call Destroy method
+                
+                // Remove the player
                 GameController.instance.destroyPlayerHero();
             }
-            // ENDROFL //
             InputMovement();
         }
     }
@@ -102,8 +101,8 @@ public class PlayerController : MonoBehaviour
 
                 paramsForRPC[0] = transform.FindChild("ProjectileStartingPoint").transform.position;
                 paramsForRPC[1] = projectileRotation;
-                paramsForRPC[2] = punView.ownerId;
-                paramsForRPC[3] = this.projectile.name;
+                paramsForRPC[2] = PhotonNetwork.player.ID;
+                paramsForRPC[3] = "Primary";
 
                 animator.SetTrigger("attack");
 
@@ -134,8 +133,8 @@ public class PlayerController : MonoBehaviour
 
                 paramsForRPC[0] = transform.FindChild("ProjectileStartingPoint").transform.position;
                 paramsForRPC[1] = projectileRotation;
-                paramsForRPC[2] = punView.ownerId;
-                paramsForRPC[3] = this.projectile2.name;
+                paramsForRPC[2] = PhotonNetwork.player.ID;
+                paramsForRPC[3] = "Secondary";
 
                 //animator.SetTrigger("attack");
 
@@ -158,27 +157,32 @@ public class PlayerController : MonoBehaviour
         if (punView.ownerId == playerHitId)
         {
             this.currentHP -= damage;
+
             if(this.currentHP <= 0)
             {
+                Debug.Log("My ID: " + punView.owner.ID);
+                Debug.Log("Killer ID: " + projectileOwnerPlayerId);
                 GameController.instance.addKillPoint(projectileOwnerPlayerId);
             }
-        
         }
-        //Destroy()
     }
 
     [RPC] void FireProjectile(Vector3 pos, Quaternion rot, int ownerId, string projectileName)
     {
         GameObject tmpProjectile = null;
 
-        if (projectileName == "DeathBolt")
+        if (projectileName == "Primary")
+        {
             tmpProjectile = Instantiate(projectile2, pos, rot) as GameObject;
-        else if (projectileName == "FireBolt")
+        }
+        else if (projectileName == "Secondary")
+        {
             tmpProjectile = Instantiate(projectile, pos, rot) as GameObject;
+        }
 
         animator.SetTrigger("attack");
          
-        tmpProjectile.GetComponent<Projectile>().ownerId = ownerId;
+        tmpProjectile.GetComponent<Projectile>().Owner = ownerId;
     }
 
 

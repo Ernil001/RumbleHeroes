@@ -10,12 +10,23 @@ public abstract class Projectile : MonoBehaviour {
     public int damage = 100;
     public int secondsToLive = 10;
 
-    public int ownerId;
-
     public Rigidbody2D projectileBody;
 
     private Vector3 basePosition;
     private float timeInstantiated;
+    private int networkOwnerId;
+
+    public int Owner
+    {
+        set
+        {
+            this.networkOwnerId = value;
+        }
+        get
+        {
+            return this.networkOwnerId;
+        }
+    }
 
 	protected virtual void Start () {
 
@@ -60,4 +71,39 @@ public abstract class Projectile : MonoBehaviour {
             Destroy(gameObject);
         }
 	}
+
+    protected virtual void OnTriggerEnter2D(Collider2D col)
+    {
+        if (PhotonNetwork.player.isMasterClient)
+        {
+            GameObject collidedObject = col.gameObject;
+            //Debug.Log(col.name);
+
+            if (collidedObject.tag != "Projectile" &&
+                collidedObject.GetComponent<PhotonView>().owner.ID != this.Owner)
+            {
+                Debug.Log("We hit: " + collidedObject.tag);
+
+                if (collidedObject.tag == "Player")
+                {
+                    object[] paramsForRPC = new object[4];
+                    paramsForRPC[0] = this.damage;
+                    paramsForRPC[1] = collidedObject.GetComponent<PhotonView>().ownerId;
+                    paramsForRPC[2] = transform.position;
+                    paramsForRPC[3] = this.Owner;
+
+                    collidedObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All, paramsForRPC);
+                }
+
+                //Remove projectiles from all clients
+                this.GetComponent<PhotonView>().RPC("RemoveProjectileFromGame", PhotonTargets.All, null);
+            }
+        }
+    }
+
+    [RPC]
+    public void RemoveProjectileFromGame()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -960,15 +960,20 @@ public class GameController : Photon.MonoBehaviour
     // Add KILL point to local client
     public void addKillPoint(int playerId)
     {
-        ExitGames.Client.Photon.Hashtable getKill = new ExitGames.Client.Photon.Hashtable();
+        ExitGames.Client.Photon.Hashtable customPropertiesTable = new ExitGames.Client.Photon.Hashtable();
 
-        foreach(PhotonPlayer pl in PhotonNetwork.otherPlayers)
+        foreach(PhotonPlayer networkPlayer in PhotonNetwork.otherPlayers)
         {
-            if(pl.ID == playerId)
+            if (networkPlayer.ID == playerId)
             {
-                getKill = pl.customProperties;
-                getKill["k"] = (Convert.ToInt32(getKill["k"]) + 1).ToString();
-                pl.SetCustomProperties(getKill);
+                // Current players ID matches with the ID of the client who killed another client
+
+                customPropertiesTable = networkPlayer.customProperties;
+
+                // "k" = Ernils way of saying "amount of kills"
+                customPropertiesTable["k"] = (Convert.ToInt32(customPropertiesTable["k"]) + 1).ToString();
+
+                networkPlayer.SetCustomProperties(customPropertiesTable);
             }
         }
     }
