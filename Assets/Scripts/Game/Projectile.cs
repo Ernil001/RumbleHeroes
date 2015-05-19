@@ -81,12 +81,13 @@ public abstract class Projectile : MonoBehaviour {
             if ((collidedObject.tag == "Player" &&
                 collidedObject.GetComponent<PhotonView>().owner.ID != this.Owner))
             {
+
                 object[] paramsForRPC = new object[4];
                 paramsForRPC[0] = this.damage;
                 paramsForRPC[1] = collidedObject.GetComponent<PhotonView>().ownerId;
                 paramsForRPC[2] = transform.position;
                 paramsForRPC[3] = this.Owner;
-
+    
                 collidedObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All, paramsForRPC);
 
                 //Remove projectiles from all clients
