@@ -153,7 +153,6 @@ public class PlayerController : MonoBehaviour
                 tmpProjectile.GetComponent<Projectile>().Owner = PhotonNetwork.player.ID;
                 Debug.Log("Player ID: " + PhotonNetwork.player.ID);
                 /* KEKKE TEST*/
-
                 lastFired = Time.time;
             }
         }
@@ -171,8 +170,9 @@ public class PlayerController : MonoBehaviour
         if (punView.ownerId == playerHitId)
         {
             this.currentHP -= damage;
-            //GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
-            Debug.Log("My HP was reduced");
+            if (punView.isMine) GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
+            
+            //Debug.Log("My HP was reduced");
             if(this.currentHP <= 0)
             {
                 Debug.Log("My ID: " + punView.owner.ID);
