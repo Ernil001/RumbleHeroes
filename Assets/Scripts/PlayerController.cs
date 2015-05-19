@@ -142,13 +142,13 @@ public class PlayerController : MonoBehaviour
 
                 /* KEKKE TEST */
                 GameObject tmpProjectile = null;
-<<<<<<< HEAD
+
                 
                 tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, projectileRotation, 0) as GameObject;
-=======
+
 
                 tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, projectileRotation, 0, instantiateData) as GameObject;
->>>>>>> origin/master
+
 
                 animator.SetTrigger("attack");
 
