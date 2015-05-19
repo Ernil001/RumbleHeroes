@@ -132,12 +132,9 @@ public class PlayerController : MonoBehaviour
                 Quaternion projectileRotation = Quaternion.Euler(new Vector3(0, 0, angle));
 
                 //PUN RPC Call
-                object[] paramsForRPC = new object[4];
+                object[] instantiateData = new object[1];
 
-                paramsForRPC[0] = transform.FindChild("ProjectileStartingPoint").transform.position;
-                paramsForRPC[1] = projectileRotation;
-                paramsForRPC[2] = PhotonNetwork.player.ID;
-                paramsForRPC[3] = "Secondary";
+                instantiateData[0] = PhotonNetwork.player.ID;
 
                 //animator.SetTrigger("attack");
 
@@ -146,17 +143,21 @@ public class PlayerController : MonoBehaviour
                 /* KEKKE TEST */
                 GameObject tmpProjectile = null;
 
-                tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, projectileRotation, 0) as GameObject;
+                tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, projectileRotation, 0, instantiateData) as GameObject;
 
                 animator.SetTrigger("attack");
 
-                tmpProjectile.GetComponent<Projectile>().Owner = PhotonNetwork.player.ID;
+                //tmpProjectile.GetComponent<Projectile>().Owner = PhotonNetwork.player.ID;
+
+                //punView.RPC("SetOwnerOfProjectile", PhotonTargets.All, paramsForRPC);
+
                 Debug.Log("Player ID: " + PhotonNetwork.player.ID);
                 /* KEKKE TEST*/
                 lastFired = Time.time;
             }
         }
     }
+
     [RPC] void PlayDeathAnimation(Vector3 pos)
     {
         Instantiate(deathParticles, pos, Quaternion.identity);
