@@ -838,7 +838,7 @@ public class GameController : Photon.MonoBehaviour
     // An error with spawning i believe
     private Vector3 GetRandomSpawnPoint()
     {
-        int randomPos = UnityEngine.Random.Range(0, spawnPositions.Count);
+        int randomPos = UnityEngine.Random.Range(0, spawnPositions.Count - 1);
         Debug.Log(randomPos);
 
         Vector3 returnPos = spawnPositions[randomPos];
