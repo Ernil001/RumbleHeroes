@@ -150,7 +150,8 @@ public class PlayerController : MonoBehaviour
 
                 animator.SetTrigger("attack");
 
-                tmpProjectile.GetComponent<Projectile>().Owner = punView.owner.ID;
+                tmpProjectile.GetComponent<Projectile>().Owner = PhotonNetwork.player.ID;
+                Debug.Log("Player ID: " + PhotonNetwork.player.ID);
                 /* KEKKE TEST*/
 
                 lastFired = Time.time;
@@ -160,7 +161,6 @@ public class PlayerController : MonoBehaviour
     [RPC] void PlayDeathAnimation(Vector3 pos)
     {
         Instantiate(deathParticles, pos, Quaternion.identity);
-
     }
 
     [RPC]public void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)
