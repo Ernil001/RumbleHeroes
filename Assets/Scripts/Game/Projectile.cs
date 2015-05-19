@@ -76,10 +76,9 @@ public abstract class Projectile : MonoBehaviour {
 
     protected virtual void OnTriggerEnter2D(Collider2D col)
     {
-        if (PhotonNetwork.player.isMasterClient)
+        //Only collision check your own projectiles
+        if (PhotonNetwork.player.ID == this.Owner)
         {
-            Debug.Log(col.gameObject.tag);
-
             GameObject collidedObject = col.gameObject;
 
             if ((collidedObject.tag == "Player" &&
