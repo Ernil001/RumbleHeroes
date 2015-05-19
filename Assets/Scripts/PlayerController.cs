@@ -144,7 +144,7 @@ public class PlayerController : MonoBehaviour
                 GameObject tmpProjectile = null;
 
                 
-                tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, projectileRotation, 0) as GameObject;
+                //tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, projectileRotation, 0) as GameObject;
 
 
                 tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, projectileRotation, 0, instantiateData) as GameObject;
