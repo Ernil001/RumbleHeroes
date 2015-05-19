@@ -171,7 +171,7 @@ public class PlayerController : MonoBehaviour
         if (punView.ownerId == playerHitId)
         {
             this.currentHP -= damage;
-            GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
+            //GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
             Debug.Log("My HP was reduced");
             if(this.currentHP <= 0)
             {
