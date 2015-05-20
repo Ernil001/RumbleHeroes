@@ -135,6 +135,8 @@ public class GameController : Photon.MonoBehaviour
         //
         changeActiveStatus(this.UI_mainMenu, true);
         changeActiveStatus(this.UI_game, false);
+        //
+        changeActiveStatus(UI_GameUI_ScoreBoard, false);
     }
     //
     public void populateHeroSelectionList()
@@ -366,7 +368,8 @@ public class GameController : Photon.MonoBehaviour
             sht.GetComponent<Text>().text = "";
         }
     }
-    // Prepare to start the next round when Objectives are met, for all players
+    //
+    //////////////////////////////////////// - RoundMatch GameMode RPC calls for Rounds and End check - ////////////////////////////////
     [RPC] public void GameMode_RoundMatch_RoundEnd()
     {
         StartCoroutine(GameMode_RoundMatch_PrepareToSpawn());
@@ -381,7 +384,7 @@ public class GameController : Photon.MonoBehaviour
         int x = 0;
         while (x<2)
         {
-            Debug.Log("Loop " + x.ToString());
+            //Debug.Log("Loop " + x.ToString());
             if (x == 1)
             {
                 Debug.Log("Starting new round!");
@@ -393,6 +396,32 @@ public class GameController : Photon.MonoBehaviour
             yield return new WaitForSeconds(3f);
         }
     }
+    [RPC] public void GameMode_RoundMatch_GameEnd()
+    {
+        StartCoroutine(GameMode_RoundMatch_PrepareToEndGame());
+    }
+    // Ends the game after 5 sec, shows end screen
+    IEnumerator GameMode_RoundMatch_PrepareToEndGame()
+    {
+        //Set KeyBinds
+        InputKeys.instance.InputType = "MainMenu";
+        //
+        changeActiveStatus(UI_GameUI_ScoreBoard, true);
+        // Set Ending screen here
+
+        //
+        int x = 0;
+        while (x < 2)
+        {
+            if (x == 1)
+            {
+                endGame_client();
+            }
+            x++;
+            yield return new WaitForSeconds(5f);
+        }
+    }
+    //////////////////////////////////////// - END - ////////////////////////////////
     //
     IEnumerator UpdateGameScreen()
     {
@@ -856,6 +885,7 @@ public class GameController : Photon.MonoBehaviour
             Destroy(GameMode.instantiatedMap.gameObject);
             //
             destroyAllChildGameObjects(UI_GameUI_ScoreBoard_Score);
+
         }
         else
         {
@@ -928,7 +958,7 @@ public class GameController : Photon.MonoBehaviour
         }
         //else Debug.Log("No spawn Hero Alive");
     }
-    // Kill the player hero resource // DOESNT WORK FROM HERE YET
+    // Kill the player hero resource and Check if GameEnd is true, else continue with GameMode Design for spawning
     public void destroyPlayerHero()
     {
 
@@ -939,33 +969,55 @@ public class GameController : Photon.MonoBehaviour
         PhotonNetwork.Destroy(this.activeLocalHero.gameObject);
         Destroy(this.activeLocalHero.gameObject);
         // Depending on the GameMode this will be changed Spawning or well staying dead
-        if (GameMode.Mode == "RoundMatch")
+        // Before checking for GameMode and what to do, check if game end condition has been met ?
+        // GameMode_RoundMatch_GameEnd()
+        bool temp_endConditionMet = false;
+        foreach(PhotonPlayer pl in PhotonNetwork.playerList)
         {
-            ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
-            int x = Convert.ToInt32(roomCusInfo["rk"].ToString());
-            x++;
-            if ((GameMode.PlayerCount - 1) <= x)
+            // Possible error with DRAW depending since it checks on player death and not with adding kill straight away
+            if (GameMode.Mode == "RoundMatch")
             {
-                // Start new Round
-                Debug.Log("New round has started");
-                // Call RPC
-                this.photonView.RPC("GameMode_RoundMatch_RoundEnd", PhotonTargets.All);
-                // Set Round deaths to 0
-                roomCusInfo["rk"] = "0";
+                ExitGames.Client.Photon.Hashtable sc = pl.customProperties;
+                if (Convert.ToInt32(sc["k"]) >= GameMode.ScoreCondition) temp_endConditionMet = true;
             }
-            else
+            if (GameMode.Mode == "CaptureTheFlag")
             {
-                // Add the round kill to room properties
-                roomCusInfo["rk"] = x.ToString();
+                // Just in case we might need something else than scoreCondition for kills.
             }
-            // Transfer only one parameter
-            ExitGames.Client.Photon.Hashtable sInfoToTransfer = new ExitGames.Client.Photon.Hashtable();
-            sInfoToTransfer.Add("rk", roomCusInfo["rk"].ToString());
-            PhotonNetwork.room.SetCustomProperties(sInfoToTransfer);
+        }
+
+        if (temp_endConditionMet)
+        {
+            this.photonView.RPC("GameMode_RoundMatch_GameEnd", PhotonTargets.All);
+        }
+        else
+        {
+            if (GameMode.Mode == "RoundMatch")
+            {
+                ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
+                int x = Convert.ToInt32(roomCusInfo["rk"].ToString());
+                x++;
+                if ((GameMode.PlayerCount - 1) <= x)
+                {
+                    // Start new Round
+                    Debug.Log("New round has started");
+                    // Call RPC
+                    this.photonView.RPC("GameMode_RoundMatch_RoundEnd", PhotonTargets.All);
+                    // Set Round deaths to 0
+                    roomCusInfo["rk"] = "0";
+                }
+                else
+                {
+                    // Add the round kill to room properties
+                    roomCusInfo["rk"] = x.ToString();
+                }
+                // Transfer only one parameter
+                ExitGames.Client.Photon.Hashtable sInfoToTransfer = new ExitGames.Client.Photon.Hashtable();
+                sInfoToTransfer.Add("rk", roomCusInfo["rk"].ToString());
+                PhotonNetwork.room.SetCustomProperties(sInfoToTransfer);
+            }
         }
     }
-    ////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////
     // Close Main Menu and return to game
     public void returnToGame_fromMainMenu()
     {
@@ -995,10 +1047,6 @@ public class GameController : Photon.MonoBehaviour
 
                 // "k" = Ernils way of saying "amount of kills" // Leave Ernils way out of this :D!
                 customPropertiesTable["k"] = (Convert.ToInt32(customPropertiesTable["k"]) + 1).ToString();
-                // Check for Game Victory Condition !
-                // This should work like a RPC + Timed interval on all clients with a ending screen and then returning to lobby by running function endGame_client();
-
-                //
                 networkPlayer.SetCustomProperties(customPropertiesTable);
             }
         }
@@ -1019,41 +1067,9 @@ public class GameController : Photon.MonoBehaviour
     // Testing method linked to Testing Button
     public void testingMethod()
     {
-        //var props : ExitGames.Client.Photon.Hashtable = new ExitGames.Client.Photon.Hashtable();
-
-        /*
-        Hashtable rp = new Hashtable();
-        rp.Add("p1", "a string");
-        rp.Add("p2", "a string");
-        PhotonNetwork.room.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "prop1", "val" }, { "prop2", 10 } }, new string[] { "prop1" });
-        */
-        /*
-        RoomOptions()
-        */
-        /*
-        ExitGames.Client.Photon.Hashtable rp = new ExitGames.Client.Photon.Hashtable();
-        
-        rp.Add("h1", "H01"); // Key is player pos in room, NOT ID, value is hero selected
-        rp.Add("h2", "H02");
-        rp.Add("h3", "H03");
-        rp.Add("h4", "H04");
-        PhotonNetwork.room.SetCustomProperties(rp);
-        */
-        /*
-        ExitGames.Client.Photon.Hashtable getHasTable = PhotonNetwork.room.customProperties;
-        foreach (DictionaryEntry row in getHasTable)
-        {
-            Debug.Log(row.Key + "/" + row.Value);
-        }
-         * */
-
         //
         Debug.Log(HeroInformation.instance.return_HeroName_OnCode("H02"));
         Debug.Log(HeroInformation.instance.return_HeroCode_OnName("Constantine"));
         //   
-        //PhotonNetwork.room.SetCustomProperties(1, "test");
-
-
-        //Debug.Log(PhotonNetwork.masterClient.name + " -- " + PhotonNetwork.masterClient.ID.GetType());
     }
 }
