@@ -821,9 +821,9 @@ public class GameController : Photon.MonoBehaviour
         this.GameStatus = "running";
         // Loads the GameMode // sets default or room customRoomProperties photon
         ExitGames.Client.Photon.Hashtable roomCusInfo = PhotonNetwork.room.customProperties;
+        GameMode.ScoreCondition = Convert.ToInt32(roomCusInfo["sc"]);
         GameMode.Mode = roomCusInfo["gm"].ToString();
         GameMode.PlayerCount = PhotonNetwork.room.playerCount;
-        GameMode.ScoreCondition = Convert.ToInt32(roomCusInfo["sc"]);
         GameMode.map = this.mapsFolder[0];
         // Load the map // Presumes files have not been tempered with
         GameMode.instantiatedMap = Instantiate(GameMode.map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;

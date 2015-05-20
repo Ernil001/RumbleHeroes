@@ -6,7 +6,7 @@ public static class GameMode
 {
     //
     private static int playerCount;
-    private static int scoreCondition; // Each gamemode is limited by an objective. This is that objective.
+    private static int scoreCondition = 15; // Each gamemode is limited by an objective. This is that objective.
     // Options for mode
     //  - RoundMatch - A player must get a certain amount of kills before the game ends, When 1 player survives each round the round restarts.
     private static string mode;
@@ -32,7 +32,7 @@ public static class GameMode
         {
             mode = value;
             if (mode == "RoundMatch")
-                ModeDescription = " Round based game \n- Each round is played until 1 player is left alive \n- Game ends when a player reaches the needed score";
+                ModeDescription = " Round based game \n- Each round is played until 1 player is left alive \n- Game ends when a player reaches the score " + scoreCondition.ToString();
         }
         get 
         {

@@ -83,7 +83,7 @@ public class Network : MonoBehaviour
         // Room Mode Settings // These settings will be taken from the UI later, now it will set default as Round Match // 10 kills
         prop.Add("gm", "RoundMatch"); // game mode
         prop.Add("rk", "0"); // RoundKills
-        prop.Add("sc", "20"); // score to obtain to win
+        prop.Add("sc", "10"); // score to obtain to win
         /*
         prop.Add("h1", "");
         prop.Add("h2", "");
