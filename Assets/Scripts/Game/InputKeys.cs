@@ -12,7 +12,7 @@ public class InputKeys : MonoBehaviour {
     //  - GameMainMenu
     //  - GameDead // When a player is dead and is either waiting for respawn or waiting for round restart, same thing iknit >X
     //  - 
-    public string inputType = "MainMenu";
+    public string inputType = "";
     public string InputType
     {
         set

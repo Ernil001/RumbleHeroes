@@ -113,10 +113,28 @@ public class GameController : Photon.MonoBehaviour
     }
     void Start()
     {
-
+        // Set Default Main Menu acting
+        setEnvironment_mainMenu();
         //Populate the list of Heroes at Hero Selection UI
         populateHeroSelectionList();
         
+    }
+    //
+    private void setEnvironment_mainMenu()
+    {
+        //
+        InputKeys.instance.InputType = "MainMenu";
+        // Hide unnecessary buttons and show the neccesarry ones
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_CreateRoom, true);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_JoinRoom, true);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, true);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToGame, false);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu, false);
+        //
+        this.GameStatus = "";
+        //
+        changeActiveStatus(this.UI_mainMenu, true);
+        changeActiveStatus(this.UI_game, false);
     }
     //
     public void populateHeroSelectionList()
@@ -392,8 +410,30 @@ public class GameController : Photon.MonoBehaviour
                     ExitGames.Client.Photon.Hashtable plInfo = new ExitGames.Client.Photon.Hashtable();
                     plInfo = pl.customProperties;
                     // UI ScoreBoard Loading
-                    UI_GameUI_Top.transform.GetChild(x).FindChild("PlayerName").GetComponent<Text>().text = pl.name;
-                    UI_GameUI_Top.transform.GetChild(x).FindChild("HealthBar").GetComponent<Text>().text = plInfo["hp"].ToString() + " / " + plInfo["mhp"].ToString() + " / ID: " + pl.ID;
+                    Transform temp_info = UI_GameUI_Top.transform.GetChild(x).FindChild("Info");
+                    temp_info.transform.FindChild("PlayerName").GetComponent<Text>().text = pl.name + " / ID: " + pl.ID;
+                    //
+                    temp_info.transform.FindChild("HealthBar").GetComponent<Text>().text = plInfo["hp"].ToString() + " / " + plInfo["mhp"].ToString();
+                    //
+                    RectTransform temp_rectT = temp_info.transform.FindChild("HealthBarRed").transform.FindChild("HealthBarGreen").GetComponent<RectTransform>();
+                    temp_rectT.anchorMax = new Vector2(0, 1);
+                    temp_rectT.anchorMin = new Vector2(0, 0);
+                    temp_rectT.anchoredPosition = new Vector2(0f, 0.5f);
+                    /*
+                    float maxHP = Convert.ToSingle(plInfo["mhp"].ToString());
+                    float HP = Convert.ToSingle(plInfo["hp"].ToString());
+                    float hpProcentDec = (HP / maxHP) * 100;
+                    int hpProcent = (int)Math.Round(hpProcentDec, 0);
+                    int changeValue =(int)Math.Round((hpProcent * 1.5f),0);
+                    Debug.Log(maxHP.ToString() + "/" + HP.ToString() + "/" + hpProcentDec.ToString() + "/" + hpProcent.ToString());
+                    temp_rectT.sizeDelta = new Vector2(changeValue, 0);
+                    temp_rectT.localPosition = new Vector3(((changeValue/2f)-75),0,0);
+                    */
+                    int temp_value = (int)Math.Round((((int)Math.Round((Convert.ToSingle(plInfo["hp"].ToString()) / Convert.ToSingle(plInfo["mhp"].ToString())) * 100, 0)) * 1.5f), 0);
+                    temp_rectT.sizeDelta = new Vector2(temp_value, 0);
+                    temp_rectT.localPosition = new Vector3(((temp_value / 2f) - 75), 0, 0);
+
+                    //
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Name").GetComponent<Text>().text = pl.name;
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Hero").GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString());
                     UI_GameUI_ScoreBoard_Score.transform.GetChild(x).FindChild("Kills").GetComponent<Text>().text = plInfo["k"].ToString();
@@ -810,19 +850,7 @@ public class GameController : Photon.MonoBehaviour
     {
         if (PhotonNetwork.LeaveRoom())
         {
-            //
-            InputKeys.instance.InputType = "MainMenu";
-            // Hide unnecessary buttons and show the neccesarry ones
-            changeActiveStatus(UI_MainMenuUI_MainMenuWrap_CreateRoom, true);
-            changeActiveStatus(UI_MainMenuUI_MainMenuWrap_JoinRoom, true);
-            changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, true);
-            changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToGame, false);
-            changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu, false);
-            //
-            this.GameStatus = "";
-            //
-            changeActiveStatus(this.UI_mainMenu, true);
-            changeActiveStatus(this.UI_game, false);
+            setEnvironment_mainMenu();
             //Destroy all unnecessary GameObjects - Map, Players, etc...
             destroyAllChildGameObjects(UI_GameUI_Top);
             Destroy(GameMode.instantiatedMap.gameObject);
@@ -876,13 +904,13 @@ public class GameController : Photon.MonoBehaviour
             }
         }
         // Set playerHeroStatus to alive /a
-        Debug.Log("You have launched the spawn method!");
+        //Debug.Log("You have launched the spawn method!");
         ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
         chInfo = PhotonNetwork.player.customProperties;
-        Debug.Log("HeroStatus: " + chInfo["hs"].ToString());
+        //Debug.Log("HeroStatus: " + chInfo["hs"].ToString());
         if (chInfo["hs"].ToString() != "a" || forceSpawn == true)
         {
-            Debug.Log("You The character is indeed dead !");
+            //Debug.Log("You The character is indeed dead !");
             //
             chInfo["hs"] = "a";
             PhotonNetwork.player.SetCustomProperties(chInfo);
@@ -898,7 +926,7 @@ public class GameController : Photon.MonoBehaviour
             this.activeLocalHero = PhotonNetwork.Instantiate(playerHeroName, GetRandomSpawnPoint(), Quaternion.identity, 0);
             mainCamera.GetComponent<SmoothCameraFollow>().target = this.activeLocalHero.transform;
         }
-        else Debug.Log("No spawn Hero Alive");
+        //else Debug.Log("No spawn Hero Alive");
     }
     // Kill the player hero resource // DOESNT WORK FROM HERE YET
     public void destroyPlayerHero()
@@ -965,9 +993,12 @@ public class GameController : Photon.MonoBehaviour
 
                 customPropertiesTable = networkPlayer.customProperties;
 
-                // "k" = Ernils way of saying "amount of kills"
+                // "k" = Ernils way of saying "amount of kills" // Leave Ernils way out of this :D!
                 customPropertiesTable["k"] = (Convert.ToInt32(customPropertiesTable["k"]) + 1).ToString();
+                // Check for Game Victory Condition !
+                // This should work like a RPC + Timed interval on all clients with a ending screen and then returning to lobby by running function endGame_client();
 
+                //
                 networkPlayer.SetCustomProperties(customPropertiesTable);
             }
         }

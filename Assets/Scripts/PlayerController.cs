@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
         someScale = transform.localScale.x;
         // Sets starting HP values for Hero
-        GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
+        if(punView.isMine) GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
         //
     }
 
@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour
         if (punView.ownerId == playerHitId)
         {
             this.currentHP -= damage;
-            if (punView.isMine) GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
+            if (punView.isMine) GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP);
             
             //Debug.Log("My HP was reduced");
             if(this.currentHP <= 0)
