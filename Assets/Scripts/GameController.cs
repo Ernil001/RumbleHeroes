@@ -885,7 +885,6 @@ public class GameController : Photon.MonoBehaviour
             Destroy(GameMode.instantiatedMap.gameObject);
             //
             destroyAllChildGameObjects(UI_GameUI_ScoreBoard_Score);
-
         }
         else
         {

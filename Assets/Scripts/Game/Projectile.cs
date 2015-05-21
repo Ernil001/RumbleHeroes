@@ -31,10 +31,21 @@ public abstract class Projectile : MonoBehaviour
         }
     }
 
-	protected virtual void Start () {
+	protected virtual void Start () 
+    {
+        // Moved the projectile type code here
+        Vector3 playerPos = (Vector3)this.GetComponent<PhotonView>().instantiationData[1];
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 10;
+        mousePos.x = mousePos.x - playerPos.x;
+        mousePos.y = mousePos.y - playerPos.y;
+        float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+        Quaternion projectileRotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        //
+        this.GetComponent<Transform>().rotation = projectileRotation;
+
 
         timeInstantiated = Time.time;
-
         //Set owner
         this.Owner = (int)this.GetComponent<PhotonView>().instantiationData[0];
 
@@ -42,7 +53,7 @@ public abstract class Projectile : MonoBehaviour
 
         //Get projectile base position
         basePosition = transform.position;
-        
+        //
         Debug.Log(basePosition);
 	}
 	

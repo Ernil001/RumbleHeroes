@@ -142,6 +142,7 @@ public class PlayerController : MonoBehaviour
                 //Input.mousePosition);
 
                 //Angle the projectile towards the mouse
+                /*
                 Vector3 mousePos = Input.mousePosition;
                 mousePos.z = 10;
                 Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
@@ -163,6 +164,28 @@ public class PlayerController : MonoBehaviour
 
                 punView.RPC("FireProjectile", PhotonTargets.All, paramsForRPC);
                 lastFired = Time.time;
+                Vector3 mousePos = Input.mousePosition;
+                mousePos.z = 10;
+                Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
+                mousePos.x = mousePos.x - playerPos.x;
+                mousePos.y = mousePos.y - playerPos.y;
+                float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+                
+                Quaternion projectileRotation = Quaternion.Euler(new Vector3(0, 0, angle));
+                */
+                //
+                Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
+                //
+                object[] instantiateData = new object[2];
+                instantiateData[0] = PhotonNetwork.player.ID;
+                instantiateData[1] = playerPos;
+                //
+                GameObject tmpProjectile = null;
+                tmpProjectile = PhotonNetwork.Instantiate(projectile2.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) as GameObject;
+                //
+                animator.SetTrigger("attack");
+                //
+                lastFired = Time.time;
             }
         }
 
@@ -170,29 +193,18 @@ public class PlayerController : MonoBehaviour
         {
             if (Time.time - lastFired > 0.8f)
             {
-                //Quaternion projectileRotation = Quaternion.FromToRotation(transform.position,
-                //Input.mousePosition);
-
-                //Angle the projectile towards the mouse
-                Vector3 mousePos = Input.mousePosition;
-                mousePos.z = 10;
+                //
                 Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
-                mousePos.x = mousePos.x - playerPos.x;
-                mousePos.y = mousePos.y - playerPos.y;
-                float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
-
-                Quaternion projectileRotation = Quaternion.Euler(new Vector3(0, 0, angle));
-
-                object[] instantiateData = new object[1];
-
+                //
+                object[] instantiateData = new object[2];
                 instantiateData[0] = PhotonNetwork.player.ID;
-
+                instantiateData[1] = playerPos;
+                //
                 GameObject tmpProjectile = null;
-
-                tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, projectileRotation, 0, instantiateData) as GameObject;
-
+                tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) as GameObject;
+                //
                 animator.SetTrigger("attack");
-
+                //
                 lastFired = Time.time;
             }
         }
