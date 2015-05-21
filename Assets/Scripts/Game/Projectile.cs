@@ -54,7 +54,6 @@ public abstract class Projectile : MonoBehaviour
             Destroy(gameObject);
         }
 
-
         // Get angle towards mouse position
         float angle = projectileBody.transform.eulerAngles.magnitude * Mathf.Deg2Rad;
 
