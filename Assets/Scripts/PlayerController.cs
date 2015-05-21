@@ -18,8 +18,10 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     public GameObject projectile;
     public GameObject projectile2;
+    /*
     public GameObject deathParticles;
     public GameObject hitParticles;
+    */ 
 
     private float someScale;
 
