@@ -24,7 +24,7 @@ public class ArrowShot : Projectile
 
         base.Start();
     }
-    /*
+    
     protected override void Update()
     {
         //Debug.Log("ASD");
@@ -33,8 +33,8 @@ public class ArrowShot : Projectile
 
 
 
-        base.Start();
+        base.Update();
     }
-    */
+    
 }
 
