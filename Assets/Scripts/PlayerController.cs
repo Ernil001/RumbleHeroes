@@ -5,7 +5,10 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
-
+    public int controllingPlayer_photonID;
+    public string controllingPlayer_Username;
+    Transform HeroUI_ConPlUser;
+    //
     public float speed;
     public int currentHP = 100;
     public int maxHP = 100;
@@ -32,10 +35,39 @@ public class PlayerController : MonoBehaviour
         // Sets starting HP values for Hero
         if(punView.isMine) GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
         //
+        this.HeroUI_ConPlUser = this.transform.FindChild("HeroUI").transform.FindChild("ControllingPlayerUsername");
+        //this.HeroUI_ControllingPlayerUsername_locSc = HeroUI_ConPlUser.GetComponent<RectTransform>().localScale;
+        //
+        this.controllingPlayer_photonID = this.punView.ownerId;
+        this.controllingPlayer_Username = this.punView.owner.name;
+        if(this.controllingPlayer_Username != null) addUsername();
+
     }
+
 
     void Update()
     {
+
+
+        if (this.GetComponent<Transform>().localScale.x < 0f && HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.x > 0f)
+        {
+
+            HeroUI_ConPlUser.GetComponent<RectTransform>().localScale = new Vector3(
+                (HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.x * -1),
+                HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.y,
+                HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.z
+            );
+        }
+        else if (this.GetComponent<Transform>().localScale.x > 0f && HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.x < 0f)
+        {
+            HeroUI_ConPlUser.GetComponent<RectTransform>().localScale = new Vector3(
+                Math.Abs(HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.x),
+                HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.y,
+                HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.z
+            );
+        }
+        
+        //
         if (punView.isMine)
         {
             if(currentHP <= 0)
@@ -53,7 +85,12 @@ public class PlayerController : MonoBehaviour
             InputMovement();
         }
     }
-
+    //
+    private void addUsername()
+    {
+        this.HeroUI_ConPlUser.GetComponent<Text>().text = controllingPlayer_Username;
+    }
+    //
     void InputMovement()
     {
         Vector2 curVel = playerRigidBody.velocity;

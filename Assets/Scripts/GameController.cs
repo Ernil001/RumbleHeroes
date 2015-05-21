@@ -955,6 +955,7 @@ public class GameController : Photon.MonoBehaviour
             // Create player on location and set camera
             this.activeLocalHero = PhotonNetwork.Instantiate(playerHeroName, GetRandomSpawnPoint(), Quaternion.identity, 0);
             mainCamera.GetComponent<SmoothCameraFollow>().target = this.activeLocalHero.transform;
+            //this.activeLocalHero.
         }
         //else Debug.Log("No spawn Hero Alive");
     }
