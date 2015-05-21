@@ -75,14 +75,27 @@ public class PlayerController : MonoBehaviour
                 //
                 object[] paramsForRPC = new object[1];
                 paramsForRPC[0] = transform.position;
-                punView.RPC("PlayDeathAnimation", PhotonTargets.All, paramsForRPC);
+                //punView.RPC("PlayDeathAnimation", PhotonTargets.All, paramsForRPC);
 
                 GameController.instance.addDeathPoint();
-                
-                // Remove the player
-                GameController.instance.destroyPlayerHero();
+                // Destroy the player completly with GameController.instance.destroyPlayerHero(); after the animation ends so timeout ?
+                StartCoroutine(FinishDeath());
+                //GameController.instance.destroyPlayerHero();
             }
             InputMovement();
+        }
+    }
+    IEnumerator FinishDeath()
+    {
+        int x = 0;
+        while (x<2)
+        {
+            if (x == 1)
+            {
+                GameController.instance.destroyPlayerHero();
+            }
+            x++;
+            yield return new WaitForSeconds(1f);
         }
     }
     //
@@ -185,13 +198,12 @@ public class PlayerController : MonoBehaviour
 
     [RPC] void PlayDeathAnimation(Vector3 pos)
     {
-        Instantiate(deathParticles, pos, Quaternion.identity);
+        //Instantiate(deathParticles, pos, Quaternion.identity);
     }
 
     [RPC]public void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)
     {
-        Instantiate(hitParticles, positionOfImpact, Quaternion.identity);
-
+        //Instantiate(hitParticles, positionOfImpact, Quaternion.identity);
         //If I am the player who got hit
         if (punView.ownerId == playerHitId)
         {
@@ -199,11 +211,16 @@ public class PlayerController : MonoBehaviour
             if (punView.isMine) GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP);
             
             //Debug.Log("My HP was reduced");
-            if(this.currentHP <= 0)
+            if (this.currentHP <= 0)
             {
+                this.animator.SetTrigger("death");
                 Debug.Log("My ID: " + punView.owner.ID);
                 Debug.Log("Killer ID: " + projectileOwnerPlayerId);
                 GameController.instance.addKillPoint(projectileOwnerPlayerId);
+            }
+            else
+            {
+                this.animator.SetTrigger("hit");
             }
         }
     }

@@ -3,13 +3,16 @@ using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Transform))]
-public abstract class Projectile : MonoBehaviour {
-
+public abstract class Projectile : MonoBehaviour 
+{
+    //
+    public GameObject projectileHitAnimation;
+    //
     public int speed = 10;
     public int maxDistance = 100;
     public int damage = 100;
     public int secondsToLive = 10;
-
+    
     public Rigidbody2D projectileBody;
 
     private Vector3 basePosition;
@@ -104,9 +107,11 @@ public abstract class Projectile : MonoBehaviour {
         }
     }
 
-    [RPC]
-    public void RemoveProjectileFromGame()
+    [RPC] public void RemoveProjectileFromGame()
     {
+        // Create EndOfProjectileStatus, AKA. explosion, random animation, etc etc
+        if (projectileHitAnimation != null) Instantiate(projectileHitAnimation, transform.position, Quaternion.identity);
+        //
         Destroy(gameObject);
     }
 }
