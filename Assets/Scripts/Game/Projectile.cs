@@ -15,8 +15,8 @@ public abstract class Projectile : MonoBehaviour
     
     public Rigidbody2D projectileBody;
 
-    private Vector3 basePosition;
-    private float timeInstantiated;
+    protected Vector3 basePosition;
+    protected float timeInstantiated;
     public int networkOwnerId;
 
     public int Owner
@@ -35,7 +35,7 @@ public abstract class Projectile : MonoBehaviour
     {
         // Moved the projectile type code here
         Vector3 playerPos = (Vector3)this.GetComponent<PhotonView>().instantiationData[1];
-        Vector3 mousePos = Input.mousePosition;
+        Vector3 mousePos = (Vector3)this.GetComponent<PhotonView>().instantiationData[2];
         mousePos.z = 10;
         mousePos.x = mousePos.x - playerPos.x;
         mousePos.y = mousePos.y - playerPos.y;
