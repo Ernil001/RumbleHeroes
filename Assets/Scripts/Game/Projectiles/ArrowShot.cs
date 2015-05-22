@@ -34,8 +34,19 @@ public class ArrowShot : Projectile
             Destroy(gameObject);
         }
         // Two options, depending on which way the shot is traveling.
-        float force = 2f;
+        if (startLocation.x > this.transform.position.x)
+        {
+            this.transform.Rotate(new Vector3(0, 0, 360.0f - Vector3.Angle(this.transform.right, this.GetComponent<Rigidbody2D>().velocity.normalized)));
+            //left
+        }
+        else if (startLocation.x < this.transform.position.x)
+        {
+            this.transform.Rotate(new Vector3(0, 0, 360.0f - Vector3.Angle(this.transform.right, this.GetComponent<Rigidbody2D>().velocity.normalized)));
+            //right
+        }
 
+        /*
+         * float force = 2f;
         if (startLocation.x > this.transform.position.x)
         {
             projectileBody.AddForceAtPosition(projectileBody.velocity * -.1f, transform.TransformPoint(0f, force, 0f));
@@ -43,17 +54,9 @@ public class ArrowShot : Projectile
         }
         else if (startLocation.x < this.transform.position.x)
         {
-            if ((this.transform.localEulerAngles.z < 90f && this.transform.localEulerAngles.z >= 0f) || (this.transform.localEulerAngles.z > 270f && this.transform.localEulerAngles.z <= 360f))
-            {
-                projectileBody.AddForceAtPosition(projectileBody.velocity * -.1f, transform.TransformPoint(0f, -force, 0f));
-                //Debug.Log("Desno, YES z: " + this.transform.localEulerAngles.z.ToString());
-            }
-            else
-            {
-                //Debug.Log("Desno, NO z: " + this.transform.localEulerAngles.z.ToString());
-            }
+            projectileBody.AddForceAtPosition(projectileBody.velocity * -.1f, transform.TransformPoint(0f, -force, 0f));
         }
-        
+        */
         //Check if max distance has been reached
         float distance = Vector3.Distance(basePosition, transform.position);
         if (distance > maxDistance)
