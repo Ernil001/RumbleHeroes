@@ -36,7 +36,7 @@ public class ArrowShot : Projectile
         // Two options, depending on which way the shot is traveling.
         if (startLocation.x > this.transform.position.x)
         {
-            this.transform.Rotate(new Vector3(0, 0, 360.0f - Vector3.Angle(this.transform.right, this.GetComponent<Rigidbody2D>().velocity.normalized)));
+            this.transform.Rotate(new Vector3(0, 0, 360.0f + Vector3.Angle(this.transform.right, this.GetComponent<Rigidbody2D>().velocity.normalized)));
             //left
         }
         else if (startLocation.x < this.transform.position.x)
@@ -44,19 +44,6 @@ public class ArrowShot : Projectile
             this.transform.Rotate(new Vector3(0, 0, 360.0f - Vector3.Angle(this.transform.right, this.GetComponent<Rigidbody2D>().velocity.normalized)));
             //right
         }
-
-        /*
-         * float force = 2f;
-        if (startLocation.x > this.transform.position.x)
-        {
-            projectileBody.AddForceAtPosition(projectileBody.velocity * -.1f, transform.TransformPoint(0f, force, 0f));
-            //Debug.Log("Levo");
-        }
-        else if (startLocation.x < this.transform.position.x)
-        {
-            projectileBody.AddForceAtPosition(projectileBody.velocity * -.1f, transform.TransformPoint(0f, -force, 0f));
-        }
-        */
         //Check if max distance has been reached
         float distance = Vector3.Distance(basePosition, transform.position);
         if (distance > maxDistance)
