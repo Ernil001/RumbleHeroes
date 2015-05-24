@@ -12,31 +12,22 @@ public abstract class Projectile : Ability
     public int speed = 10;
     public int maxDistance = 100;
     public int damage = 100;
-    public int secondsToLive = 10;
-    
+    //
     public Rigidbody2D projectileBody;
-
     protected Vector3 basePosition;
-    protected float timeInstantiated;
-    public int networkOwnerId;
-
-    public int Owner
+    
+    protected override void Awake()
     {
-        set
-        {
-            this.networkOwnerId = value;
-        }
-        get
-        {
-            return this.networkOwnerId;
-        }
+        base.Awake();
     }
 
 	protected override void Start () 
     {
         // Moved the projectile type code here
+        /*
         Vector3 playerPos = (Vector3)this.GetComponent<PhotonView>().instantiationData[1];
         Vector3 mousePos = (Vector3)this.GetComponent<PhotonView>().instantiationData[2];
+        */
         mousePos.z = 10;
         mousePos.x = mousePos.x - playerPos.x;
         mousePos.y = mousePos.y - playerPos.y;
@@ -44,14 +35,8 @@ public abstract class Projectile : Ability
         Quaternion projectileRotation = Quaternion.Euler(new Vector3(0, 0, angle));
         //
         this.GetComponent<Transform>().rotation = projectileRotation;
-
-
-        timeInstantiated = Time.time;
-        //Set owner
-        this.Owner = (int)this.GetComponent<PhotonView>().instantiationData[0];
-
+        //
         projectileBody = GetComponent<Rigidbody2D>();
-
         //Get projectile base position
         basePosition = transform.position;
         //
@@ -60,13 +45,7 @@ public abstract class Projectile : Ability
 
     protected override void Update()
     {
-
-        //Check if it has surpassed the time to live
-        if(Time.time - timeInstantiated >= secondsToLive)
-        {
-            Destroy(gameObject);
-        }
-
+        base.Update();
         // Get angle towards mouse position
         float angle = projectileBody.transform.eulerAngles.magnitude * Mathf.Deg2Rad;
 

@@ -9,7 +9,9 @@ public class PlayerController : MonoBehaviour
     public string controllingPlayer_Username;
     Transform HeroUI_ConPlUser;
     //
+    public float speedBase;
     public float speed;
+    //
     public int currentHP = 100;
     public int maxHP = 100;
     private Rigidbody2D playerRigidBody;
@@ -24,7 +26,6 @@ public class PlayerController : MonoBehaviour
     */ 
 
     private float someScale;
-
     private float lastFired;
 
     void Start()
@@ -176,10 +177,11 @@ public class PlayerController : MonoBehaviour
                 //
                 Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
                 //
-                object[] instantiateData = new object[3];
+                object[] instantiateData = new object[4];
                 instantiateData[0] = PhotonNetwork.player.ID;
                 instantiateData[1] = playerPos;
                 instantiateData[2] = Input.mousePosition;
+                instantiateData[3] = punView.viewID;
                 //
                 GameObject tmpProjectile = null;
                 tmpProjectile = PhotonNetwork.Instantiate(Ability2.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) as GameObject;
@@ -197,10 +199,11 @@ public class PlayerController : MonoBehaviour
                 //
                 Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
                 //
-                object[] instantiateData = new object[3];
+                object[] instantiateData = new object[4];
                 instantiateData[0] = PhotonNetwork.player.ID;
                 instantiateData[1] = playerPos;
                 instantiateData[2] = Input.mousePosition;
+                instantiateData[3] = punView.viewID;
                 //
                 GameObject tmpProjectile = null;
                 tmpProjectile = PhotonNetwork.Instantiate(Ability.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) as GameObject;
