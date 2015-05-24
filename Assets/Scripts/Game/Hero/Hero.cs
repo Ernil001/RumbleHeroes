@@ -57,9 +57,10 @@ public class HeroClass {
                 this.hp = 100;
                 this.movementSpeed = 0;
                 this.information = "Information for the FireMage here";
-
+                /*
                 abilities.Add(new Ability("Fire Arrow", 2, 20));
                 abilities.Add(new Ability("Fireball", 10, 50));
+                 * */
                 break;
 
             case HeroEnum.Rolfo:
@@ -69,9 +70,9 @@ public class HeroClass {
                 this.hp = 120;
                 this.movementSpeed = 0;
                 this.information = "Information for The Ranger here";
-
+                /*
                 abilities.Add(new Ability("Shoot Arrow", 2, 20));
-                abilities.Add(new Ability("Self Healing", 20, 0));
+                abilities.Add(new Ability("Self Healing", 20, 0));*/
                 break;
 
             case HeroEnum.Kreml:
@@ -81,9 +82,9 @@ public class HeroClass {
                 this.hp = 120;
                 this.movementSpeed = 0;
                 this.information = "Information for The Black Knight here";
-
+                /*
                 abilities.Add(new Ability("Shoot Arrow", 2, 20));
-                abilities.Add(new Ability("Self Healing", 20, 0));
+                abilities.Add(new Ability("Self Healing", 20, 0));*/
                 break;
 
             case HeroEnum.Nejito:
@@ -93,9 +94,9 @@ public class HeroClass {
                 this.hp = 120;
                 this.movementSpeed = 0;
                 this.information = "Information for The Ninja here";
-
+                /*
                 abilities.Add(new Ability("Shoot Arrow", 2, 20));
-                abilities.Add(new Ability("Self Healing", 20, 0));
+                abilities.Add(new Ability("Self Healing", 20, 0));*/
                 break;
 
             default:

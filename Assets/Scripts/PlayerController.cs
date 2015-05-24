@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour
     private PhotonView punView;
     private Animator animator;
     private bool isGrounded;
-    public GameObject projectile;
-    public GameObject projectile2;
+    public GameObject Ability;
+    public GameObject Ability2;
     /*
     public GameObject deathParticles;
     public GameObject hitParticles;
@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour
                 instantiateData[2] = Input.mousePosition;
                 //
                 GameObject tmpProjectile = null;
-                tmpProjectile = PhotonNetwork.Instantiate(projectile2.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) as GameObject;
+                tmpProjectile = PhotonNetwork.Instantiate(Ability2.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) as GameObject;
                 //
                 animator.SetTrigger("attack");
                 //
@@ -203,7 +203,7 @@ public class PlayerController : MonoBehaviour
                 instantiateData[2] = Input.mousePosition;
                 //
                 GameObject tmpProjectile = null;
-                tmpProjectile = PhotonNetwork.Instantiate(projectile.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) as GameObject;
+                tmpProjectile = PhotonNetwork.Instantiate(Ability.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) as GameObject;
                 //
                 animator.SetTrigger("attack");
                 //
@@ -247,11 +247,11 @@ public class PlayerController : MonoBehaviour
 
         if (projectileName == "Primary")
         {
-            tmpProjectile = Instantiate(projectile2, pos, rot) as GameObject;
+            tmpProjectile = Instantiate(Ability2, pos, rot) as GameObject;
         }
         else if (projectileName == "Secondary")
         {
-            tmpProjectile = Instantiate(projectile, pos, rot) as GameObject;
+            tmpProjectile = Instantiate(Ability, pos, rot) as GameObject;
         }
 
         animator.SetTrigger("attack");
