@@ -24,10 +24,6 @@ public abstract class Projectile : Ability
 	protected override void Start () 
     {
         // Moved the projectile type code here
-        /*
-        Vector3 playerPos = (Vector3)this.GetComponent<PhotonView>().instantiationData[1];
-        Vector3 mousePos = (Vector3)this.GetComponent<PhotonView>().instantiationData[2];
-        */
         mousePos.z = 10;
         mousePos.x = mousePos.x - playerPos.x;
         mousePos.y = mousePos.y - playerPos.y;

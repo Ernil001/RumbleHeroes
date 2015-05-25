@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class HeroClass {
-
+    // OLD CODE // This will be pointless, Player Controller will Control most of the ENTITY
     private string code; // This code is a 3 char string that goes from H01 to H99.
     private HeroEnum hero;
     private string sClass; // THe class of the hero, example, The Ninja, Fire Mage
@@ -124,4 +124,5 @@ public class HeroClass {
                 return "";
         }
     }
+    // OLD CODE //
 }

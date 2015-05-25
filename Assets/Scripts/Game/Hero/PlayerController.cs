@@ -3,28 +3,20 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Entity
 {
+    // Hero Information Variables
+    public string heroCode;
+    public string heroInformation;
+    public string heroClass;
+    // Other
     public int controllingPlayer_photonID;
     public string controllingPlayer_Username;
     Transform HeroUI_ConPlUser;
-    //
-    public float speedBase;
-    public float speed;
-    //
-    public int currentHP = 100;
-    public int maxHP = 100;
     private Rigidbody2D playerRigidBody;
     private PhotonView punView;
     private Animator animator;
     private bool isGrounded;
-    public GameObject Ability;
-    public GameObject Ability2;
-    /*
-    public GameObject deathParticles;
-    public GameObject hitParticles;
-    */ 
-
     private float someScale;
     private float lastFired;
 
@@ -50,8 +42,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
-
         if (this.GetComponent<Transform>().localScale.x < 0f && HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.x > 0f)
         {
 

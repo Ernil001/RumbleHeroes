@@ -32,6 +32,8 @@ public class GameController : Photon.MonoBehaviour
     public GameObject UI_GameUI_ScoreBoard;
     public GameObject UI_GameUI_ScoreBoard_Score;
     public GameObject UI_GameUI_ScoreBoard_GameModeDescription;
+    public GameObject UI_GameUI_Bottom_Center_FirstAbilityName;
+    public GameObject UI_GameUI_Bottom_Center_SecondAbilityName;
     public GameObject UI_MainMenuUI_MainMenuWrap_InputField; //This will be remade later.
     public GameObject UI_MainMenuUI_MainMenuWrap_CreateRoom;
     public GameObject UI_MainMenuUI_MainMenuWrap_JoinRoom;
@@ -204,6 +206,8 @@ public class GameController : Photon.MonoBehaviour
                 
                 //Clear parent GameObject
                 destroyAllChildGameObjects(selectedHeroPortrait);
+                //
+                /*
                 foreach (GameObject key in HeroInformation.instance.heroSelectionPrefabs_heroes)
                 {
                     if (key.name == _heroName)
@@ -213,6 +217,7 @@ public class GameController : Photon.MonoBehaviour
                         heroPortrait.GetComponent<Transform>().localPosition = new Vector3(0, -20, 0);
                     }
                 }
+                */
                 //Add Information Text
                 selectedHeroInformation.GetComponent<Text>().text = HeroInformation.instance.heroes[i].Information;
                 //Add Hero Name
@@ -911,7 +916,7 @@ public class GameController : Photon.MonoBehaviour
         //Destroy childreen if any.
         destroyAllChildGameObjects(UI_GameUI_Top);
         destroyAllChildGameObjects(UI_GameUI_ScoreBoard_Score);
-        // Load the needed ui
+        // Load the needed ui for TOP and ScoreBoard, relation to players
         foreach (PhotonPlayer pl in PhotonNetwork.playerList)
         {
             GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
@@ -919,6 +924,28 @@ public class GameController : Photon.MonoBehaviour
             GameObject temp_scorePlayer = Instantiate(this.score_PlayerWrap, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             temp_scorePlayer.transform.SetParent(UI_GameUI_ScoreBoard_Score.transform);
         }
+        // Load the ability names
+        foreach (GameObject hr in HeroInformation.instance.allHeroes)
+        {
+            if (hr.GetComponent<PlayerController>().heroCode == PhotonNetwork.player.customProperties["h"].ToString())
+            {
+                UI_GameUI_Bottom_Center_FirstAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability.gameObject.name;
+                UI_GameUI_Bottom_Center_SecondAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability2.gameObject.name;
+                
+                /*
+                hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent(hr.GetComponent<PlayerController>().Ability2.name);
+                UI_GameUI_Bottom_Center_SecondAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent(hr.GetComponent<PlayerController>().Ability2.name).;
+                /*
+                List<Component> a = hr.GetComponent<PlayerController>().Ability2.gameObject.GetComponents;
+                foreach (List<Component> co in a)
+                {
+                    co.name;
+                }
+                 * */
+            }
+            else Debug.Log("nein");
+        }
+        Debug.Log("Da");
     }
     // Spawn the player hero
     public void spawnPlayerHero(string playerHeroName = "", bool forceSpawn = false)
