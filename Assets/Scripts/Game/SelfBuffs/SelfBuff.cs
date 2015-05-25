@@ -26,8 +26,12 @@ public abstract class SelfBuff : Ability
     
     protected override void Update()
     {
-        Vector3 tmp_savePos = ownerGameObject.GetComponent<Transform>().position;
-        this.GetComponent<Transform>().position = new Vector3(tmp_savePos.x, tmp_savePos.y+heightDisplay, tmp_savePos.z);
+        if (ownerGameObject != null)
+        {
+            Vector3 tmp_savePos = ownerGameObject.GetComponent<Transform>().position;
+            this.GetComponent<Transform>().position = new Vector3(tmp_savePos.x, tmp_savePos.y + heightDisplay, tmp_savePos.z);
+        }
+        else forceDestroy();
         //
         base.Update();
         // Visual Duration

@@ -52,4 +52,8 @@ public class Ability : Photon.MonoBehaviour
             Destroy(gameObject);
         }
     }
+    protected virtual void forceDestroy()
+    {
+        Destroy(this.gameObject);
+    }
 }
