@@ -4,12 +4,11 @@ using System.Collections;
 public class Ability : Photon.MonoBehaviour 
 {
     //-***********
-    //  THE THIRD INHERITING CHILD, which is the last child aka FireBolt, has to have the same SCRIPT NAME as the Resource prefab for the ability.
-    //
+    //  THE THIRD INHERITING CHILD, which is the last child aka FireBolt, should have its name same as the prefab resource. 
+    //  Exaple: FireBolt.prefab == FireBolt.cs
     //-***********
-
     public string visualName;
-    public int cd;
+    public float cd;
     // Time until object is self destroyed. if null is ignored
     public int secondsToLive;
     // Time of the object instantiation.

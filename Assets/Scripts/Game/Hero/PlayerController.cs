@@ -18,17 +18,24 @@ public class PlayerController : Entity
     private Animator animator;
     private bool isGrounded;
     private float someScale;
-    private float lastFired;
 
     void Start()
     {
+        //
         playerRigidBody = GetComponent<Rigidbody2D>();
         punView = GetComponent<PhotonView>();
         animator = GetComponent<Animator>();
 
         someScale = transform.localScale.x;
         // Sets starting HP values for Hero
-        if(punView.isMine) GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
+        if (punView.isMine)
+        {
+            GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP, this.maxHP);
+            //Sets the default color of the skill is ready
+
+            GameController.instance.UI_GameUI_Bottom_Center_FirstAbilityCD.GetComponent<Image>().color = GameController.instance.bGreen;
+            GameController.instance.UI_GameUI_Bottom_Center_SecondAbilityCD.GetComponent<Image>().color = GameController.instance.bGreen;
+        }
         //
         this.HeroUI_ConPlUser = this.transform.FindChild("HeroUI").transform.FindChild("ControllingPlayerUsername");
         //this.HeroUI_ControllingPlayerUsername_locSc = HeroUI_ConPlUser.GetComponent<RectTransform>().localScale;
@@ -59,7 +66,6 @@ public class PlayerController : Entity
                 HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.z
             );
         }
-        
         //
         if (punView.isMine)
         {
@@ -77,6 +83,7 @@ public class PlayerController : Entity
             }
             InputMovement();
         }
+        //
     }
     IEnumerator FinishDeath()
     {
@@ -124,87 +131,92 @@ public class PlayerController : Entity
             isGrounded = false;
             //animator.SetBool("Jumping", true);
         }
-
-        if(Input.GetKeyDown(KeyCode.Mouse1))
+        //Ability
+        if ((Input.GetKeyDown(KeyCode.Mouse0)) && ability_ready)
         {
-            if (Time.time - lastFired > 0.8f)
-            {
-                //Quaternion projectileRotation = Quaternion.FromToRotation(transform.position,
-                //Input.mousePosition);
-
-                //Angle the projectile towards the mouse
-                /*
-                Vector3 mousePos = Input.mousePosition;
-                mousePos.z = 10;
-                Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
-                mousePos.x = mousePos.x - playerPos.x;
-                mousePos.y = mousePos.y - playerPos.y;
-                float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
-
-                Quaternion projectileRotation = Quaternion.Euler(new Vector3(0, 0, angle));
-
-                //PUN RPC Call
-                object[] paramsForRPC = new object[4];
-
-                paramsForRPC[0] = transform.FindChild("ProjectileStartingPoint").transform.position;
-                paramsForRPC[1] = projectileRotation;
-                paramsForRPC[2] = PhotonNetwork.player.ID;
-                paramsForRPC[3] = "Primary";
-
-                animator.SetTrigger("attack");
-
-                punView.RPC("FireProjectile", PhotonTargets.All, paramsForRPC);
-                lastFired = Time.time;
-                Vector3 mousePos = Input.mousePosition;
-                mousePos.z = 10;
-                Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
-                mousePos.x = mousePos.x - playerPos.x;
-                mousePos.y = mousePos.y - playerPos.y;
-                float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
-                
-                Quaternion projectileRotation = Quaternion.Euler(new Vector3(0, 0, angle));
-                */
-                //
-                Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
-                //
-                object[] instantiateData = new object[4];
-                instantiateData[0] = PhotonNetwork.player.ID;
-                instantiateData[1] = playerPos;
-                instantiateData[2] = Input.mousePosition;
-                instantiateData[3] = punView.viewID;
-                //
-                GameObject tmpProjectile = null;
-                tmpProjectile = PhotonNetwork.Instantiate(Ability2.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) as GameObject;
-                //
-                animator.SetTrigger("attack");
-                //
-                lastFired = Time.time;
-            }
+            //
+            Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
+            //
+            object[] instantiateData = new object[4];                
+            instantiateData[0] = PhotonNetwork.player.ID;                
+            instantiateData[1] = playerPos;            
+            instantiateData[2] = Input.mousePosition;            
+            instantiateData[3] = punView.viewID;            
+            //            
+            GameObject tmpProjectile = null;            
+            tmpProjectile = PhotonNetwork.Instantiate(Ability.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) 
+                as GameObject;                
+            // This animator trigger will soon be sourced out into the ability            
+            animator.SetTrigger("attack");            
+            //            
+            StartCoroutine(cd_ability());
         }
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        //Ability2
+        if ((Input.GetKeyDown(KeyCode.Mouse1)) && ability2_ready)
         {
-            if (Time.time - lastFired > 0.8f)
-            {
-                //
-                Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
-                //
-                object[] instantiateData = new object[4];
-                instantiateData[0] = PhotonNetwork.player.ID;
-                instantiateData[1] = playerPos;
-                instantiateData[2] = Input.mousePosition;
-                instantiateData[3] = punView.viewID;
-                //
-                GameObject tmpProjectile = null;
-                tmpProjectile = PhotonNetwork.Instantiate(Ability.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) as GameObject;
-                //
-                animator.SetTrigger("attack");
-                //
-                lastFired = Time.time;
-            }
+            //
+            Vector3 playerPos = Camera.main.WorldToScreenPoint(transform.FindChild("ProjectileStartingPoint").transform.position);
+            //
+            object[] instantiateData = new object[4];
+            instantiateData[0] = PhotonNetwork.player.ID;
+            instantiateData[1] = playerPos;
+            instantiateData[2] = Input.mousePosition;
+            instantiateData[3] = punView.viewID;
+            //            
+            GameObject tmpProjectile = null;
+            tmpProjectile = PhotonNetwork.Instantiate(Ability2.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData)
+                as GameObject;
+            //            
+            animator.SetTrigger("attack");
+            //            
+            StartCoroutine(cd_ability2());
         }
     }
-
+    // CoolDowns and their "Animation" :P.
+    IEnumerator cd_ability()
+    {
+        ability_ready = false;
+        //ability_lockRelease = Ability.gameObject.transform.GetComponent<Ability>().cd + Time.time;
+        int timeToWait = Convert.ToInt32(Ability.gameObject.transform.GetComponent<Ability>().cd);
+        Transform tmp_count = GameController.instance.UI_GameUI_Bottom_Center_FirstAbilityCD.transform.FindChild("Count");
+        GameController.instance.UI_GameUI_Bottom_Center_FirstAbilityCD.GetComponent<Image>().color = GameController.instance.bRed;
+        //
+        int x = 0;
+        while (x <= timeToWait)
+        {
+            if (x == timeToWait)
+            {
+                tmp_count.GetComponent<Text>().text = "";
+                ability_ready = true;
+                GameController.instance.UI_GameUI_Bottom_Center_FirstAbilityCD.GetComponent<Image>().color = GameController.instance.bGreen;
+            }
+            else tmp_count.GetComponent<Text>().text = (timeToWait - x).ToString();
+            x++;
+            yield return new WaitForSeconds(1f);
+        }
+    }
+    IEnumerator cd_ability2()
+    {
+        ability2_ready = false;
+        int timeToWait = Convert.ToInt32(Ability2.gameObject.transform.GetComponent<Ability>().cd);
+        Transform tmp_count = GameController.instance.UI_GameUI_Bottom_Center_SecondAbilityCD.transform.FindChild("Count");
+        GameController.instance.UI_GameUI_Bottom_Center_SecondAbilityCD.GetComponent<Image>().color = GameController.instance.bRed;
+        //
+        int x = 0;
+        while (x <= timeToWait)
+        {
+            if (x == timeToWait)
+            {
+                tmp_count.GetComponent<Text>().text = "";
+                ability2_ready = true;
+                GameController.instance.UI_GameUI_Bottom_Center_SecondAbilityCD.GetComponent<Image>().color = GameController.instance.bGreen;
+            }
+            else tmp_count.GetComponent<Text>().text = (timeToWait - x).ToString();
+            x++;
+            yield return new WaitForSeconds(1f);
+        }
+    }
+    //
     [RPC] void PlayDeathAnimation(Vector3 pos)
     {
         //Instantiate(deathParticles, pos, Quaternion.identity);
@@ -251,8 +263,8 @@ public class PlayerController : Entity
          
         tmpProjectile.GetComponent<Projectile>().Owner = ownerId;
     }
-
-
+    //
+    //
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.tag == "Ground")
