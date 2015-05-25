@@ -14,8 +14,13 @@ public class GameController : Photon.MonoBehaviour
     public static GameController instance = null;
     // Design color variables tbh dunno why, just felt like it :D
     // r - roomLobby
+    // b - Basic colors
+
     public Color32 rRegBack = new Color32(255,255,255,0);
     public Color32 rDifBack = new Color32(67, 88, 70, 255);
+
+    public Color32 bGreen = new Color32(35, 58, 0, 150);
+    public Color32 bRed = new Color32(128, 27, 27, 150);
     //Main UI layers
     public GameObject UI_mainMenu;
     public GameObject UI_game;
@@ -34,6 +39,10 @@ public class GameController : Photon.MonoBehaviour
     public GameObject UI_GameUI_ScoreBoard_GameModeDescription;
     public GameObject UI_GameUI_Bottom_Center_FirstAbilityName;
     public GameObject UI_GameUI_Bottom_Center_SecondAbilityName;
+
+    public GameObject UI_GameUI_Bottom_Center_FirstAbilityCD;
+    public GameObject UI_GameUI_Bottom_Center_SecondAbilityCD;
+
     public GameObject UI_MainMenuUI_MainMenuWrap_InputField; //This will be remade later.
     public GameObject UI_MainMenuUI_MainMenuWrap_CreateRoom;
     public GameObject UI_MainMenuUI_MainMenuWrap_JoinRoom;
@@ -929,19 +938,23 @@ public class GameController : Photon.MonoBehaviour
         {
             if (hr.GetComponent<PlayerController>().heroCode == PhotonNetwork.player.customProperties["h"].ToString())
             {
-                UI_GameUI_Bottom_Center_FirstAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability.gameObject.name;
-                UI_GameUI_Bottom_Center_SecondAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability2.gameObject.name;
+                UI_GameUI_Bottom_Center_FirstAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability.gameObject.transform.GetComponent<Ability>().visualName;
+                UI_GameUI_Bottom_Center_SecondAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent<Ability>().visualName;
                 
+                
+                //Debug.Log(hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent<Ability>().visualName);
+                
+
+                // hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent(hr.GetComponent<PlayerController>().Ability2.name);
                 /*
-                hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent(hr.GetComponent<PlayerController>().Ability2.name);
-                UI_GameUI_Bottom_Center_SecondAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent(hr.GetComponent<PlayerController>().Ability2.name).;
-                /*
+                UI_GameUI_Bottom_Center_SecondAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent<Ability:SelfBuff:SpeedPotion>.().visualName;
+                
                 List<Component> a = hr.GetComponent<PlayerController>().Ability2.gameObject.GetComponents;
                 foreach (List<Component> co in a)
                 {
                     co.name;
                 }
-                 * */
+                */
             }
             else Debug.Log("nein");
         }
