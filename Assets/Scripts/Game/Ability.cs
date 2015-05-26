@@ -49,7 +49,9 @@ public class Ability : Photon.MonoBehaviour
         // Play sound abilityInstantiate
         if (abilityInstantiate != null)
         {
-            this.GetComponent<AudioSource>().PlayOneShot(abilityInstantiate, 1);
+            //this.GetComponent<AudioSource>().PlayOneShot(abilityInstantiate, 1);
+            AudioController.instance.playClip_ability(abilityInstantiate, this.GetComponent<Transform>().position);
+
         }
     }
     protected virtual void Start()
@@ -72,7 +74,8 @@ public class Ability : Photon.MonoBehaviour
         // Play sound for abilityOnDestroy
         if (abilityOnDestroy != null)
         {
-            this.GetComponent<AudioSource>().PlayOneShot(abilityOnDestroy, 1);
+            //this.GetComponent<AudioSource>().PlayOneShot(abilityOnDestroy, 1);
+            AudioController.instance.playClip_ability(abilityOnDestroy, this.GetComponent<Transform>().position);
         }
         //
         Destroy(this.gameObject);

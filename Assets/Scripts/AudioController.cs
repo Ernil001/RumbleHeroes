@@ -19,7 +19,44 @@ public class AudioController : MonoBehaviour
 	}
 	void Update ()
     {
+
 	}
+    // Remaking the default AudioSource.PlayClipAtPoint function // Custom Parameters dont work yet
+    /// <summary>
+    /// Reworked original AudioSource.PlayClipAtPoint (Able to change AudioSource Attributes)
+    /// </summary>
+    private AudioSource playClipAtPoint(AudioClip file, Vector3 pos, string objName = "Default:playClipAtPoint", object[] customPar = null)
+    {
+        GameObject obj = new GameObject(objName); // create the temp object
+        obj.transform.position = pos; // set its position
+        AudioSource aSource = obj.AddComponent<AudioSource>();
+        aSource.clip = file;
+        // Set Custom properties - Might rework this, that we could invoke different special properties
+        if (customPar != null)
+        {
+
+        }
+        else 
+        {
+            // Sets Default
+            aSource.spatialBlend = 1f;
+            aSource.rolloffMode = AudioRolloffMode.Linear;
+            aSource.maxDistance = 20f;
+            aSource.minDistance = 10f;
+            aSource.spread = 0f;
+            aSource.dopplerLevel = 1f;
+        }
+        //
+        aSource.Play();
+        Destroy(obj, file.length); 
+        return aSource; 
+
+    }
     //
+    public void playClip_ability(AudioClip file, Vector3 pos)
+    {
+        //AudioSource.PlayClipAtPoint(file, pos);
+        playClipAtPoint(file, pos);
+    }
 
 }
