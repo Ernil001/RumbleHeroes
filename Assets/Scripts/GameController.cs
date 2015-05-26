@@ -128,6 +128,10 @@ public class GameController : Photon.MonoBehaviour
         setEnvironment_mainMenu();
         //Populate the list of Heroes at Hero Selection UI
         populateHeroSelectionList();
+        //
+        
+        AudioListener.volume = 0.5f;
+        //this.GetComponent<AudioListener>().enabled = false;
         
     }
     //
@@ -940,25 +944,8 @@ public class GameController : Photon.MonoBehaviour
             {
                 UI_GameUI_Bottom_Center_FirstAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability.gameObject.transform.GetComponent<Ability>().visualName;
                 UI_GameUI_Bottom_Center_SecondAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent<Ability>().visualName;
-                
-                
-                //Debug.Log(hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent<Ability>().visualName);
-                
-
-                // hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent(hr.GetComponent<PlayerController>().Ability2.name);
-                /*
-                UI_GameUI_Bottom_Center_SecondAbilityName.GetComponent<Text>().text = hr.GetComponent<PlayerController>().Ability2.gameObject.transform.GetComponent<Ability:SelfBuff:SpeedPotion>.().visualName;
-                
-                List<Component> a = hr.GetComponent<PlayerController>().Ability2.gameObject.GetComponents;
-                foreach (List<Component> co in a)
-                {
-                    co.name;
-                }
-                */
             }
-            else Debug.Log("nein");
         }
-        Debug.Log("Da");
     }
     // Spawn the player hero
     public void spawnPlayerHero(string playerHeroName = "", bool forceSpawn = false)
@@ -1111,5 +1098,11 @@ public class GameController : Photon.MonoBehaviour
         Debug.Log(HeroInformation.instance.return_HeroName_OnCode("H02"));
         Debug.Log(HeroInformation.instance.return_HeroCode_OnName("Constantine"));
         //   
+    }
+    public void testingSetSoundOnOff()
+    {
+        if (AudioListener.volume != 1f)
+            AudioListener.volume = 1f;
+        else AudioListener.volume = 0f;
     }
 }

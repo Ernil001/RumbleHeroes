@@ -23,6 +23,7 @@ public abstract class Projectile : Ability
 
 	protected override void Start () 
     {
+        
         // Moved the projectile type code here
         mousePos.z = 10;
         mousePos.x = mousePos.x - playerPos.x;
@@ -99,6 +100,6 @@ public abstract class Projectile : Ability
         // Create EndOfProjectileStatus, AKA. explosion, random animation, etc etc
         if (projectileHitAnimation != null) Instantiate(projectileHitAnimation, transform.position, Quaternion.identity);
         //
-        Destroy(gameObject);
+        forceDestroy();
     }
 }
