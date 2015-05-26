@@ -8,7 +8,7 @@ public class Ability : Photon.MonoBehaviour
     //  Exaple: FireBolt.prefab == FireBolt.cs
     //-***********
     public string visualName;
-    public float cd;
+    public float cd; // It takes a float, but when the skill goes on CD, it will actualy conver to INT and check that. so only use full numbers.
     // Time until object is self destroyed. if null is ignored
     public int secondsToLive;
     // Time of the object instantiation.

@@ -7,8 +7,7 @@ public class PlayerController : Entity
 {
     // Hero Information Variables
     public string heroCode;
-    public string heroInformation;
-    public string heroClass;
+    //public string heroClass;
     // Other
     public int controllingPlayer_photonID;
     public string controllingPlayer_Username;

@@ -130,7 +130,7 @@ public class GameController : Photon.MonoBehaviour
         populateHeroSelectionList();
         //
         
-        AudioListener.volume = 0.5f;
+        //AudioListener.volume = 0.5f;
         //this.GetComponent<AudioListener>().enabled = false;
         
     }
@@ -176,15 +176,17 @@ public class GameController : Photon.MonoBehaviour
                 }
             }
             // Adds heroes that the player does not own - Possible later on with player accounting.
-            for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
+
+            // Populate the list
+            foreach (GameObject hero in HeroInformation.instance.allHeroes)
             {
                 GameObject bu = Instantiate(heroSelectionButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
                 bu.transform.SetParent(listOfHeroes.transform);
-                string tempHoldName = HeroInformation.instance.heroes[i].ToString();
-                bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(tempHoldName));
-                bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].Name + " (" + HeroInformation.instance.heroes[i].Class + ")";
+                string temp_holdName = hero.GetComponent<PlayerController>().entityName;
+                bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(temp_holdName));
+                bu.transform.FindChild("HeroName").GetComponent<Text>().text = hero.GetComponent<PlayerController>().entityName + " (" + hero.GetComponent<PlayerController>().entityClass + ")";
                 
-                if (takenHeroes.Contains(HeroInformation.instance.heroes[i].Code))
+                if (takenHeroes.Contains(hero.GetComponent<PlayerController>().heroCode))
                     bu.GetComponent<Button>().interactable = false;
                 else
                     bu.GetComponent<Button>().interactable = true;
@@ -193,13 +195,13 @@ public class GameController : Photon.MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
+            foreach (GameObject hero in HeroInformation.instance.allHeroes)
             {
                 GameObject bu = Instantiate(heroSelectionButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
                 bu.transform.SetParent(listOfHeroes.transform);
-                string tempHoldName = HeroInformation.instance.heroes[i].ToString();
-                bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(tempHoldName));
-                bu.transform.FindChild("HeroName").GetComponent<Text>().text = HeroInformation.instance.heroes[i].Name + " (" + HeroInformation.instance.heroes[i].Class + ")";
+                string temp_holdName = hero.GetComponent<PlayerController>().entityName;
+                bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(temp_holdName));
+                bu.transform.FindChild("HeroName").GetComponent<Text>().text = hero.GetComponent<PlayerController>().entityName + " (" + hero.GetComponent<PlayerController>().entityClass + ")";
             }
 
         }
@@ -210,17 +212,17 @@ public class GameController : Photon.MonoBehaviour
     //  - heroAvailable - Bool, true if he can select the hero, false if hero select is not possible. (Account for later when hero selecting will be limited. Might be deprecated since i might just populate the takenHero array isntead)
     void heroSelection(string _heroName = ""/*, bool heroAvailable = true*/)
     {
-        for (int i = 0; i < HeroInformation.instance.heroes.Count; i++)
+        foreach (GameObject hero in HeroInformation.instance.allHeroes)
         {
-            if (HeroInformation.instance.heroes[i].ToString() == _heroName)
+            if (hero.GetComponent<PlayerController>().entityName == _heroName)
             {
                 //Add picture or Animated prefab
                 // CURRENTLY NOT WORKING DUE TO NO CORRECT PREFABS HUE HUE >X
                 
                 //Clear parent GameObject
                 destroyAllChildGameObjects(selectedHeroPortrait);
-                //
-                /*
+
+                /*  Testing
                 foreach (GameObject key in HeroInformation.instance.heroSelectionPrefabs_heroes)
                 {
                     if (key.name == _heroName)
@@ -231,10 +233,11 @@ public class GameController : Photon.MonoBehaviour
                     }
                 }
                 */
+
                 //Add Information Text
-                selectedHeroInformation.GetComponent<Text>().text = HeroInformation.instance.heroes[i].Information;
+                selectedHeroInformation.GetComponent<Text>().text = hero.GetComponent<PlayerController>().entityInformation;
                 //Add Hero Name
-                selectedHeroName.GetComponent<Text>().text = HeroInformation.instance.heroes[i].Name;
+                selectedHeroName.GetComponent<Text>().text = hero.GetComponent<PlayerController>().entityName;
                 break;
             }
         }
@@ -258,14 +261,15 @@ public class GameController : Photon.MonoBehaviour
                 }
             }
         }
-        string tmpSelectedHeroCode = "";
+        string tmpSelectedHeroCode = HeroInformation.instance.return_HeroCode_OnName(selectedHeroName.GetComponent<Text>().text);
         // I wonder if this part could be rewritten to ask directly into the references of the objects inside the list, instead of looping through them ?
+        /*
         string heroName = selectedHeroName.GetComponent<Text>().text;
         for(int x = 0; x < HeroInformation.instance.heroes.Count; x++)
         {
             if(heroName == HeroInformation.instance.heroes[x].Name)
                 tmpSelectedHeroCode = HeroInformation.instance.heroes[x].Code;
-        }
+        }*/
         // Asks if Hero Code is available to take.
         if(takenHeroes.Contains(tmpSelectedHeroCode))
         {

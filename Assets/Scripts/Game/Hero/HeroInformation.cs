@@ -6,7 +6,7 @@ public class HeroInformation : MonoBehaviour
 {
     //***********//
     //
-    // REWORK in PROGRESS DO NOT USE OLD CODE FOR GRABBING INFORMATION ANYMORE
+    // REWORK in PROGRESS DO NOT USE OLD CODE FOR GRABBING INFORMATION ANYMORE (REWORK FINISHED)
     // Everything about heroes is now saved inside the allHeroes array of GameObjects (Compiled from actual resource entities)
     //
     //***********//
@@ -20,26 +20,14 @@ public class HeroInformation : MonoBehaviour
     /// Static value of how many player Heros exist // MANUAL
     /// </summary>
     public int heroAmount;
-    // Testing
-    //public GameObject RolfoResource;
     //
-    public List<HeroClass> heroes;
-
     void Awake()
     {
 
         // Makes the current instance a static one.
         if (instance == null) instance = this;
         else if (instance != this) Destroy(gameObject);
-        DontDestroyOnLoad(gameObject);
-        // OLD CODE, Leaving it in until i remake everything with the proper one.
-        heroes = new List<HeroClass>();
-        heroes.Add(new HeroClass(HeroEnum.Constantine));
-        heroes.Add(new HeroClass(HeroEnum.Rolfo));
-        heroes.Add(new HeroClass(HeroEnum.Kreml));
-        heroes.Add(new HeroClass(HeroEnum.Nejito));
-        // OLD CODE
-        
+        DontDestroyOnLoad(gameObject);    
     }
     void Start()
     {
@@ -53,31 +41,30 @@ public class HeroInformation : MonoBehaviour
         }
         //
     }
-    // OLD CODE //
-    
+    // Utility Tools Probably reworked, Fine for now.
     public string return_HeroName_OnCode(string heroCode)
     {
         string heroName = "";
-        for (int x = 0; x < HeroInformation.instance.heroes.Count; x++)
+        foreach (GameObject hero in HeroInformation.instance.allHeroes)
         {
-            if (heroCode == HeroInformation.instance.heroes[x].Code)
-                heroName = HeroInformation.instance.heroes[x].Name;
+            if (heroCode == hero.GetComponent<PlayerController>().heroCode)
+                heroName = hero.GetComponent<PlayerController>().entityName;
 
         }
+
         if (heroName == "") GameController.instance.errorDisplay_open("Hero with the code: " + heroCode + ", does not exist !");
         return heroName;
     }
     public string return_HeroCode_OnName(string heroName)
     {
         string heroCode = "";
-        for (int x = 0; x < HeroInformation.instance.heroes.Count; x++)
+        foreach (GameObject hero in HeroInformation.instance.allHeroes)
         {
-            if (heroName == HeroInformation.instance.heroes[x].Name)
-                heroCode = HeroInformation.instance.heroes[x].Code;
+            if (heroName == hero.GetComponent<PlayerController>().entityName)
+                heroCode = hero.GetComponent<PlayerController>().heroCode;
 
         }
         if (heroCode == "") GameController.instance.errorDisplay_open("Hero with the name: " + heroName + ", does not exist !");
         return heroCode;
     }
-    // OLD CODE //
 }
