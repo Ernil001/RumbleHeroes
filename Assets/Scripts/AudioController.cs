@@ -53,10 +53,10 @@ public class AudioController : MonoBehaviour
 
     }
     //
-    public void playClip_ability(AudioClip file, Vector3 pos)
+    public void playClip_ability(AudioClip file, Vector3 pos, string objName = "Default:playClipAtPoint", object[] customPar = null)
     {
         //AudioSource.PlayClipAtPoint(file, pos);
-        playClipAtPoint(file, pos);
+        playClipAtPoint(file, pos, objName, customPar);
     }
 
 }

@@ -983,7 +983,7 @@ public class GameController : Photon.MonoBehaviour
                 playerHeroName = HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString());
             }
             // Create player on location and set camera
-            this.activeLocalHero = PhotonNetwork.Instantiate(playerHeroName, GetRandomSpawnPoint(), Quaternion.identity, 0);
+            this.activeLocalHero = PhotonNetwork.Instantiate("Heroes/"+playerHeroName, GetRandomSpawnPoint(), Quaternion.identity, 0);
             mainCamera.GetComponent<SmoothCameraFollow>().target = this.activeLocalHero.transform;
             //this.activeLocalHero.
         }
