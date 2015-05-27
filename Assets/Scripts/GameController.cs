@@ -142,7 +142,7 @@ public class GameController : Photon.MonoBehaviour
         // Hide unnecessary buttons and show the neccesarry ones
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_CreateRoom, true);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_JoinRoom, true);
-        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, true);
+        //changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, true);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToGame, false);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu, false);
         //
@@ -871,7 +871,7 @@ public class GameController : Photon.MonoBehaviour
         // Hide unnecessary buttons and show the neccesarry ones
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_CreateRoom, false);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_JoinRoom, false);
-        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, false);
+        //changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, false);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToGame, true);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu, true);
         // Display game UI

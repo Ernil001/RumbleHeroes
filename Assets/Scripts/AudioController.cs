@@ -3,6 +3,11 @@ using System.Collections;
 
 public class AudioController : MonoBehaviour 
 {
+    //*************
+    //
+    //  This controller will have the needed Methods and GameObjects which will be required for the Audio
+    //
+    //*************
     public static AudioController instance = null;
 	//
     void Awake()

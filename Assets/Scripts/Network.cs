@@ -11,7 +11,14 @@ public class Network : MonoBehaviour
     public GameObject playerPrefab;
     //private string roomName = "Room - ";
     
-    public GameObject playerNameInput;
+    //public GameObject playerNameInput;
+    private string Username
+    {
+        get
+        {
+            return OptionController.instance.Username;
+        }
+    }
     //
     private IEnumerator setRoomProp;
     //
@@ -24,9 +31,9 @@ public class Network : MonoBehaviour
     }
     public void createPhotonRoom()
     {
-        if (playerNameInput.GetComponent<InputField>().text == "")
+        if (Username == "")
         {
-            GameController.instance.errorDisplay_open("You need to enter your name before Creating a new room !");
+            GameController.instance.errorDisplay_open("You need to enter your name in Options before Creating a new room !");
             return;
         }
         else
@@ -37,8 +44,8 @@ public class Network : MonoBehaviour
             {
 
                 string temp_roomName;
-                if (addToName == 0) temp_roomName = "Room " + playerNameInput.GetComponent<InputField>().text;
-                else temp_roomName = "Room " + playerNameInput.GetComponent<InputField>().text + "(" + addToName.ToString() + ")";
+                if (addToName == 0) temp_roomName = "Room " + Username;
+                else temp_roomName = "Room " + Username + "(" + addToName.ToString() + ")";
 
                 if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
                 //Adding Raw values to server might be after or before not sure yet.
@@ -128,7 +135,7 @@ public class Network : MonoBehaviour
     //Join room handle
     void photonJoinRoom_prepare(string roomName_photon)
     {
-        if (playerNameInput.GetComponent<InputField>().text != "")
+        if (Username != "")
         {
             PhotonNetwork.JoinRoom(roomName_photon);
         }
@@ -141,7 +148,7 @@ public class Network : MonoBehaviour
     void OnJoinedRoom()
     {
         //Here set name on your id.
-        setYourPhotonName(playerNameInput.GetComponent<InputField>().text);
+        setYourPhotonName(Username);
         //Set player properties.
         setNewPlayerCusProperties(/*playerNameInput.GetComponent<InputField>().text*/);
         GameController.instance.changeActiveStatus(GameController.instance.roomLobby);
