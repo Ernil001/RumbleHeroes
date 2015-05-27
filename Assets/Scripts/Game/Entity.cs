@@ -8,11 +8,13 @@ public abstract class Entity : MonoBehaviour
     public string entityClass;
     public string entityType;
     public string entityInformation;
-    //public string entityController;
     public float speedBase;
 
     public GameObject Ability;
     public GameObject Ability2;
+    // Represent the string that will be used for calling the animation for each ability in the animator
+    public string ability_animator;
+    public string ability2_animator;
     public int maxHP;
     // Entity active variables
     public int currentHP;

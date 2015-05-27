@@ -145,8 +145,10 @@ public class PlayerController : Entity
             GameObject tmpProjectile = null;            
             tmpProjectile = PhotonNetwork.Instantiate(Ability.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) 
                 as GameObject;                
-            // This animator trigger will soon be sourced out into the ability            
-            animator.SetTrigger("attack");            
+            // Original idea was to move the attack animations to ability, but ill keep it here for now.   
+            object[] data = new object[1];
+            data[0] = this.ability_animator;
+            this.punView.RPC("defaultAttackAnimation", PhotonTargets.All, data);        
             //            
             StartCoroutine(cd_ability());
         }
@@ -165,11 +167,18 @@ public class PlayerController : Entity
             GameObject tmpProjectile = null;
             tmpProjectile = PhotonNetwork.Instantiate(Ability2.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData)
                 as GameObject;
-            //            
-            animator.SetTrigger("attack");
+            //     
+            object[] data = new object[1];
+            data[0] = this.ability2_animator;
+            this.punView.RPC("defaultAttackAnimation", PhotonTargets.All, data);
             //            
             StartCoroutine(cd_ability2());
         }
+    }
+    [RPC] void defaultAttackAnimation(string AbilityAnimator = "")
+    {
+        if(AbilityAnimator != "")
+            this.animator.SetTrigger(AbilityAnimator);
     }
     // CoolDowns and their "Animation" :P.
     IEnumerator cd_ability()
@@ -215,6 +224,7 @@ public class PlayerController : Entity
             yield return new WaitForSeconds(1f);
         }
     }
+    
     //
     [RPC] void PlayDeathAnimation(Vector3 pos)
     {
@@ -234,8 +244,10 @@ public class PlayerController : Entity
             if (this.currentHP <= 0)
             {
                 this.animator.SetTrigger("death");
+                /*
                 Debug.Log("My ID: " + punView.owner.ID);
                 Debug.Log("Killer ID: " + projectileOwnerPlayerId);
+                */
                 GameController.instance.addKillPoint(projectileOwnerPlayerId);
             }
             else

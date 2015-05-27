@@ -37,7 +37,6 @@ public abstract class Projectile : Ability
         //Get projectile base position
         basePosition = transform.position;
         //
-        Debug.Log(basePosition);
 	}
 
     protected override void Update()

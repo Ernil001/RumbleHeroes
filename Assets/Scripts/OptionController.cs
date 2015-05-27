@@ -81,10 +81,9 @@ public class OptionController : MonoBehaviour
     {
         // Change status to options that are sensitive whether the game is running or not
         this.changeSensitiveOptions();
-        // Load Master Volume Sound
+        // Load
         masterVolumeObj.GetComponent<Slider>().value = MasterVolume;
         usernameObj.GetComponent<InputField>().text = Username;
-        // Load Username
     }
     public void changeSensitiveOptions()
     {
