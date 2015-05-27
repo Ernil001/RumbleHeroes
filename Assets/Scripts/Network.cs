@@ -103,7 +103,7 @@ public class Network : MonoBehaviour
     public void refreshPhotonRooms()
     {
         roomsList = PhotonNetwork.GetRoomList();
-
+        //Debug.Log("Refresh");
         // Clear all rooms first
         GameController.instance.listOfRooms_clearList();
         //Populate refresh
@@ -112,6 +112,7 @@ public class Network : MonoBehaviour
             string temp_roomNameHold;
             for (int i = 0; i < roomsList.Length; i++)
             {
+                //Debug.Log(i);
                 GameObject go;
                 go = Instantiate(GameController.instance.roomRow, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
                 go.transform.parent = GameController.instance.ListOfRoomsContent.transform;

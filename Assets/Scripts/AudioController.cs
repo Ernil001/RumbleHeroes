@@ -51,10 +51,9 @@ public class AudioController : MonoBehaviour
         aSource.Play();
         Destroy(obj, file.length); 
         return aSource; 
-
     }
     //
-    public void playClip_ability(AudioClip file, Vector3 pos, string objName = "Default:AbilitySound", object[] customPar = null)
+    public void playClip_ability(AudioClip file, Vector3 pos, string objName = "Default:", object[] customPar = null)
     {
         //AudioSource.PlayClipAtPoint(file, pos);
         playClipAtPoint(file, pos, objName, customPar);

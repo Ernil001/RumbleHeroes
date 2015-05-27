@@ -725,7 +725,16 @@ public class GameController : Photon.MonoBehaviour
         {
             if (key.name == "OptionsWrap") changeActiveStatus(key, "open");
         }
+        // THis will pull all information to display the saved options
+        OptionController.instance.displayOptions();
 
+    }
+    public void extraRoom_closeOptions()
+    {
+        foreach (GameObject key in extraOptionsUI)
+        {
+            if (key.name == "OptionsWrap") changeActiveStatus(key, false);
+        }
     }
     public void extraRoom_openJoin()
     {
@@ -735,7 +744,7 @@ public class GameController : Photon.MonoBehaviour
         }
 
         // What to do on open list of rooms ? List teh rooms ane. baaak.
-
+        this.GetComponent<Network>().refreshPhotonRooms(); // Doesnt work, didnt debug yet.
         // Call function refreshPhotonRooms
 
     }
@@ -749,7 +758,6 @@ public class GameController : Photon.MonoBehaviour
         {
             if (key.name == "CreateWrap") changeActiveStatus(key, "open");
         }
-
     }
     // Clear all rooms in List Of Rooms
     public void listOfRooms_clearList()
