@@ -13,7 +13,7 @@ public class GameController : Photon.MonoBehaviour
     //
 
     //Private vars, cuz i can' // private is private no more ! Private ! Sir Yes Sir !
-    private List<Vector3> spawnPositions = new List<Vector3>();
+    private List<Vector3> spawnPositions;
 
     public static GameController instance = null;
     // Design color variables tbh dunno why, just felt like it :D
@@ -141,7 +141,6 @@ public class GameController : Photon.MonoBehaviour
         
         //AudioListener.volume = 0.5f;
         //this.GetComponent<AudioListener>().enabled = false;
-        
     }
     //
     private void setEnvironment_mainMenu()
@@ -897,13 +896,13 @@ public class GameController : Photon.MonoBehaviour
         // Load the map // Presumes files have not been tempered with
         GameMode.instantiatedMap = Instantiate(GameMode.map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         // Initialise the spawn points
-        spawnPositions.Add(GameObject.Find("SpawnPoint1").transform.position);
-        spawnPositions.Add(GameObject.Find("SpawnPoint2").transform.position);
-        spawnPositions.Add(GameObject.Find("SpawnPoint3").transform.position);
-        spawnPositions.Add(GameObject.Find("SpawnPoint4").transform.position);
-        spawnPositions.Add(GameObject.Find("SpawnPoint5").transform.position);
-        spawnPositions.Add(GameObject.Find("SpawnPoint6").transform.position);
-
+        spawnPositions = new List<Vector3>();
+        spawnPositions.Add(GameObject.Find("SpawnPoint1").GetComponent<Transform>().position);
+        spawnPositions.Add(GameObject.Find("SpawnPoint2").GetComponent<Transform>().position);
+        spawnPositions.Add(GameObject.Find("SpawnPoint3").GetComponent<Transform>().position);
+        spawnPositions.Add(GameObject.Find("SpawnPoint4").GetComponent<Transform>().position);
+        spawnPositions.Add(GameObject.Find("SpawnPoint5").GetComponent<Transform>().position);
+        spawnPositions.Add(GameObject.Find("SpawnPoint6").GetComponent<Transform>().position);
         // Load the player prefab
         spawnPlayerHero(HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString()));
         // Load the UI // Might change this to load the number of listed players and not the players that actually exists
@@ -935,13 +934,11 @@ public class GameController : Photon.MonoBehaviour
     // An error with spawning i believe
     private Vector3 GetRandomSpawnPoint()
     {
-        int randomPos = UnityEngine.Random.Range(0, spawnPositions.Count - 1);
-        Debug.Log(randomPos);
-
-        Vector3 returnPos = spawnPositions[randomPos];
-        spawnPositions.RemoveAt(randomPos);
-
-        return returnPos;
+        //int randomPos = UnityEngine.Random.Range(0, spawnPositions.Count - 1);
+        //Debug.Log(randomPos);
+        //Vector3 returnPos = spawnPositions[randomPos];
+        //spawnPositions.RemoveAt(randomPos);
+        return spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count - 1)];
     }
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////

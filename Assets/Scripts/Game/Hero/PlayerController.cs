@@ -73,9 +73,6 @@ public class PlayerController : Entity
                 //
                 object[] paramsForRPC = new object[1];
                 paramsForRPC[0] = transform.position;
-                //punView.RPC("PlayDeathAnimation", PhotonTargets.All, paramsForRPC);
-
-                GameController.instance.addDeathPoint();
                 // Destroy the player completly with GameController.instance.destroyPlayerHero(); after the animation ends so timeout ?
                 StartCoroutine(FinishDeath());
                 //GameController.instance.destroyPlayerHero();
@@ -242,6 +239,7 @@ public class PlayerController : Entity
             if (punView.isMine)
             {
                 GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP);
+                if (this.currentHP <= 0) GameController.instance.addDeathPoint();
             }
             // All
             if (this.currentHP <= 0)
