@@ -64,9 +64,6 @@ public class FireBall : Projectile
 
             if ((collidedObject.tag == tag_Player && collidedObject.GetComponent<PhotonView>().owner.ID != this.Owner) || col.tag == "Ground")
             {
-
-                // Projectile has made proper collision for explosion, detect possible objects to damage around this area, and apply damage.
-                this.GetComponent<PhotonView>().RPC("RemoveProjectileFromGame", PhotonTargets.All, null);
                 // Check aoe for manually detected collisions and apply damage to those objects.
                 Vector3 aPos = this.GetComponent<Transform>().position;
                 foreach (GameObject activeHero in GameController.instance.activePlayerHeroes)
@@ -93,7 +90,8 @@ public class FireBall : Projectile
                         activeHero.gameObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All, paramsForRPC);
                     }
                 }
-
+                // Projectile has made proper collision for explosion, detect possible objects to damage around this area, and apply damage.
+                this.GetComponent<PhotonView>().RPC("RemoveProjectileFromGame", PhotonTargets.All, null);
 
                 
             }
