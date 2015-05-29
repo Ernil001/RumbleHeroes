@@ -13,8 +13,7 @@ public class Ability : Photon.MonoBehaviour
     public int secondsToLive;
     // Time of the object instantiation.
     protected float timeInstantiated;
-    // Photon player owner id of the instantiated object
-    protected int networkOwnerId;
+    
     // Ability used by GameObject linked to PhotonView
     protected int ownerViewID;
     protected PhotonView ownerGameObject;
@@ -25,6 +24,9 @@ public class Ability : Photon.MonoBehaviour
     //
     protected Vector3 playerPos;
     protected Vector3 mousePos;
+    //
+    // Photon player owner id of the instantiated object
+    protected int networkOwnerId;
     public int Owner
     {
         set
@@ -34,6 +36,14 @@ public class Ability : Photon.MonoBehaviour
         get
         {
             return this.networkOwnerId;
+        }
+    }
+    //
+    protected string tag_Player
+    {
+        get
+        {
+            return GameController.instance.tag_Player;
         }
     }
     //

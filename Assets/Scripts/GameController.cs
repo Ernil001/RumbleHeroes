@@ -8,6 +8,10 @@ using System.Reflection;
 
 public class GameController : Photon.MonoBehaviour 
 {
+    // All varied Tags for searching parameters
+    public string tag_Player;
+    //
+
     //Private vars, cuz i can' // private is private no more ! Private ! Sir Yes Sir !
     private List<Vector3> spawnPositions = new List<Vector3>();
 
@@ -63,8 +67,13 @@ public class GameController : Photon.MonoBehaviour
     public GameObject score_PlayerWrap;
     // Maps
     public GameObject[] mapsFolder;
-    // Heroes
-    public GameObject[] heroesFolder;
+    /// <summary>
+    /// An array of active player heroes for the current round
+    /// </summary>
+    public GameObject[] activePlayerHeroes;
+    /// <summary>
+    /// Your local Hero resource
+    /// </summary>
     public GameObject activeLocalHero = null;
     // Main Camera
     public GameObject mainCamera;
@@ -449,7 +458,8 @@ public class GameController : Photon.MonoBehaviour
     {
         while (this.gameStatus == "running")
         {
-            //Debug.Log("running");
+            // Add all GameObjects with Player to activePlayerHeroes array
+            this.activePlayerHeroes = GameObject.FindGameObjectsWithTag(this.tag_Player);
             //Displaying PlayerIconTop
             if (UI_GameUI_Top.transform.childCount > 0)
             {

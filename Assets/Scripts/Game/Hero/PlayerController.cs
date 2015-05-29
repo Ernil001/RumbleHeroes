@@ -230,7 +230,7 @@ public class PlayerController : Entity
     {
         //Instantiate(deathParticles, pos, Quaternion.identity);
     }
-
+    /*positionOfImpact is not needed right now, might be removed later*/
     [RPC]public void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)
     {
         //Instantiate(hitParticles, positionOfImpact, Quaternion.identity);
@@ -238,9 +238,12 @@ public class PlayerController : Entity
         if (punView.ownerId == playerHitId)
         {
             this.currentHP -= damage;
-            if (punView.isMine) GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP);
-            
-            //Debug.Log("My HP was reduced");
+            // Local hero specific
+            if (punView.isMine)
+            {
+                GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP);
+            }
+            // All
             if (this.currentHP <= 0)
             {
                 this.animator.SetTrigger("death");

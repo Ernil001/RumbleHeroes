@@ -71,7 +71,7 @@ public abstract class Projectile : Ability
         {
             GameObject collidedObject = col.gameObject;
 
-            if ((collidedObject.tag == "Player" &&
+            if ((collidedObject.tag == tag_Player &&
                 collidedObject.GetComponent<PhotonView>().owner.ID != this.Owner))
             {
 
