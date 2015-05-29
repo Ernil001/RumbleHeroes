@@ -21,6 +21,9 @@ public class Ability : Photon.MonoBehaviour
     public AudioClip abilityInstantiate; // Played on object Awake callback
     public AudioClip abilityDuration; // This will be looped
     public AudioClip abilityOnDestroy; // Played when forceDestroy is activated.
+    // Effects for Instantiate and OnDestroy
+    public GameObject effectInstantiate;
+    public GameObject effectOnDestroy;
     //
     protected Vector3 playerPos;
     protected Vector3 mousePos;
@@ -61,7 +64,11 @@ public class Ability : Photon.MonoBehaviour
         {
             //this.GetComponent<AudioSource>().PlayOneShot(abilityInstantiate, 1);
             AudioController.instance.playClip_ability(abilityInstantiate, this.GetComponent<Transform>().position, "Default:AbilityInstantiate");
-
+        }
+        // Create Effect on Instantiate
+        if (effectInstantiate != null)
+        {
+            Instantiate(effectInstantiate, this.GetComponent<Transform>().position, Quaternion.identity);
         }
     }
     protected virtual void Start()
@@ -86,6 +93,10 @@ public class Ability : Photon.MonoBehaviour
         {
             //this.GetComponent<AudioSource>().PlayOneShot(abilityOnDestroy, 1);
             AudioController.instance.playClip_ability(abilityOnDestroy, this.GetComponent<Transform>().position, "Default:AbilityOnDestroy");
+        }
+        if (effectOnDestroy != null)
+        {
+            Instantiate(effectOnDestroy, this.GetComponent<Transform>().position, Quaternion.identity);
         }
         //
         Destroy(this.gameObject);

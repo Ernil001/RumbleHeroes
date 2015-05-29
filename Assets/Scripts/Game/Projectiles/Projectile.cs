@@ -97,7 +97,7 @@ public abstract class Projectile : Ability
     [RPC] public void RemoveProjectileFromGame()
     {
         // Create EndOfProjectileStatus, AKA. explosion, random animation, etc etc
-        if (projectileHitAnimation != null) Instantiate(projectileHitAnimation, transform.position, Quaternion.identity);
+        //if (projectileHitAnimation != null) Instantiate(projectileHitAnimation, transform.position, Quaternion.identity);
         //
         forceDestroy();
     }
