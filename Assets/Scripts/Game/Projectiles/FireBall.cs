@@ -5,6 +5,7 @@ public class FireBall : Projectile
 {
     private Vector3 startLocation;
     private bool hasHit = false;
+    public bool selfDamage;
     public float aoeX;
     public float aoeY;
 
@@ -77,21 +78,28 @@ public class FireBall : Projectile
                         aPos.y+aoeY >= hPos.y
                         &&
                         aPos.y-aoeY <= hPos.y
-                        /*
-                        &&
-                        Owner != activeHero.GetComponent<PhotonView>().owner.ID
-                        */
-                        // Could add the section above for other AOE spells, that will not want to damage the owner this one does.
                        )
                     {
+                        if (selfDamage)
+                        {
+                            object[] paramsForRPC = new object[4];
+                            paramsForRPC[0] = this.damage;
+                            paramsForRPC[1] = activeHero.gameObject.GetComponent<PhotonView>().ownerId;
+                            paramsForRPC[2] = transform.position;
+                            paramsForRPC[3] = this.Owner;
 
-                        object[] paramsForRPC = new object[4];
-                        paramsForRPC[0] = this.damage;
-                        paramsForRPC[1] = activeHero.gameObject.GetComponent<PhotonView>().ownerId;
-                        paramsForRPC[2] = transform.position;
-                        paramsForRPC[3] = this.Owner;
+                            activeHero.gameObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All, paramsForRPC);
+                        }
+                        else if (Owner != activeHero.GetComponent<PhotonView>().owner.ID)
+                        {
+                            object[] paramsForRPC = new object[4];
+                            paramsForRPC[0] = this.damage;
+                            paramsForRPC[1] = activeHero.gameObject.GetComponent<PhotonView>().ownerId;
+                            paramsForRPC[2] = transform.position;
+                            paramsForRPC[3] = this.Owner;
 
-                        activeHero.gameObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All, paramsForRPC);
+                            activeHero.gameObject.GetComponent<PhotonView>().RPC("ProjectileHit", PhotonTargets.All, paramsForRPC);
+                        }
                     }
                 }
                 // Projectile has made proper collision for explosion, detect possible objects to damage around this area, and apply damage.

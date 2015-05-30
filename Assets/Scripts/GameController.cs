@@ -1068,6 +1068,7 @@ public class GameController : Photon.MonoBehaviour
     public void returnToGame_fromMainMenu()
     {
         changeActiveStatus(GameController.instance.UI_mainMenu, false);
+        InputKeys.instance.InputType = "Game";
     }
     //
     public void setHpValues_toPlayerCustomProp(int currentHP, int maxHP = 0)
