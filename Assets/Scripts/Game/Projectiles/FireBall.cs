@@ -77,9 +77,13 @@ public class FireBall : Projectile
                         aPos.y+aoeY >= hPos.y
                         &&
                         aPos.y-aoeY <= hPos.y
+                        /*
+                        &&
+                        Owner != activeHero.GetComponent<PhotonView>().owner.ID
+                        */
+                        // Could add the section above for other AOE spells, that will not want to damage the owner this one does.
                        )
                     {
-                        //Debug.Log(activeHero.name + " Has Been Hit");
 
                         object[] paramsForRPC = new object[4];
                         paramsForRPC[0] = this.damage;
@@ -92,16 +96,7 @@ public class FireBall : Projectile
                 }
                 // Projectile has made proper collision for explosion, detect possible objects to damage around this area, and apply damage.
                 this.GetComponent<PhotonView>().RPC("RemoveProjectileFromGame", PhotonTargets.All, null);
-
-                
             }
-            /*
-            else if (col.tag == "Ground")
-            {
-                //We hit ground, remove projectile
-                this.GetComponent<PhotonView>().RPC("RemoveProjectileFromGame", PhotonTargets.All, null);
-            }
-                 * */
         }
     }
 

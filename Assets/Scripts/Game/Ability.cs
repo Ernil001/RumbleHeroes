@@ -9,10 +9,12 @@ public class Ability : Photon.MonoBehaviour
     //-***********
     public string visualName;
     public float cd; // It takes a float, but when the skill goes on CD, it will actualy conver to INT and check that. so only use full numbers.
+    public string description;
     // Time until object is self destroyed. if null is ignored
     public int secondsToLive;
     // Time of the object instantiation.
     protected float timeInstantiated;
+    //
     
     // Ability used by GameObject linked to PhotonView
     protected int ownerViewID;

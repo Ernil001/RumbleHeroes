@@ -17,6 +17,18 @@ public class PlayerController : Entity
     private Animator animator;
     private bool isGrounded;
     private float someScale;
+    /// <summary>
+    /// Returns true if the InputKeys are set on Game
+    /// </summary>
+    private bool IsGameInput
+    {
+        get 
+        {
+            if (InputKeys.instance.InputType == "Game") return true;
+            else return false;
+        }
+    }
+
 
     void Start()
     {
@@ -77,7 +89,7 @@ public class PlayerController : Entity
                 StartCoroutine(FinishDeath());
                 //GameController.instance.destroyPlayerHero();
             }
-            InputMovement();
+            if(IsGameInput) InputMovement();
         }
         //
     }
