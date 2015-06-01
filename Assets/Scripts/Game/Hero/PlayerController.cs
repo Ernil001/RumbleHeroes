@@ -152,7 +152,7 @@ public class PlayerController : Entity
             instantiateData[3] = punView.viewID;            
             //            
             GameObject tmpProjectile = null;            
-            tmpProjectile = PhotonNetwork.Instantiate(Ability.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) 
+            tmpProjectile = PhotonNetwork.Instantiate("Abilities/"+Ability.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData) 
                 as GameObject;                
             // Original idea was to move the attack animations to ability, but ill keep it here for now.   
             object[] data = new object[1];
@@ -174,7 +174,7 @@ public class PlayerController : Entity
             instantiateData[3] = punView.viewID;
             //            
             GameObject tmpProjectile = null;
-            tmpProjectile = PhotonNetwork.Instantiate(Ability2.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData)
+            tmpProjectile = PhotonNetwork.Instantiate("Abilities/" + Ability2.name, transform.FindChild("ProjectileStartingPoint").transform.position, Quaternion.identity, 0, instantiateData)
                 as GameObject;
             //     
             object[] data = new object[1];
