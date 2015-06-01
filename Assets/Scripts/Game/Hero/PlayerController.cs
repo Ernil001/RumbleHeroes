@@ -248,10 +248,19 @@ public class PlayerController : Entity
     {
         //Instantiate(deathParticles, pos, Quaternion.identity);
     }
+
     /*positionOfImpact is not needed right now, might be removed later*/
     [RPC]public void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)
     {
-        //Instantiate(hitParticles, positionOfImpact, Quaternion.identity);
+        // Projectile only Code IF NEEDED
+
+
+        //
+        AbilityHit(damage, playerHitId, positionOfImpact, projectileOwnerPlayerId);
+    }
+    [RPC] public void AbilityHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)
+    {
+        
         //If I am the player who got hit
         if (punView.ownerId == playerHitId)
         {
@@ -266,10 +275,6 @@ public class PlayerController : Entity
             if (this.currentHP <= 0)
             {
                 this.animator.SetTrigger("death");
-                /*
-                Debug.Log("My ID: " + punView.owner.ID);
-                Debug.Log("Killer ID: " + projectileOwnerPlayerId);
-                */
                 GameController.instance.addKillPoint(projectileOwnerPlayerId);
             }
             else
