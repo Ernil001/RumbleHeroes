@@ -194,32 +194,38 @@ public class PlayerController : Entity
     {
         ability_ready = false;
         //ability_lockRelease = Ability.gameObject.transform.GetComponent<Ability>().cd + Time.time;
-        int timeToWait = Convert.ToInt32(Ability.gameObject.transform.GetComponent<Ability>().cd);
+        float timeToWait = Ability.gameObject.transform.GetComponent<Ability>().cd;
         Transform tmp_count = GameController.instance.UI_GameUI_Bottom_Center_FirstAbilityCD.transform.FindChild("Count");
         GameController.instance.UI_GameUI_Bottom_Center_FirstAbilityCD.GetComponent<Image>().color = GameController.instance.bRed;
         //
-        int x = 0;
+        
+        //
+        float x = 0;
         while (x <= timeToWait)
         {
             if (x == timeToWait)
             {
                 tmp_count.GetComponent<Text>().text = "";
                 ability_ready = true;
+
                 GameController.instance.UI_GameUI_Bottom_Center_FirstAbilityCD.GetComponent<Image>().color = GameController.instance.bGreen;
             }
-            else tmp_count.GetComponent<Text>().text = (timeToWait - x).ToString();
-            x++;
-            yield return new WaitForSeconds(1f);
+            else if(x%1 == 0)
+            {
+                tmp_count.GetComponent<Text>().text = (timeToWait - x).ToString();
+            }
+            x=x+0.5f;
+            yield return new WaitForSeconds(0.5f);
         }
     }
     IEnumerator cd_ability2()
     {
         ability2_ready = false;
-        int timeToWait = Convert.ToInt32(Ability2.gameObject.transform.GetComponent<Ability>().cd);
+        float timeToWait = Ability2.gameObject.transform.GetComponent<Ability>().cd;
         Transform tmp_count = GameController.instance.UI_GameUI_Bottom_Center_SecondAbilityCD.transform.FindChild("Count");
         GameController.instance.UI_GameUI_Bottom_Center_SecondAbilityCD.GetComponent<Image>().color = GameController.instance.bRed;
         //
-        int x = 0;
+        float x = 0;
         while (x <= timeToWait)
         {
             if (x == timeToWait)
@@ -228,9 +234,12 @@ public class PlayerController : Entity
                 ability2_ready = true;
                 GameController.instance.UI_GameUI_Bottom_Center_SecondAbilityCD.GetComponent<Image>().color = GameController.instance.bGreen;
             }
-            else tmp_count.GetComponent<Text>().text = (timeToWait - x).ToString();
-            x++;
-            yield return new WaitForSeconds(1f);
+            else if (x % 1 == 0)
+            {
+                tmp_count.GetComponent<Text>().text = (timeToWait - x).ToString();
+            }
+            x = x + 0.5f;
+            yield return new WaitForSeconds(0.5f);
         }
     }
     

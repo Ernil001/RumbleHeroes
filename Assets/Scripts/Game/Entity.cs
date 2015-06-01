@@ -21,7 +21,7 @@ public abstract class Entity : MonoBehaviour
     public float speed;
     public bool ability_ready = true;
     public bool ability2_ready = true;
-    public float ability_lockRelease;
-    public float ability2_lockRelease;
+
+
     // This class will be expanded when we know more what we can move here. Preparations maybe for some simple AI :X
 }
