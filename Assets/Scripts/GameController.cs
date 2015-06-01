@@ -940,6 +940,37 @@ public class GameController : Photon.MonoBehaviour
         //spawnPositions.RemoveAt(randomPos);
         return spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count - 1)];
     }
+
+    IEnumerator DisplayRoundText()
+    {
+        // Testing
+        GameObject countdownObject = new GameObject();
+        countdownObject.AddComponent<GUIText>();
+
+        GUIText countdownText = countdownObject.GetComponent<GUIText>();
+        Font pyrite = (Font)Resources.Load("Fonts/pyrite");
+        countdownText.font = pyrite;
+        countdownText.text = "FIGHT";
+        countdownText.fontSize = 220;
+        countdownText.color = new Color(0.7f, 0.25f, 0.25f);
+        countdownText.alignment = TextAlignment.Center;
+        countdownText.anchor = TextAnchor.MiddleCenter;
+
+        countdownObject.transform.position = new Vector3(0.5f, 0.5f, 0f);
+
+        AudioClip fight = new AudioClip();
+        fight = (AudioClip)Resources.Load<AudioClip>("Sounds/fight");
+
+        AudioSource.PlayClipAtPoint(fight, new Vector3(0f, 0f, 0f));
+
+        while (countdownText.color.a > 0f)
+        {
+            yield return new WaitForSeconds(0.15f);
+
+            countdownText.color = new Color(countdownText.color.r, countdownText.color.g, countdownText.color.b, countdownText.color.a - 0.1f);
+        }
+    }
+
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
     // Load the Game UI elements for running game
@@ -948,7 +979,11 @@ public class GameController : Photon.MonoBehaviour
         //Destroy childreen if any.
         destroyAllChildGameObjects(UI_GameUI_Top);
         destroyAllChildGameObjects(UI_GameUI_ScoreBoard_Score);
+
         // Load the needed ui for TOP and ScoreBoard, relation to players
+
+        StartCoroutine("DisplayRoundText");
+
         foreach (PhotonPlayer pl in PhotonNetwork.playerList)
         {
             GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
