@@ -80,11 +80,12 @@ public class FireBall : Projectile
                         aPos.y-aoeY <= hPos.y
                        )
                     {
+                        Debug.Log("A hit has happened to resource:" + activeHero.name);
                         if (selfDamage)
                         {
                             object[] paramsForRPC = new object[4];
                             paramsForRPC[0] = this.damage;
-                            paramsForRPC[1] = activeHero.gameObject.GetComponent<PhotonView>().ownerId;
+                            paramsForRPC[1] = activeHero.gameObject.GetComponent<PhotonView>().owner.ID;
                             paramsForRPC[2] = transform.position;
                             paramsForRPC[3] = this.Owner;
 
@@ -94,7 +95,7 @@ public class FireBall : Projectile
                         {
                             object[] paramsForRPC = new object[4];
                             paramsForRPC[0] = this.damage;
-                            paramsForRPC[1] = activeHero.gameObject.GetComponent<PhotonView>().ownerId;
+                            paramsForRPC[1] = activeHero.gameObject.GetComponent<PhotonView>().owner.ID;
                             paramsForRPC[2] = transform.position;
                             paramsForRPC[3] = this.Owner;
 

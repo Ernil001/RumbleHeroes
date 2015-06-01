@@ -68,7 +68,7 @@ public class GameController : Photon.MonoBehaviour
     // Maps
     public GameObject[] mapsFolder;
     /// <summary>
-    /// An array of active player heroes for the current round
+    /// An array of active player heroes for the current round   (Collects GameObjects with tag "Player")
     /// </summary>
     public GameObject[] activePlayerHeroes;
     /// <summary>

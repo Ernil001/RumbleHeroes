@@ -7,7 +7,7 @@ using System.Collections;
 public abstract class Projectile : Ability 
 {
     //
-    public GameObject projectileHitAnimation;
+    //public GameObject projectileHitAnimation;
     //
     public int speed = 10;
     public int maxDistance = 100;
@@ -34,7 +34,7 @@ public abstract class Projectile : Ability
         this.GetComponent<Transform>().rotation = projectileRotation;
         //
         projectileBody = GetComponent<Rigidbody2D>();
-        //Get projectile base position
+        // Get projectile base position
         basePosition = transform.position;
         //
 	}
