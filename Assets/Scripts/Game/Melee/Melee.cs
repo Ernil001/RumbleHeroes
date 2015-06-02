@@ -27,7 +27,6 @@ public class Melee : Ability
             }
         }
         else forceDestroy();
-        
     }
     // Melee Contact
     protected virtual void OnTriggerEnter2D(Collider2D col)
@@ -54,7 +53,7 @@ public class Melee : Ability
             }
         }
     }
-    [RPC] private void RemoveItself()
+    [RPC] public void RemoveItself()
     {
         this.forceDestroy();
     }
