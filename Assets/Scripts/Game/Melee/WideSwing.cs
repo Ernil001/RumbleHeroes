@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NarrowThrust : Melee 
-{
+public class WideSwing : Melee {
+
     //-***********
-    //  Primary thrust of the ninja Nejito
+    //  Primary Swing of the Death Knight / Wide Arc damage
     //  Might have issues with staying too long on the field.
     //-***********
     //
