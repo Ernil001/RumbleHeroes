@@ -15,6 +15,19 @@ public class Melee : Ability
     protected override void Update()
     {
         base.Update();
+        //
+        if (ownerGameObject != null )
+        {
+            if (ownerGameObject.transform.FindChild("ProjectileStartingPoint").gameObject != null)
+                this.GetComponent<Transform>().position = ownerGameObject.transform.FindChild("ProjectileStartingPoint").GetComponent<Transform>().position;
+            else
+            {
+                Debug.Log("ProjectileStartingPoint GameObject does not exist in the hero resource !");
+                forceDestroy();
+            }
+        }
+        else forceDestroy();
+        
     }
     // Melee Contact
     protected virtual void OnTriggerEnter2D(Collider2D col)
