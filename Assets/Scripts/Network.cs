@@ -47,6 +47,23 @@ public class Network : MonoBehaviour
                 if (addToName == 0) temp_roomName = "Room " + Username;
                 else temp_roomName = "Room " + Username + "(" + addToName.ToString() + ")";
 
+                /*
+                var newRoomOptions : RoomOptions = new RoomOptions();
+
+                newRoomOptions.isOpen = true;
+                newRoomOptions.isVisible = true;
+                newRoomOptions.maxPlayers = maxNumPlayers;
+      
+                newRoomOptions.customRoomProperties = new ExitGames.Client.Photon.Hashtable();
+                newRoomOptions.customRoomProperties[ "race" ] = 0; // I have no idea what the HashTable is for, nor what the key value I'm assigning signifies
+      
+                var lobbyProps : String[] = [ "race" ];
+                newRoomOptions.customRoomPropertiesForLobby = lobbyProps; // again, totally clueless what this means or does
+      
+                var sqlLobby : TypedLobby = new TypedLobby( "race", LobbyType.SqlLobby );
+      
+                PhotonNetwork.CreateRoom( roomName, newRoomOptions, sqlLobby ); // created room is not showing up in lobby :(
+                */
                 if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
                 //Adding Raw values to server might be after or before not sure yet.
             }

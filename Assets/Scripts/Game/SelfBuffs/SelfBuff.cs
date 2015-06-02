@@ -12,7 +12,7 @@ public abstract class SelfBuff : Ability
     public int power;
     public float heightDisplay;
     // Duration for the visual effect on the hero
-    public int visualDuration;
+    public int visualDuration; // This variable is good that if we leave it empty it should be 0 sintead of undefined
     /// ///////////////////////////////////////////////////////////////////////////////////
     protected override void Awake()
     {
@@ -35,7 +35,7 @@ public abstract class SelfBuff : Ability
         //
         base.Update();
         // Visual Duration
-        if ((visualDuration != null) && (visualDuration != 0) && (Time.time - timeInstantiated >= visualDuration))
+        if ( /*(visualDuration != null) &&*/ (visualDuration != 0) && (Time.time - timeInstantiated >= visualDuration))
         {
             GameController.instance.changeActiveStatus(this.gameObject, false);
         }

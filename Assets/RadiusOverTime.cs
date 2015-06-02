@@ -8,20 +8,20 @@ public class RadiusOverTime : MonoBehaviour {
     public float overTime;
 
     private float timeStarted;
-    private CircleCollider2D collider;
+    private CircleCollider2D _collider;
 
 	// Use this for initialization
 	void Start () {
         this.timeStarted = Time.time;
-        collider = this.GetComponent<CircleCollider2D>();
-        collider.radius = startRadius;
+        _collider = this.GetComponent<CircleCollider2D>();
+        _collider.radius = startRadius;
     }
 	
 	// Update is called once per frame
 	void Update () {
         if(Time.time - this.timeStarted < this.overTime)
         {
-            collider.radius = (Time.time - this.timeStarted) * endRadius;
+            _collider.radius = (Time.time - this.timeStarted) * endRadius;
         }
 	}
 }

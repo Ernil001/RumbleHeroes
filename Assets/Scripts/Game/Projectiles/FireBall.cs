@@ -4,7 +4,6 @@ using System.Collections;
 public class FireBall : Projectile
 {
     private Vector3 startLocation;
-    private bool hasHit = false;
     public bool selfDamage;
     public float aoeX;
     public float aoeY;

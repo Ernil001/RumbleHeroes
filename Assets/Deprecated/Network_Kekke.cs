@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 public class Network_Kekke : MonoBehaviour
 {
+    /*
     private const string roomName = "RoomName";
     private RoomInfo[] roomsList;
 
@@ -42,12 +43,12 @@ public class Network_Kekke : MonoBehaviour
     {
         roomsList = PhotonNetwork.GetRoomList();
     }
-    /*
+    
     void OnJoinedRoom()
     {
         Debug.Log("Connected to Room");
     }
-    */
+    
     void OnJoinedRoom()
     {
         Debug.Log("Connected to Room");
@@ -58,7 +59,7 @@ public class Network_Kekke : MonoBehaviour
 
         mainCamera.GetComponent<SmoothCameraFollow>().target = tmpPlayer.transform;
 
-        /*string newName = "Player-" + PhotonNetwork.player.ID.ToString();
+        string newName = "Player-" + PhotonNetwork.player.ID.ToString();
 
         //tmpPlayer.name = newName;
 
@@ -66,6 +67,7 @@ public class Network_Kekke : MonoBehaviour
         rpcParams[0] = newName;
 
         tmpPlayer.GetComponent<PhotonView>().RPC("ChangePlayerName", PhotonTargets.All,
-            rpcParams);*/
+            rpcParams);
     }
+    */
 }

@@ -11,7 +11,7 @@ public class Ability : Photon.MonoBehaviour
     public float cd; // It takes a float, But only use full numbers or half numbers.
     public string description;
     // Time until object is self destroyed. if null is ignored
-    public int secondsToLive;
+    public int secondsToLive; // Should never be left undefined.
     // Time of the object instantiation.
     protected float timeInstantiated;
     //
@@ -82,7 +82,7 @@ public class Ability : Photon.MonoBehaviour
         // Adopted with base.Update();
 
         // Object Duration
-        if ((secondsToLive != null) && (secondsToLive != 0) && (Time.time - timeInstantiated >= secondsToLive))
+        if ( /*(secondsToLive != null) && */ (secondsToLive != 0) && (Time.time - timeInstantiated >= secondsToLive))
         {
             Destroy(gameObject);
         }

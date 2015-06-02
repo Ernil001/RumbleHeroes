@@ -138,9 +138,6 @@ public class GameController : Photon.MonoBehaviour
         //Populate the list of Heroes at Hero Selection UI
         populateHeroSelectionList();
         //
-        
-        //AudioListener.volume = 0.5f;
-        //this.GetComponent<AudioListener>().enabled = false;
     }
     //
     private void setEnvironment_mainMenu()
@@ -177,7 +174,7 @@ public class GameController : Photon.MonoBehaviour
                 if (!tarPlayer.isLocal)
                 {
                     ExitGames.Client.Photon.Hashtable tm = tarPlayer.customProperties;
-                    if (tm["h"] != "")
+                    if (tm["h"].ToString() != "")
                     {
                         takenHeroes.Add(tm["h"].ToString());
                     }
@@ -263,7 +260,7 @@ public class GameController : Photon.MonoBehaviour
             if (!tarPlayer.isLocal)
             {
                 ExitGames.Client.Photon.Hashtable tm = tarPlayer.customProperties;
-                if (tm["h"] != "")
+                if (tm["h"].ToString() != "")
                 {
                     takenHeroes.Add(tm["h"].ToString());
                 }
@@ -324,7 +321,7 @@ public class GameController : Photon.MonoBehaviour
                 }
                 else
                 {
-                    if (playerCusProp["h"] != "")
+                    if (playerCusProp["h"].ToString() != "")
                     {
                         string tempHeroCode = playerCusProp["h"].ToString();
                         // Check if correct child exists to populate information, otherwise create it.
@@ -347,7 +344,7 @@ public class GameController : Photon.MonoBehaviour
                 else
                 {
                     //
-                    if (playerCusProp["h"] != "")
+                    if (playerCusProp["h"].ToString() != "")
                     {
                         string tempHeroCode = playerCusProp["h"].ToString();
                         roomUIClassHolders[pos].transform.GetChild(0).GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(tempHeroCode);
@@ -365,7 +362,6 @@ public class GameController : Photon.MonoBehaviour
         }
         else 
         {
-            // We have a problem here >X
             errorDisplay_open("Too many GameObjects in " + roomUIClassHolders[pos].name, "0003");
         }
     }
@@ -535,7 +531,7 @@ public class GameController : Photon.MonoBehaviour
             {
                 //Debug.Log("ID: " + key + " Player Name: " + diCk[key].name + " is master?: " + diCk[key].isMasterClient);
                 AddPlayerToRoomList(diCk[key].name, i, diCk[key].isMasterClient);
-                ExitGames.Client.Photon.Hashtable playerProp = diCk[key].allProperties;
+                //ExitGames.Client.Photon.Hashtable playerProp = diCk[key].allProperties;
                 setPlayerHeroSelection(i, diCk[key]);
                 // Visual difference for you and other players
                 setDifferentDisplayForPlayers(i, diCk[key]);
@@ -637,6 +633,7 @@ public class GameController : Photon.MonoBehaviour
     // Possible paramaters for force (STRICT ALLOWED: STRING - "open" || "close")
     public void changeActiveStatus(GameObject targetObj, string force = "")
     {
+        // This polymorphism allows the second parameter to be unset and then does the automatic thing.
         if (force == "")
         {
             if (targetObj.activeSelf == true) targetObj.SetActive(false);
@@ -647,12 +644,7 @@ public class GameController : Photon.MonoBehaviour
     }
     public void changeActiveStatus(GameObject targetObj, bool force)
     {
-        if (force == null)
-        {
-            if (targetObj.activeSelf == true) targetObj.SetActive(false);
-            else targetObj.SetActive(true);
-        }
-        else if (force == true) targetObj.SetActive(true);
+        if (force == true) targetObj.SetActive(true);
         else if (force == false) targetObj.SetActive(false);
     }
     // CLeaning up RoomLobbyUI on leave room.
@@ -814,7 +806,7 @@ public class GameController : Photon.MonoBehaviour
                 if (!continueLoad) break;
                 ExitGames.Client.Photon.Hashtable ch = new ExitGames.Client.Photon.Hashtable();
                 ch = pl.customProperties;
-                if (ch["h"] == "")
+                if (ch["h"].ToString() == "")
                 {
                     errorMsg += "All players must choose a hero ! \n";
                     continueLoad = false;
@@ -981,17 +973,17 @@ public class GameController : Photon.MonoBehaviour
         //Destroy childreen if any.
         destroyAllChildGameObjects(UI_GameUI_Top);
         destroyAllChildGameObjects(UI_GameUI_ScoreBoard_Score);
-
         // Load the needed ui for TOP and ScoreBoard, relation to players
-
         //StartCoroutine("DisplayRoundText");
-
         foreach (PhotonPlayer pl in PhotonNetwork.playerList)
         {
-            GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-            temp_PlayerIconTop.transform.SetParent(UI_GameUI_Top.transform);
-            GameObject temp_scorePlayer = Instantiate(this.score_PlayerWrap, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-            temp_scorePlayer.transform.SetParent(UI_GameUI_ScoreBoard_Score.transform);
+            if (pl != null)
+            {
+                GameObject temp_PlayerIconTop = Instantiate(this.gamePlayerIcon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                temp_PlayerIconTop.transform.SetParent(UI_GameUI_Top.transform);
+                GameObject temp_scorePlayer = Instantiate(this.score_PlayerWrap, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+                temp_scorePlayer.transform.SetParent(UI_GameUI_ScoreBoard_Score.transform);
+            }
         }
         // Load the ability names
         foreach (GameObject hr in HeroInformation.instance.allHeroes)
