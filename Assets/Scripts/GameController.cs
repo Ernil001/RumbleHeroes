@@ -940,10 +940,11 @@ public class GameController : Photon.MonoBehaviour
         //spawnPositions.RemoveAt(randomPos);
         return spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count - 1)];
     }
-    /*
+    
     IEnumerator DisplayRoundText()
     {
         // Testing
+        
         GameObject countdownObject = new GameObject();
         countdownObject.AddComponent<GUIText>();
 
@@ -969,8 +970,9 @@ public class GameController : Photon.MonoBehaviour
 
             countdownText.color = new Color(countdownText.color.r, countdownText.color.g, countdownText.color.b, countdownText.color.a - 0.1f);
         }
+        
     }
-    */
+    
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
     // Load the Game UI elements for running game
@@ -982,7 +984,7 @@ public class GameController : Photon.MonoBehaviour
 
         // Load the needed ui for TOP and ScoreBoard, relation to players
 
-        StartCoroutine("DisplayRoundText");
+        //StartCoroutine("DisplayRoundText");
 
         foreach (PhotonPlayer pl in PhotonNetwork.playerList)
         {
