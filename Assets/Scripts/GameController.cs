@@ -940,7 +940,7 @@ public class GameController : Photon.MonoBehaviour
         //spawnPositions.RemoveAt(randomPos);
         return spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count - 1)];
     }
-
+    /*
     IEnumerator DisplayRoundText()
     {
         // Testing
@@ -970,7 +970,7 @@ public class GameController : Photon.MonoBehaviour
             countdownText.color = new Color(countdownText.color.r, countdownText.color.g, countdownText.color.b, countdownText.color.a - 0.1f);
         }
     }
-
+    */
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
     // Load the Game UI elements for running game
