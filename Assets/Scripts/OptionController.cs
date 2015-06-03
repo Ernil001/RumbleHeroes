@@ -85,7 +85,7 @@ public class OptionController : MonoBehaviour
         masterVolumeObj.GetComponent<Slider>().value = MasterVolume;
         usernameObj.GetComponent<InputField>().text = Username;
     }
-    public void changeSensitiveOptions()
+    private void changeSensitiveOptions()
     {
         usernameObj.GetComponent<InputField>().interactable = IsGameRunning;
     }

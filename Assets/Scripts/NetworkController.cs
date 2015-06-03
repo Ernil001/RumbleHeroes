@@ -2,16 +2,17 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
-public class Network : MonoBehaviour 
+using System;
+public class NetworkController : Photon.MonoBehaviour 
 {
+    public static NetworkController instance = null;
     //
-    //private const string roomName = "RoomName";
     private RoomInfo[] roomsList;
     //
     public GameObject playerPrefab;
-    //private string roomName = "Room - ";
-    
-    //public GameObject playerNameInput;
+    private int roomNameExtension;
+    private bool connectedToMaster = false;
+    //
     private string Username
     {
         get
@@ -22,77 +23,83 @@ public class Network : MonoBehaviour
     //
     private IEnumerator setRoomProp;
     //
-
+    void Awake()
+    {
+        // Makes the current instance a static one.
+        if (instance == null) instance = this;
+        else if (instance != this) Destroy(gameObject);
+        //
+        DontDestroyOnLoad(gameObject);
+    }
     // Use this for initialization
     void Start()
     {
         //This function enables us host and join rooms of our game based on the appID of photon.
         PhotonNetwork.ConnectUsingSettings("0.1");
     }
-    public void createPhotonRoom()
+    // Main Photon resolvers for the network
+    public void OnConnectedToPhoton()
     {
+        //Debug.Log("Connected to Master");
+        this.connectedToMaster = true;
+    }
+    public void OnFailedToConnectToPhoton()
+    {
+        Debug.Log("Failed to connect to Photon.");
+        this.connectedToMaster = false;
+        // This area will need a proper resolve for the game. Like disabling the createRoom etc etc.. Might be more linked to GameController this.
+
+    }
+    //
+    public void createPhotonRoom(int _roomNameExtension = 0)
+    {
+        //Debug.Log(_roomNameExtension);
+        if (_roomNameExtension != 0)
+        {
+            roomNameExtension = _roomNameExtension;
+        }
+        //
         if (Username == "")
         {
             GameController.instance.errorDisplay_open("You need to enter your name in Options before Creating a new room !");
             return;
         }
-        else
+        else if (connectedToMaster)
         {
-            bool tempRoomCreated = false;
-            int addToName = 0;
-            while (!tempRoomCreated)
-            {
 
-                string temp_roomName;
-                if (addToName == 0) temp_roomName = "Room " + Username;
-                else temp_roomName = "Room " + Username + "(" + addToName.ToString() + ")";
-
-                /*
-                var newRoomOptions : RoomOptions = new RoomOptions();
-
-                newRoomOptions.isOpen = true;
-                newRoomOptions.isVisible = true;
-                newRoomOptions.maxPlayers = maxNumPlayers;
-      
-                newRoomOptions.customRoomProperties = new ExitGames.Client.Photon.Hashtable();
-                newRoomOptions.customRoomProperties[ "race" ] = 0; // I have no idea what the HashTable is for, nor what the key value I'm assigning signifies
-      
-                var lobbyProps : String[] = [ "race" ];
-                newRoomOptions.customRoomPropertiesForLobby = lobbyProps; // again, totally clueless what this means or does
-      
-                var sqlLobby : TypedLobby = new TypedLobby( "race", LobbyType.SqlLobby );
-      
-                PhotonNetwork.CreateRoom( roomName, newRoomOptions, sqlLobby ); // created room is not showing up in lobby :(
-                */
-                if (PhotonNetwork.CreateRoom(temp_roomName, true, true, 4)) tempRoomCreated = true;
-                //Adding Raw values to server might be after or before not sure yet.
-            }
-            if (tempRoomCreated && PhotonNetwork.inRoom)
-            {
-                // Prepare all properties for the room
-                setRoomProperties();
-
-            }
-            else
-            {
-                setRoomProp = waitForRoomCreation();
-                StartCoroutine(setRoomProp);
-            } 
+            string temp_roomName;
+            if (roomNameExtension == 0) temp_roomName = "Room " + Username;
+            else temp_roomName = "Room " + Username + " (" + roomNameExtension.ToString() + ")";
+            //
+            RoomOptions roomOpt = new RoomOptions();
+            roomOpt.maxPlayers = 4;
+            roomOpt.isOpen = true;
+            roomOpt.isVisible = true;
+            PhotonNetwork.CreateRoom(temp_roomName, roomOpt, null);
             //GameController.instance.errorDisplay_open("kle prie");
         }
-    }
-    //
-    IEnumerator waitForRoomCreation()
-    {
-        while (true)
+        else 
         {
-            if (PhotonNetwork.inRoom)
-            {
-                setRoomProperties();
-                StopCoroutine(setRoomProp);
-                //Debug.Log("Working");
-            }
-            yield return new WaitForSeconds(0.5f);
+            Debug.Log(connectedToMaster);
+        }
+    }
+    public void OnCreateRoom() //This callback doesnt work for some reason
+    {
+        Debug.Log("Accessed OnCreateRoom callback from PUN");
+        //if (PhotonNetwork.isMasterClient) setRoomProperties();
+        //else GameController.instance.errorDisplay_open("ERROR: OnCreateRoom() was called even when you were not the master client for the room.");
+    }
+    // On room fail to create room
+    public void OnPhotonCreateRoomFailed(object[] CodeMsg)
+    {
+        // If failed to create room due to Name Error Request another room creation with different roomName
+        if (Convert.ToInt32(CodeMsg[0]) == 32766)
+        {
+            createPhotonRoom(roomNameExtension+1);
+        }
+        else 
+        {
+            GameController.instance.errorDisplay_open("ERROR: Failed to create the room. \nPhotonErrorID: " + CodeMsg[0].ToString() + "\n PhotonErrorMSG: " + CodeMsg[1].ToString());
         }
     }
     // Prepares defaults for hero selection
@@ -108,13 +115,7 @@ public class Network : MonoBehaviour
         prop.Add("gm", "RoundMatch"); // game mode
         prop.Add("rk", "0"); // RoundKills
         prop.Add("sc", "10"); // score to obtain to win
-        /*
-        prop.Add("h1", "");
-        prop.Add("h2", "");
-        prop.Add("h3", "");
-        prop.Add("h4", "");
-        */
-        //Saave
+        //Save
         PhotonNetwork.room.SetCustomProperties(prop);
     }
     //
@@ -152,22 +153,29 @@ public class Network : MonoBehaviour
     //Join room handle
     void photonJoinRoom_prepare(string roomName_photon)
     {
-        if (Username != "")
-        {
-            PhotonNetwork.JoinRoom(roomName_photon);
-        }
-        else
+        if (Username == "")
         {
             GameController.instance.errorDisplay_open("You need to enter your name before Joining a Room!");
             return;
         }
+        else if (connectedToMaster)
+        {
+            PhotonNetwork.JoinRoom(roomName_photon);
+        }
+        else 
+        {
+            GameController.instance.errorDisplay_open("Not Connected to MasterPhoton. Try again.");
+        }
     }
     void OnJoinedRoom()
     {
+        //
+        if (PhotonNetwork.isMasterClient) setRoomProperties();
         //Here set name on your id.
         setYourPhotonName(Username);
         //Set player properties.
-        setNewPlayerCusProperties(/*playerNameInput.GetComponent<InputField>().text*/);
+        setNewPlayerCusProperties();
+        // Set room view and create the update loop for room
         GameController.instance.changeActiveStatus(GameController.instance.roomLobby);
         GameController.instance.GameStatus = "roomLobby";
         GameController.instance.roomName.GetComponent<Text>().text = PhotonNetwork.room.name;

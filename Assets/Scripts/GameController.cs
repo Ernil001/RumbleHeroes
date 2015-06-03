@@ -745,7 +745,7 @@ public class GameController : Photon.MonoBehaviour
         }
 
         // What to do on open list of rooms ? List teh rooms ane. baaak.
-        this.GetComponent<Network>().refreshPhotonRooms(); // Doesnt work, didnt debug yet.
+        //this.GetComponent<Network>().refreshPhotonRooms(); // Doesnt work, didnt debug yet.
         // Call function refreshPhotonRooms
 
     }
