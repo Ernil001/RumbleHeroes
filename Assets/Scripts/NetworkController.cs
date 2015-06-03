@@ -272,6 +272,28 @@ public class NetworkController : Photon.MonoBehaviour
         GameController.instance.changeActiveStatus(GameController.instance.roomLobby, "close");
         GameController.instance.GameStatus = "";
     }
+    // Quick join an available room.
+    public void quickJoinGameRoom()
+    {
+        // Probably not, but in future might need an IF here to check which type of lobby you are connecting to. but i doubt it :D
+        // This will be kept as simple for now. No Point creating a proper searching algorythm.
+
+        if (Username == "")
+        {
+            GameController.instance.errorDisplay_open("You need to enter your name before Joining a Room!");
+            return;
+        }
+        else if (connectedToMaster)
+        {
+            PhotonNetwork.JoinRandomRoom();
+        }
+        else
+        {
+            GameController.instance.errorDisplay_open("Not Connected to MasterPhoton. Try again.");
+        }
+        //
+    }
+
     // testing 
     public void OnPhotonCustomRoomPropertiesChanged()
     {

@@ -49,6 +49,7 @@ public class GameController : Photon.MonoBehaviour
 
     public GameObject UI_MainMenuUI_MainMenuWrap_InputField; //This will be remade later.
     public GameObject UI_MainMenuUI_MainMenuWrap_CreateRoom;
+    public GameObject UI_MainMenuUI_MainMenuWrap_QuickJoin;
     public GameObject UI_MainMenuUI_MainMenuWrap_JoinRoom;
     public GameObject UI_MainMenuUI_MainMenuWrap_ReturnToGame;
     public GameObject UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu;
@@ -146,6 +147,7 @@ public class GameController : Photon.MonoBehaviour
         InputKeys.instance.InputType = "MainMenu";
         // Hide unnecessary buttons and show the neccesarry ones
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_CreateRoom, true);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_QuickJoin, true);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_JoinRoom, true);
         //changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, true);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToGame, false);
@@ -871,6 +873,7 @@ public class GameController : Photon.MonoBehaviour
         InputKeys.instance.InputType = "Game";
         // Hide unnecessary buttons and show the neccesarry ones
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_CreateRoom, false);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_QuickJoin, false);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_JoinRoom, false);
         //changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, false);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToGame, true);
@@ -926,17 +929,12 @@ public class GameController : Photon.MonoBehaviour
     // An error with spawning i believe
     private Vector3 GetRandomSpawnPoint()
     {
-        //int randomPos = UnityEngine.Random.Range(0, spawnPositions.Count - 1);
-        //Debug.Log(randomPos);
-        //Vector3 returnPos = spawnPositions[randomPos];
-        //spawnPositions.RemoveAt(randomPos);
         return spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count - 1)];
     }
     
     IEnumerator DisplayRoundText()
     {
         // Testing
-        
         GameObject countdownObject = new GameObject();
         countdownObject.AddComponent<GUIText>();
 
@@ -964,7 +962,6 @@ public class GameController : Photon.MonoBehaviour
         }
         
     }
-    
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
     // Load the Game UI elements for running game
