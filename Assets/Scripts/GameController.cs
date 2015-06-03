@@ -51,6 +51,7 @@ public class GameController : Photon.MonoBehaviour
     public GameObject UI_MainMenuUI_MainMenuWrap_CreateRoom;
     public GameObject UI_MainMenuUI_MainMenuWrap_QuickJoin;
     public GameObject UI_MainMenuUI_MainMenuWrap_JoinRoom;
+    public GameObject UI_MainMenuUI_MainMenuWrap_Credits;
     public GameObject UI_MainMenuUI_MainMenuWrap_ReturnToGame;
     public GameObject UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu;
     //
@@ -149,6 +150,7 @@ public class GameController : Photon.MonoBehaviour
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_CreateRoom, true);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_QuickJoin, true);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_JoinRoom, true);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_Credits, true);
         //changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, true);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToGame, false);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu, false);
@@ -875,6 +877,7 @@ public class GameController : Photon.MonoBehaviour
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_CreateRoom, false);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_QuickJoin, false);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_JoinRoom, false);
+        changeActiveStatus(UI_MainMenuUI_MainMenuWrap_Credits, false);
         //changeActiveStatus(UI_MainMenuUI_MainMenuWrap_InputField, false);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToGame, true);
         changeActiveStatus(UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu, true);

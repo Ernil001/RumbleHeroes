@@ -41,6 +41,10 @@ public class NetworkController : Photon.MonoBehaviour
     public void OnConnectedToPhoton()
     {
         //Debug.Log("Connected to Master");
+        //this.connectedToMaster = true;
+    }
+    public void OnJoinedLobby()
+    {
         this.connectedToMaster = true;
     }
     public void OnFailedToConnectToPhoton()
@@ -80,7 +84,7 @@ public class NetworkController : Photon.MonoBehaviour
         }
         else 
         {
-            Debug.Log(connectedToMaster);
+            //Debug.Log(connectedToMaster);
         }
     }
     public void OnCreateRoom() //This callback doesnt work for some reason
