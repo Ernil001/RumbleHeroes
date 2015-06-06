@@ -35,6 +35,7 @@ public class GameController : Photon.MonoBehaviour
     public int maxPlayerPossible = 4;
     //
     // Ui Section GameObjects
+    public GameObject DamageFloatingText;
     public GameObject errorUI;
     public GameObject errorText;
     public GameObject UI_GameUI_Top;

@@ -11,6 +11,7 @@ public class PlayerController : Entity
     // Other
     public int controllingPlayer_photonID;
     public string controllingPlayer_Username;
+    Transform HeroUI;
     Transform HeroUI_ConPlUser;
     private Rigidbody2D playerRigidBody;
     private PhotonView punView;
@@ -49,6 +50,7 @@ public class PlayerController : Entity
         }
         //
         this.HeroUI_ConPlUser = this.transform.FindChild("HeroUI").transform.FindChild("ControllingPlayerUsername");
+        this.HeroUI = this.transform.FindChild("HeroUI");
         //this.HeroUI_ControllingPlayerUsername_locSc = HeroUI_ConPlUser.GetComponent<RectTransform>().localScale;
         //
         this.controllingPlayer_photonID = this.punView.ownerId;
@@ -260,7 +262,14 @@ public class PlayerController : Entity
         //If I am the player who got hit
         if (punView.ownerId == playerHitId)
         {
+            // Reduces HP
             this.currentHP -= damage;
+            // Creates animation
+            GameObject tempMove = Instantiate(GameController.instance.DamageFloatingText, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+            if (tempMove != null) Debug.Log(tempMove);
+            tempMove.GetComponent<Text>().text = damage.ToString();
+            tempMove.transform.SetParent(HeroUI);
+            tempMove.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
             // Local hero specific
             if (punView.isMine)
             {
