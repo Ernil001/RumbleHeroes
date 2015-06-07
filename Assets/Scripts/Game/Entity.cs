@@ -9,6 +9,7 @@ public abstract class Entity : MonoBehaviour
     public string entityType;
     public string entityInformation;
     public float speedBase;
+    public float entityJumpPower; // Relates to the strength of an entities Jump.
 
     public GameObject Ability;
     public GameObject Ability2;

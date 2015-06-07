@@ -137,7 +137,7 @@ public class PlayerController : Entity
         //
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            playerRigidBody.AddForce(new Vector2(0, 25), ForceMode2D.Impulse);
+            playerRigidBody.AddForce(new Vector2(0, entityJumpPower), ForceMode2D.Impulse);
             isGrounded = false;
             //animator.SetBool("Jumping", true);
         }

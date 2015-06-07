@@ -10,6 +10,7 @@ public class GameController : Photon.MonoBehaviour
 {
     // All varied Tags for searching parameters
     public string tag_Player;
+    public string tag_MapSpawn;
     //
 
     //Private vars, cuz i can' // private is private no more ! Private ! Sir Yes Sir !
@@ -891,21 +892,18 @@ public class GameController : Photon.MonoBehaviour
         GameMode.ScoreCondition = Convert.ToInt32(roomCusInfo["sc"]);
         GameMode.Mode = roomCusInfo["gm"].ToString();
         GameMode.PlayerCount = PhotonNetwork.room.playerCount;
-        GameMode.map = this.mapsFolder[0];
+        GameMode.map = this.mapsFolder[1];
         // Load the map // Presumes files have not been tempered with
         GameMode.instantiatedMap = Instantiate(GameMode.map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-        // Initialise the spawn points
+        // Initialise the spawn points // Searches for all GameObject that have the tag_MapSpawn (Set in Editor)
         spawnPositions = new List<Vector3>();
-        spawnPositions.Add(GameObject.Find("SpawnPoint1").GetComponent<Transform>().position);
-        spawnPositions.Add(GameObject.Find("SpawnPoint2").GetComponent<Transform>().position);
-        spawnPositions.Add(GameObject.Find("SpawnPoint3").GetComponent<Transform>().position);
-        spawnPositions.Add(GameObject.Find("SpawnPoint4").GetComponent<Transform>().position);
-        spawnPositions.Add(GameObject.Find("SpawnPoint5").GetComponent<Transform>().position);
-        spawnPositions.Add(GameObject.Find("SpawnPoint6").GetComponent<Transform>().position);
+        foreach (GameObject spawn in GameObject.FindGameObjectsWithTag(this.tag_MapSpawn))
+        {
+            spawnPositions.Add(spawn.GetComponent<Transform>().position);
+        }
         // Load the player prefab
         spawnPlayerHero(HeroInformation.instance.return_HeroName_OnCode(plInfo["h"].ToString()));
         // Load the UI // Might change this to load the number of listed players and not the players that actually exists
-            // TopPlayerIcons && ScoreBoard info for players
         gameUI_loadElements();
         // Load the GameMode Description
         UI_GameUI_ScoreBoard_GameModeDescription.GetComponent<Text>().text = GameMode.ModeDescription;
