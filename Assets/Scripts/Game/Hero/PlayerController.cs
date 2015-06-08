@@ -266,7 +266,7 @@ public class PlayerController : Entity
             this.currentHP -= damage;
             // Creates animation
             GameObject tempMove = Instantiate(GameController.instance.DamageFloatingText, new Vector3(0,0,0), Quaternion.identity) as GameObject;
-            if (tempMove != null) Debug.Log(tempMove);
+            //if (tempMove != null) Debug.Log(tempMove);
             tempMove.GetComponent<Text>().text = damage.ToString();
             tempMove.transform.SetParent(HeroUI);
             tempMove.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
@@ -274,7 +274,10 @@ public class PlayerController : Entity
             if (punView.isMine)
             {
                 GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP);
-                if (this.currentHP <= 0) GameController.instance.addDeathPoint();
+                if (this.currentHP <= 0)
+                {
+                    GameController.instance.addDeathPoint();
+                }
             }
             // All
             if (this.currentHP <= 0)

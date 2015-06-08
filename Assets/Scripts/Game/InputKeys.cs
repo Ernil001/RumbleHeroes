@@ -81,6 +81,29 @@ public class InputKeys : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             //GameController.instance.addKillPoint();
+            // Testing for switching camera point of view.
+            GameController.instance.rotateDeathCamera();
+        }
+    }
+    public void InputGameDead()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, true);
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, false);
+        }
+        //
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            this.InputType = "GameMainMenu";
+            GameController.instance.changeActiveStatus(GameController.instance.UI_mainMenu);
+        }
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            GameController.instance.rotateDeathCamera();
         }
     }
     //
@@ -93,12 +116,4 @@ public class InputKeys : MonoBehaviour {
         }
     }
     //
-    public void InputGameDead()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            this.InputType = "Game";
-            GameController.instance.changeActiveStatus(GameController.instance.UI_mainMenu);
-        }
-    }
 }

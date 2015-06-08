@@ -994,6 +994,53 @@ public class GameController : Photon.MonoBehaviour
             }
         }
     }
+    // Switching main camera point of view
+    public void rotateDeathCamera()
+    {
+        // Find the target
+        int activeCount = activePlayerHeroes.Length;
+        if (activeCount != 0)
+        {
+            int getActiveCameraTarget = 0;
+            //Debug.Log(getActiveCameraTarget);
+            int x = 1;
+            foreach (GameObject pl in activePlayerHeroes)
+            {
+                if (mainCamera.GetComponent<SmoothCameraFollow>().targetHero == pl)
+                {
+                    getActiveCameraTarget = x;
+                    Debug.Log("PrimaryFocus: " + getActiveCameraTarget.ToString());
+                }
+                x++;
+            }
+            if (getActiveCameraTarget == activeCount)
+                getActiveCameraTarget = 1;
+            else getActiveCameraTarget++;
+
+            Debug.Log("NewFocus: " + getActiveCameraTarget.ToString());
+            //
+            x = 1;
+            foreach (GameObject pl in activePlayerHeroes)
+            {
+                if (getActiveCameraTarget == x)
+                {
+                    mainCamera.GetComponent<SmoothCameraFollow>().targetHero = pl;
+                }
+                x++;
+            }
+            //
+        }
+        else 
+        {
+            this.errorDisplay_open("ActiveCount of players: " + activeCount.ToString());
+        }
+
+        //Debug.Log(getActiveCameraTarget);
+        // 
+        //mainCamera.GetComponent<SmoothCameraFollow>().target;
+        
+        
+    }
     // Spawn the player hero
     public void spawnPlayerHero(string playerHeroName = "", bool forceSpawn = false)
     {
@@ -1027,8 +1074,7 @@ public class GameController : Photon.MonoBehaviour
             }
             // Create player on location and set camera
             this.activeLocalHero = PhotonNetwork.Instantiate("Heroes/"+playerHeroName, GetRandomSpawnPoint(), Quaternion.identity, 0);
-            mainCamera.GetComponent<SmoothCameraFollow>().target = this.activeLocalHero.transform;
-            //this.activeLocalHero.
+            mainCamera.GetComponent<SmoothCameraFollow>().targetHero = this.activeLocalHero;
         }
         //else Debug.Log("No spawn Hero Alive");
     }
@@ -1039,6 +1085,8 @@ public class GameController : Photon.MonoBehaviour
         ExitGames.Client.Photon.Hashtable chInfo = new ExitGames.Client.Photon.Hashtable();
         chInfo.Add("hs", "d");
         PhotonNetwork.player.SetCustomProperties(chInfo);
+        //
+        InputKeys.instance.InputType = "GameDead";
         //
         PhotonNetwork.Destroy(this.activeLocalHero.gameObject);
         Destroy(this.activeLocalHero.gameObject);
@@ -1126,6 +1174,7 @@ public class GameController : Photon.MonoBehaviour
             }
         }
     }
+
     // Add DEATH point to local client
     public void addDeathPoint()
     {
