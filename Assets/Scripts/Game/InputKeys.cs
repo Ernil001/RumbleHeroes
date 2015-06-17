@@ -13,6 +13,9 @@ public class InputKeys : MonoBehaviour {
     //  - GameDead // When a player is dead and is either waiting for respawn or waiting for round restart, same thing iknit >X
     //  - 
     public string inputType = "";
+    /// <summary>
+    /// Get/Set Either set the Input Type or return its value.
+    /// </summary>
     public string InputType
     {
         set

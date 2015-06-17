@@ -80,33 +80,13 @@ public class PlayerController : Entity
             );
         }
         //
-        if (punView.isMine)
+        if (punView.isMine && IsGameInput && this.isEntityAlive)
         {
-            if(currentHP <= 0)
-            {
-                //
-                object[] paramsForRPC = new object[1];
-                paramsForRPC[0] = transform.position;
-                // Destroy the player completly with GameController.instance.destroyPlayerHero(); after the animation ends so timeout ?
-                StartCoroutine(FinishDeath());
-                //GameController.instance.destroyPlayerHero();
-            }
-            if(IsGameInput) InputMovement();
+            InputMovement();
         }
+        // Might do an extra check for if player is dead.
+
         //
-    }
-    IEnumerator FinishDeath()
-    {
-        int x = 0;
-        while (x<2)
-        {
-            if (x == 1)
-            {
-                GameController.instance.destroyPlayerHero();
-            }
-            x++;
-            yield return new WaitForSeconds(1f);
-        }
     }
     //
     private void addUsername()
@@ -271,27 +251,50 @@ public class PlayerController : Entity
             tempMove.transform.SetParent(HeroUI);
             tempMove.GetComponent<RectTransform>().position = new Vector3(0, 0, 0);
             // Local hero specific
-            if (punView.isMine)
+
+            if (this.isEntityAlive)
             {
-                GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP);
+                if (punView.isMine)
+                {
+                    GameController.instance.setHpValues_toPlayerCustomProp(this.currentHP);
+                    if (this.currentHP <= 0)
+                    {
+                        GameController.instance.addDeathPoint();
+                        StartCoroutine(FinishDeath());
+
+                    }
+                }
+                // All
                 if (this.currentHP <= 0)
                 {
-                    GameController.instance.addDeathPoint();
+                    this.animator.SetTrigger("death");
+                    this.isEntityAlive = false;
+                    GameController.instance.addKillPoint(projectileOwnerPlayerId);
+                }
+                else
+                {
+                    this.animator.SetTrigger("hit");
                 }
             }
-            // All
-            if (this.currentHP <= 0)
-            {
-                this.animator.SetTrigger("death");
-                GameController.instance.addKillPoint(projectileOwnerPlayerId);
-            }
-            else
-            {
-                this.animator.SetTrigger("hit");
-            }
+
+
         }
     }
-
+    //
+    IEnumerator FinishDeath()
+    {
+        int x = 0;
+        while (x < 2)
+        {
+            if (x == 1)
+            {
+                GameController.instance.destroyPlayerHero();
+            }
+            x++;
+            yield return new WaitForSeconds(1f);
+        }
+    }
+    //
     [RPC] void FireProjectile(Vector3 pos, Quaternion rot, int ownerId, string projectileName)
     {
         GameObject tmpProjectile = null;
@@ -304,9 +307,7 @@ public class PlayerController : Entity
         {
             tmpProjectile = Instantiate(Ability, pos, rot) as GameObject;
         }
-
         animator.SetTrigger("attack");
-         
         tmpProjectile.GetComponent<Projectile>().Owner = ownerId;
     }
     //

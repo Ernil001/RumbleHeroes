@@ -37,6 +37,13 @@ public class NetworkController : Photon.MonoBehaviour
         //This function enables us host and join rooms of our game based on the appID of photon.
         PhotonNetwork.ConnectUsingSettings("0.1");
     }
+    void Update()
+    {
+        // Connection status
+        GameController.instance.UI_MainMenuUI_MainMenuWrap_PhotonConnection.GetComponent<Text>().text = PhotonNetwork.connectionState.ToString();
+        // Ping
+        GameController.instance.UI_MainMenuUI_MainMenuWrap_ServerPing.GetComponent<Text>().text = PhotonNetwork.GetPing().ToString() + " ms";
+    }
     // Main Photon resolvers for the network
     public void OnConnectedToPhoton()
     {
@@ -57,35 +64,39 @@ public class NetworkController : Photon.MonoBehaviour
     //
     public void createPhotonRoom(int _roomNameExtension = 0)
     {
-        //Debug.Log(_roomNameExtension);
-        if (_roomNameExtension != 0)
+        if (PhotonNetwork.connectedAndReady)
         {
-            roomNameExtension = _roomNameExtension;
-        }
-        //
-        if (Username == "")
-        {
-            GameController.instance.errorDisplay_open("You need to enter your name in Options before Creating a new room !");
-            return;
-        }
-        else if (connectedToMaster)
-        {
-
-            string temp_roomName;
-            if (roomNameExtension == 0) temp_roomName = "Room " + Username;
-            else temp_roomName = "Room " + Username + " (" + roomNameExtension.ToString() + ")";
+            //Debug.Log(_roomNameExtension);
+            if (_roomNameExtension != 0)
+            {
+                roomNameExtension = _roomNameExtension;
+            }
             //
-            RoomOptions roomOpt = new RoomOptions();
-            roomOpt.maxPlayers = 4;
-            roomOpt.isOpen = true;
-            roomOpt.isVisible = true;
-            PhotonNetwork.CreateRoom(temp_roomName, roomOpt, null);
-            //GameController.instance.errorDisplay_open("kle prie");
+            if (Username == "")
+            {
+                GameController.instance.errorDisplay_open("You need to enter your name in Options before Creating a new room !");
+                return;
+            }
+            else if (connectedToMaster)
+            {
+
+                string temp_roomName;
+                if (roomNameExtension == 0) temp_roomName = "Room " + Username;
+                else temp_roomName = "Room " + Username + " (" + roomNameExtension.ToString() + ")";
+                //
+                RoomOptions roomOpt = new RoomOptions();
+                roomOpt.maxPlayers = 4;
+                roomOpt.isOpen = true;
+                roomOpt.isVisible = true;
+                PhotonNetwork.CreateRoom(temp_roomName, roomOpt, null);
+                //GameController.instance.errorDisplay_open("kle prie");
+            }
+            else
+            {
+                //Debug.Log(connectedToMaster);
+            }
         }
-        else 
-        {
-            //Debug.Log(connectedToMaster);
-        }
+        else GameController.instance.errorDisplay_open("Error: Photon connection is not ready. (PhotonNetwork.connectedAndReady -> " + PhotonNetwork.connectedAndReady.ToString()  + ")");
     }
     public void OnCreateRoom() //This callback doesnt work for some reason
     {

@@ -8,6 +8,9 @@ using System.Reflection;
 
 public class GameController : Photon.MonoBehaviour 
 {
+    //
+    public string GameVersion;
+    
     // All varied Tags for searching parameters
     public string tag_Player;
     public string tag_MapSpawn;
@@ -56,6 +59,13 @@ public class GameController : Photon.MonoBehaviour
     public GameObject UI_MainMenuUI_MainMenuWrap_Credits;
     public GameObject UI_MainMenuUI_MainMenuWrap_ReturnToGame;
     public GameObject UI_MainMenuUI_MainMenuWrap_ReturnToMainMenu;
+
+    /// <summary>
+    /// Ui Text GameObject that is a mini console for displaying CURRENT PhotonConnection Information.
+    /// </summary>
+    public GameObject UI_MainMenuUI_MainMenuWrap_PhotonConnection;
+    public GameObject UI_MainMenuUI_MainMenuWrap_GameVersion;
+    public GameObject UI_MainMenuUI_MainMenuWrap_ServerPing;
     //
     public GameObject roomLobbyConsole;
     public GameObject roomLobby;
@@ -142,6 +152,7 @@ public class GameController : Photon.MonoBehaviour
         //Populate the list of Heroes at Hero Selection UI
         populateHeroSelectionList();
         //
+        UI_MainMenuUI_MainMenuWrap_GameVersion.GetComponent<Text>().text = GameVersion;
     }
     //
     private void setEnvironment_mainMenu()
@@ -273,14 +284,6 @@ public class GameController : Photon.MonoBehaviour
             }
         }
         string tmpSelectedHeroCode = HeroInformation.instance.return_HeroCode_OnName(selectedHeroName.GetComponent<Text>().text);
-        // I wonder if this part could be rewritten to ask directly into the references of the objects inside the list, instead of looping through them ?
-        /*
-        string heroName = selectedHeroName.GetComponent<Text>().text;
-        for(int x = 0; x < HeroInformation.instance.heroes.Count; x++)
-        {
-            if(heroName == HeroInformation.instance.heroes[x].Name)
-                tmpSelectedHeroCode = HeroInformation.instance.heroes[x].Code;
-        }*/
         // Asks if Hero Code is available to take.
         if(takenHeroes.Contains(tmpSelectedHeroCode))
         {
@@ -1107,7 +1110,6 @@ public class GameController : Photon.MonoBehaviour
                 // Just in case we might need something else than scoreCondition for kills.
             }
         }
-
         if (temp_endConditionMet)
         {
             this.photonView.RPC("GameMode_RoundMatch_GameEnd", PhotonTargets.All);

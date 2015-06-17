@@ -22,6 +22,8 @@ public abstract class Entity : MonoBehaviour
     public float speed;
     public bool ability_ready = true;
     public bool ability2_ready = true;
+    // Entity global status
+    protected bool isEntityAlive = true;
 
 
     // This class will be expanded when we know more what we can move here. Preparations maybe for some simple AI :X
