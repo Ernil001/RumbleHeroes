@@ -10,5 +10,6 @@ New:
 Changes:
  - Hero now properly changes state when dead.
  - Hero can no longer use skills when dead.
+ - Hero no longer "Runs" while in the air from jumping.
 ********************************************************
 ********************************************************

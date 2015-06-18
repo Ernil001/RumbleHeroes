@@ -86,9 +86,9 @@ public abstract class Projectile : Ability
                 //Remove projectiles from all clients
                 this.GetComponent<PhotonView>().RPC("RemoveProjectileFromGame", PhotonTargets.All, null);
             }
-            else if(col.tag == "Ground")
+            else if (col.tag == GameController.instance.tag_Ground || col.tag == GameController.instance.tag_NormalWall)
             {
-                //We hit ground, remove projectile
+                //We hit ground/Wall, remove projectile
                 this.GetComponent<PhotonView>().RPC("RemoveProjectileFromGame", PhotonTargets.All, null);
             }
         }

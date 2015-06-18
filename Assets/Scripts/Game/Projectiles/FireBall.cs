@@ -62,7 +62,7 @@ public class FireBall : Projectile
         {
             GameObject collidedObject = col.gameObject;
 
-            if ((collidedObject.tag == tag_Player && collidedObject.GetComponent<PhotonView>().owner.ID != this.Owner) || col.tag == "Ground")
+            if ((collidedObject.tag == tag_Player && collidedObject.GetComponent<PhotonView>().owner.ID != this.Owner) || col.tag == GameController.instance.tag_Ground || col.tag == GameController.instance.tag_NormalWall)
             {
                 // Check aoe for manually detected collisions and apply damage to those objects.
                 Vector3 aPos = this.GetComponent<Transform>().position;

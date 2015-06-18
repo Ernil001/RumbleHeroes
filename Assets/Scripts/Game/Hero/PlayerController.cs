@@ -29,15 +29,18 @@ public class PlayerController : Entity
             else return false;
         }
     }
-
-
-    void Start()
+    void Awake()
     {
         //
         playerRigidBody = GetComponent<Rigidbody2D>();
         punView = GetComponent<PhotonView>();
         animator = GetComponent<Animator>();
+        //
+    }
 
+    void Start()
+    {
+        //
         someScale = transform.localScale.x;
         // Sets starting HP values for Hero
         if (punView.isMine)
@@ -58,8 +61,6 @@ public class PlayerController : Entity
         if(this.controllingPlayer_Username != null) addUsername();
 
     }
-
-
     void Update()
     {
         if (this.GetComponent<Transform>().localScale.x < 0f && HeroUI_ConPlUser.GetComponent<RectTransform>().localScale.x > 0f)
@@ -87,6 +88,23 @@ public class PlayerController : Entity
         // Might do an extra check for if player is dead.
 
         //
+        /*
+        Vector3 horizontalMove = playerRigidBody.velocity;
+        // Don't use the vertical velocity
+        horizontalMove.y = 0;
+        // Calculate the approximate distance that will be traversed
+        float distance = horizontalMove.magnitue * Time.fixedDeltaTime;
+        // Normalize horizontalMove since it should be used to indicate direction
+        horizontalMove.Normalize();
+        RaycastHit hit;
+
+        // Check if the body's current velocity will result in a collision
+        if (playerRigidBody.SweepTest(horizontalMove, out hit, distance))
+        {
+            // If so, stop the movement
+            playerRigidBody.velocity = new Vector3(0, playerRigidBody.velocity.y, 0);
+        }
+        */
     }
     //
     private void addUsername()
@@ -102,12 +120,12 @@ public class PlayerController : Entity
 
         if(playerRigidBody.velocity.x > 0)
         {
-            animator.SetBool("Running", true);
+            animator.SetBool("Running", isGrounded);
             transform.localScale = new Vector2(-someScale, transform.localScale.y);
         }
         else if(playerRigidBody.velocity.x < 0)
         {
-            animator.SetBool("Running", true);
+            animator.SetBool("Running", isGrounded);
             transform.localScale = new Vector2(someScale, transform.localScale.y);
         }
         else
@@ -314,10 +332,9 @@ public class PlayerController : Entity
     //
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Ground")
+        if (col.gameObject.tag == GameController.instance.tag_Ground)
         {
             isGrounded = true;
-            //animator.SetBool("Jumping", false);
         }
     }
 }

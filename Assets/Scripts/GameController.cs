@@ -14,6 +14,8 @@ public class GameController : Photon.MonoBehaviour
     // All varied Tags for searching parameters
     public string tag_Player;
     public string tag_MapSpawn;
+    public string tag_Ground;
+    public string tag_NormalWall;
     //
     public Material[] skyBox;
 
