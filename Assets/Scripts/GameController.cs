@@ -15,6 +15,7 @@ public class GameController : Photon.MonoBehaviour
     public string tag_Player;
     public string tag_MapSpawn;
     //
+    public Material[] skyBox;
 
     //Private vars, cuz i can' // private is private no more ! Private ! Sir Yes Sir !
     private List<Vector3> spawnPositions;
@@ -174,6 +175,8 @@ public class GameController : Photon.MonoBehaviour
         changeActiveStatus(this.UI_game, false);
         //
         changeActiveStatus(UI_GameUI_ScoreBoard, false);
+        //
+        selectSkyBox();
     }
     //
     public void populateHeroSelectionList()
@@ -910,6 +913,10 @@ public class GameController : Photon.MonoBehaviour
         gameUI_loadElements();
         // Load the GameMode Description
         UI_GameUI_ScoreBoard_GameModeDescription.GetComponent<Text>().text = GameMode.ModeDescription;
+        // Load the skybox - Right now it will be random.
+        //UnityEngine.Random.Range(0, skyBox.Length);
+        selectSkyBox();
+        //
     }
     //
     // Main function for returning from active game to idle main menu
@@ -1184,6 +1191,20 @@ public class GameController : Photon.MonoBehaviour
         getKill = PhotonNetwork.player.customProperties;
         getKill["d"] = (Convert.ToInt32(getKill["d"]) + 1).ToString();
         PhotonNetwork.player.SetCustomProperties(getKill);
+    }
+    /// <summary>
+    /// Sets the skybox for the mainCamera
+    /// </summary>
+    private void selectSkyBox()
+    {
+        mainCamera.GetComponent<Skybox>().material = skyBox[UnityEngine.Random.Range(0, skyBox.Length)];
+    }
+    /// <summary>
+    /// Removes the skybox from the mainCamera
+    /// </summary>
+    private void removeSkyBox()
+    {
+        mainCamera.GetComponent<Skybox>().material = null;
     }
     //Application quit
     public void gameQuit()

@@ -1,0 +1,14 @@
+********************************************************
+********************************************************
+v 0.1
+
+New:
+ - Working skybox background in game and MainMenu.
+ - Death camera now works with left mouse button
+ - New floating damage text when an ability hits an enemy Hero.
+ - Quick join function.
+Changes:
+ - Hero now properly changes state when dead.
+ - Hero can no longer use skills when dead.
+********************************************************
+********************************************************
