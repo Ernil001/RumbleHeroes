@@ -2,14 +2,24 @@
 ********************************************************
 v 0.1
 
+Dev TODO list:
+	- Creating Install file
+	- Credits
+	- rubberbanding in jumps -  multiplayer sync needs a fix.
+	- Another Hero x2
+	- Options for resolution
+	- Options for window/fullscreen
+	- Option for graphic quality (Needed ?)
 New:
- - Working skybox background in game and MainMenu.
- - Death camera now works with left mouse button
- - New floating damage text when an ability hits an enemy Hero.
- - Quick join function.
+	- Working skybox background in game and MainMenu.
+	- Death camera now works with left mouse button
+	- New floating damage text when an ability hits an enemy Hero.
+	- Quick join function.
+	- Create room now allows custom strings for naming the room.
 Changes:
- - Hero now properly changes state when dead.
- - Hero can no longer use skills when dead.
- - Hero no longer "Runs" while in the air from jumping.
+	- Hero now properly changes state when dead.
+	- Hero can no longer use skills when dead.
+	- Hero no longer "Runs" while in the air from jumping.
+	- SkyBox now works properly in a multiplayer environment
 ********************************************************
 ********************************************************
