@@ -45,6 +45,7 @@ public class GameController : Photon.MonoBehaviour
     public GameObject DamageFloatingText;
     public GameObject errorUI;
     public GameObject errorText;
+    public GameObject CreateNew_RoomName;
     public GameObject UI_GameUI_Top;
     public GameObject UI_GameUI_ScoreBoard;
     public GameObject UI_GameUI_ScoreBoard_Score;
@@ -774,6 +775,13 @@ public class GameController : Photon.MonoBehaviour
             if (key.name == "CreateWrap") changeActiveStatus(key, "open");
         }
     }
+    public void extraRoom_closeCreate()
+    {
+        foreach (GameObject key in extraOptionsUI)
+        {
+            if (key.name == "CreateWrap") changeActiveStatus(key, false);
+        }
+    }
     // Clear all rooms in List Of Rooms
     public void listOfRooms_clearList()
     {
@@ -850,8 +858,10 @@ public class GameController : Photon.MonoBehaviour
         //
         if (continueLoad)
         {
-            //Start game
-
+            // Load special room properties
+            ExitGames.Client.Photon.Hashtable newSkyBox = new ExitGames.Client.Photon.Hashtable();
+            newSkyBox.Add("sky",selectSkyBox_randomReturn().ToString());
+            PhotonNetwork.room.SetCustomProperties(newSkyBox);
             //Disable joining into room and make it invisible
             PhotonNetwork.room.open = false;
             PhotonNetwork.room.visible = false;
@@ -917,7 +927,8 @@ public class GameController : Photon.MonoBehaviour
         UI_GameUI_ScoreBoard_GameModeDescription.GetComponent<Text>().text = GameMode.ModeDescription;
         // Load the skybox - Right now it will be random.
         //UnityEngine.Random.Range(0, skyBox.Length);
-        selectSkyBox();
+        selectSkyBox(Convert.ToInt32(PhotonNetwork.room.customProperties["sky"]));
+        Debug.Log(Convert.ToInt32(PhotonNetwork.room.customProperties["sky"]));
         //
     }
     //
@@ -1199,7 +1210,15 @@ public class GameController : Photon.MonoBehaviour
     /// </summary>
     private void selectSkyBox()
     {
-        mainCamera.GetComponent<Skybox>().material = skyBox[UnityEngine.Random.Range(0, skyBox.Length)];
+        mainCamera.GetComponent<Skybox>().material = skyBox[selectSkyBox_randomReturn()];
+    }
+    private void selectSkyBox(int selectedSky)
+    {
+        mainCamera.GetComponent<Skybox>().material = skyBox[selectedSky];
+    }
+    public int selectSkyBox_randomReturn()
+    {
+        return UnityEngine.Random.Range(0, skyBox.Length);
     }
     /// <summary>
     /// Removes the skybox from the mainCamera

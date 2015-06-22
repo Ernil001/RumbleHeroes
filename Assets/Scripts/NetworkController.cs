@@ -20,6 +20,16 @@ public class NetworkController : Photon.MonoBehaviour
             return OptionController.instance.Username;
         }
     }
+    /// <summary>
+    /// Returns Room Name from the InputField in CreateRoom
+    /// </summary>
+    private string RoomNameInput
+    {
+        get
+        {
+            return GameController.instance.CreateNew_RoomName.GetComponent<InputField>().text;
+        }
+    }
     //
     private IEnumerator setRoomProp;
     //
@@ -81,8 +91,8 @@ public class NetworkController : Photon.MonoBehaviour
             {
 
                 string temp_roomName;
-                if (roomNameExtension == 0) temp_roomName = "Room " + Username;
-                else temp_roomName = "Room " + Username + " (" + roomNameExtension.ToString() + ")";
+                if (roomNameExtension == 0) temp_roomName = RoomNameInput;
+                else temp_roomName = RoomNameInput + " (" + roomNameExtension.ToString() + ")";
                 //
                 RoomOptions roomOpt = new RoomOptions();
                 roomOpt.maxPlayers = 4;
@@ -130,6 +140,7 @@ public class NetworkController : Photon.MonoBehaviour
         prop.Add("gm", "RoundMatch"); // game mode
         prop.Add("rk", "0"); // RoundKills
         prop.Add("sc", "10"); // score to obtain to win
+        prop.Add("sky", "0"); // score to obtain to win
         //Save
         PhotonNetwork.room.SetCustomProperties(prop);
     }
