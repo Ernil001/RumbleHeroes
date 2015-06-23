@@ -27,7 +27,10 @@ public class NetworkController : Photon.MonoBehaviour
     {
         get
         {
-            return GameController.instance.CreateNew_RoomName.GetComponent<InputField>().text;
+            if (GameController.instance.CreateNew_RoomName.GetComponent<InputField>().text == "")
+                return "Room";
+            else
+                return GameController.instance.CreateNew_RoomName.GetComponent<InputField>().text;
         }
     }
     //

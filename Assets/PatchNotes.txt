@@ -10,6 +10,10 @@ Dev TODO list:
 	- Options for resolution
 	- Options for window/fullscreen
 	- Option for graphic quality (Needed ?)
+	- Fix heroSelection window + Add pictures and Information
+	- Loading panel
+	- Implementing a simple one color UI layout
+	- New mouse cursor
 New:
 	- Working skybox background in game and MainMenu.
 	- Death camera now works with left mouse button

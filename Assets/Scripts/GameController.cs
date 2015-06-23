@@ -26,7 +26,7 @@ public class GameController : Photon.MonoBehaviour
     // Design color variables tbh dunno why, just felt like it :D
     // r - roomLobby
     // b - Basic colors
-
+    public Color32 bMain = new Color32();
     public Color32 rRegBack = new Color32(255,255,255,0);
     public Color32 rDifBack = new Color32(67, 88, 70, 255);
 
@@ -246,9 +246,11 @@ public class GameController : Photon.MonoBehaviour
             {
                 //Add picture or Animated prefab
                 // CURRENTLY NOT WORKING DUE TO NO CORRECT PREFABS HUE HUE >X
-                
+                selectedHeroPortrait.GetComponent<Image>().sprite = hero.GetComponent<PlayerController>().entityDescriptionImage;
+
                 //Clear parent GameObject
                 destroyAllChildGameObjects(selectedHeroPortrait);
+
 
                 /*  Testing
                 foreach (GameObject key in HeroInformation.instance.heroSelectionPrefabs_heroes)

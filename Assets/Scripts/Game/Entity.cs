@@ -11,6 +11,7 @@ public abstract class Entity : MonoBehaviour
     public float speedBase;
     public float entityJumpPower; // Relates to the strength of an entities Jump.
 
+
     public GameObject Ability;
     public GameObject Ability2;
     // Represent the string that will be used for calling the animation for each ability in the animator
@@ -24,6 +25,8 @@ public abstract class Entity : MonoBehaviour
     public bool ability2_ready = true;
     // Entity global status
     protected bool isEntityAlive = true;
+    // Entity Description Image
+    public Sprite entityDescriptionImage;
 
 
     // This class will be expanded when we know more what we can move here. Preparations maybe for some simple AI :X
