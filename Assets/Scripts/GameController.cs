@@ -212,7 +212,7 @@ public class GameController : Photon.MonoBehaviour
                 bu.transform.SetParent(listOfHeroes.transform);
                 string temp_holdName = hero.GetComponent<PlayerController>().entityName;
                 bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(temp_holdName));
-                bu.transform.FindChild("HeroName").GetComponent<Text>().text = hero.GetComponent<PlayerController>().entityName + " (" + hero.GetComponent<PlayerController>().entityClass + ")";
+                bu.transform.FindChild("HeroName").GetComponent<Text>().text = hero.GetComponent<PlayerController>().entityName;
                 
                 if (takenHeroes.Contains(hero.GetComponent<PlayerController>().heroCode))
                     bu.GetComponent<Button>().interactable = false;
@@ -229,7 +229,7 @@ public class GameController : Photon.MonoBehaviour
                 bu.transform.SetParent(listOfHeroes.transform);
                 string temp_holdName = hero.GetComponent<PlayerController>().entityName;
                 bu.GetComponent<Button>().onClick.AddListener(() => this.heroSelection(temp_holdName));
-                bu.transform.FindChild("HeroName").GetComponent<Text>().text = hero.GetComponent<PlayerController>().entityName + " (" + hero.GetComponent<PlayerController>().entityClass + ")";
+                bu.transform.FindChild("HeroName").GetComponent<Text>().text = hero.GetComponent<PlayerController>().entityName;
             }
 
         }
@@ -344,6 +344,15 @@ public class GameController : Photon.MonoBehaviour
                         // Check if correct child exists to populate information, otherwise create it.
                         //Debug.Log(roomUIClassHolders[pos].transform.GetChildCount().ToString());
                         roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Text").GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(tempHeroCode);
+                        // Populate image // HeroInformation Should be made to return a single hero depending on some unique attribute.
+                        foreach (GameObject hero in HeroInformation.instance.allHeroes)
+                        {
+                            if (hero.GetComponent<PlayerController>().heroCode == tempHeroCode)
+                            {
+                                roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Image").GetComponent<Image>().sprite = hero.GetComponent<PlayerController>().entityDescriptionImage;
+                                roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Image").GetComponent<Image>().color = new Color(255f, 255f, 255f, 255f);
+                            }
+                        }
                     }
                     else
                     {
@@ -365,6 +374,14 @@ public class GameController : Photon.MonoBehaviour
                     {
                         string tempHeroCode = playerCusProp["h"].ToString();
                         roomUIClassHolders[pos].transform.GetChild(0).GetComponent<Text>().text = HeroInformation.instance.return_HeroName_OnCode(tempHeroCode);
+                        foreach (GameObject hero in HeroInformation.instance.allHeroes)
+                        {
+                            if (hero.GetComponent<PlayerController>().heroCode == tempHeroCode)
+                            {
+                                roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Image").GetComponent<Image>().sprite = hero.GetComponent<PlayerController>().entityDescriptionImage;
+                                roomUIClassHolders[pos].transform.GetChild(0).transform.FindChild("Image").GetComponent<Image>().color = new Color(255f, 255f, 255f, 255f);
+                            }
+                        }
                     }
                     else
                     {
@@ -387,7 +404,7 @@ public class GameController : Photon.MonoBehaviour
     {
         // Delete child if exists
         destroyAllChildGameObjects(roomUIClassHolders[pos]);
-        // Repopulate with correct child
+        // Repopulate with currect child
         if (isLocal)
         {
             GameObject sht = Instantiate(selectHeroButton, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
@@ -407,7 +424,7 @@ public class GameController : Photon.MonoBehaviour
             sht.transform.SetParent(roomUIClassHolders[pos].transform);
             sht.transform.localScale = Vector3.one;
             sht.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-            sht.GetComponent<RectTransform>().anchoredPosition = new Vector2(50, 0);
+            sht.GetComponent<RectTransform>().anchoredPosition = new Vector2(87, 0);
             sht.GetComponent<Text>().text = "";
         }
     }
@@ -578,7 +595,7 @@ public class GameController : Photon.MonoBehaviour
     {
         if (player.isLocal)
         {
-            roomUINames[playerIndex].transform.parent.GetComponent<Image>().color = this.rDifBack;
+            roomUINames[playerIndex].transform.parent.GetComponent<Image>().color = this.bMain;
         }
         else
         {

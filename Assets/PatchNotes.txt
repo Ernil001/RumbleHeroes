@@ -10,7 +10,6 @@ Dev TODO list:
 	- Options for resolution
 	- Options for window/fullscreen
 	- Option for graphic quality (Needed ?)
-	- Fix heroSelection window + Add pictures and Information
 	- Loading panel
 	- Implementing a simple one color UI layout
 	- New mouse cursor
@@ -25,5 +24,6 @@ Changes:
 	- Hero can no longer use skills when dead.
 	- Hero no longer "Runs" while in the air from jumping.
 	- SkyBox now works properly in a multiplayer environment
+	- Applied some changes to HeroSelection - scales properly with different resolutions - Images.
 ********************************************************
 ********************************************************
