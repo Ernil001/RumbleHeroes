@@ -25,10 +25,12 @@ public class OptionController : MonoBehaviour
     // GameObjects that will interact with options
     public GameObject usernameObj;
     public GameObject masterVolumeObj;
+    public GameObject fullscreenObj;
     
     // Default values
     private string username = "";
     private float masterVolume = 1f;
+    private bool fullscreen = true;
     //
 
     /// <summary>
@@ -60,9 +62,24 @@ public class OptionController : MonoBehaviour
         {
             return PlayerPrefs.GetFloat("MasterVolume", masterVolume);
         }
-        
     }
-
+    /// <summary>
+    /// Set/Get this value controlls Screen.fullscreen
+    /// </summary>
+    public bool Fullscreen
+    {
+        set
+        {
+            //PlayerPrefs.SetInt("Fullscreen", value);
+            if (value) PlayerPrefs.SetInt("Fullscreen", 1);
+            else PlayerPrefs.SetInt("Fullscreen", 0);
+            Screen.fullScreen = value;
+        }
+        get
+        {
+            return Screen.fullScreen;
+        }
+    }
     //
     void Awake()
     {
@@ -74,7 +91,9 @@ public class OptionController : MonoBehaviour
     }
     void Start()
     {
-
+        // Load default settings such as fullscreen and resolution if needed
+        if (PlayerPrefs.GetInt("Fullscreen") == 1) Fullscreen = true;
+        else Fullscreen = false;
     }
     // Loading options for display purpose. They will be displayed in the extraOptions -> OptionsWrap window
     public void displayOptions()
@@ -84,6 +103,7 @@ public class OptionController : MonoBehaviour
         // Load
         masterVolumeObj.GetComponent<Slider>().value = MasterVolume;
         usernameObj.GetComponent<InputField>().text = Username;
+        fullscreenObj.GetComponent<Toggle>().isOn = Fullscreen;
     }
     private void changeSensitiveOptions()
     {
@@ -92,7 +112,6 @@ public class OptionController : MonoBehaviour
     // Main method for saving all options // lazy way out :D
     public void saveOptions()
     {
-        
         // Saving Master Volume sound
         if (MasterVolume != masterVolumeObj.GetComponent<Slider>().value)
         {
@@ -102,6 +121,11 @@ public class OptionController : MonoBehaviour
         if (Username != usernameObj.GetComponent<InputField>().text)
         {
             Username = usernameObj.GetComponent<InputField>().text;
+        }
+        // Saving fullscreen
+        if (Fullscreen != fullscreenObj.GetComponent<Toggle>().isOn)
+        {
+            Fullscreen = fullscreenObj.GetComponent<Toggle>().isOn;
         }
         // After all options have been set in OptionController and PlayerPrefs
         GameController.instance.extraRoom_closeOptions();
