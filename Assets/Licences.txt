@@ -15,3 +15,7 @@ Button27.wav - UI buttons on click
 https://www.freesound.org/people/bubaproducer/sounds/107146/
 http://creativecommons.org/licenses/by/3.0/
 ///////////////
+Cursor - Mouse cursor
+https://www.iconfinder.com/icons/85802/target_icon#size=30
+http://www.iconbeast.com/
+//////////////

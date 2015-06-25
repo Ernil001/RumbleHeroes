@@ -1,23 +1,22 @@
 ********************************************************
 ********************************************************
 v 0.1
-
 Dev TODO list:
 	- Creating Install file
 	- Credits
 	- rubberbanding in jumps -  multiplayer sync needs a fix.
 	- Another Hero x2
 	- Options for resolution
-	- Options for window/fullscreen
 	- Option for graphic quality (Needed ?)
 	- Loading panel
-	- New mouse cursor
 New:
 	- Working skybox background in game and MainMenu.
 	- Death camera now works with left mouse button
 	- New floating damage text when an ability hits an enemy Hero.
 	- Quick join function.
 	- Create room now allows custom strings for naming the room.
+	- Option for changing fullscreen mode
+	- New mouse cursor
 Changes:
 	- Hero now properly changes state when dead.
 	- Hero can no longer use skills when dead.

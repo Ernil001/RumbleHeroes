@@ -10,7 +10,6 @@ public class GameController : Photon.MonoBehaviour
 {
     //
     public string GameVersion;
-    
     // All varied Tags for searching parameters
     public string tag_Player;
     public string tag_MapSpawn;
@@ -155,8 +154,17 @@ public class GameController : Photon.MonoBehaviour
         setEnvironment_mainMenu();
         //Populate the list of Heroes at Hero Selection UI
         populateHeroSelectionList();
-        //
+        // Set version
         UI_MainMenuUI_MainMenuWrap_GameVersion.GetComponent<Text>().text = GameVersion;
+        /*
+        Resolution[] resolutions = Screen.resolutions;
+        foreach (Resolution test in resolutions)
+        {
+            Debug.Log(test.width + "x" + test.height);
+        }
+        Debug.Log(resolutions.Length);
+        */
+        //Screen.SetResolution(resolutions[0].width, resolutions[0].height, true);
     }
     //
     private void setEnvironment_mainMenu()
@@ -1252,17 +1260,4 @@ public class GameController : Photon.MonoBehaviour
         Application.Quit();
     }
     // Testing method linked to Testing Button
-    public void testingMethod()
-    {
-        //
-        Debug.Log(HeroInformation.instance.return_HeroName_OnCode("H02"));
-        Debug.Log(HeroInformation.instance.return_HeroCode_OnName("Constantine"));
-        //   
-    }
-    public void testingSetSoundOnOff()
-    {
-        if (AudioListener.volume != 1f)
-            AudioListener.volume = 1f;
-        else AudioListener.volume = 0f;
-    }
 }

@@ -71,7 +71,11 @@ public class OptionController : MonoBehaviour
         set
         {
             //PlayerPrefs.SetInt("Fullscreen", value);
-            if (value) PlayerPrefs.SetInt("Fullscreen", 1);
+            if (value)
+            {
+                PlayerPrefs.SetInt("Fullscreen", 1);
+                //MouseCursorController.instance.changeMouseCursor();
+            }
             else PlayerPrefs.SetInt("Fullscreen", 0);
             Screen.fullScreen = value;
         }
