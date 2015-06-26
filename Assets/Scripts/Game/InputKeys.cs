@@ -37,7 +37,9 @@ public class InputKeys : MonoBehaviour {
 	//
 	void Update () 
     {
-        
+        // Global Inputs
+        InputGlobal();
+        // Specific Inputs
         if (this.InputType == "MainMenu")
         {
             InputMainMenu();
@@ -58,6 +60,26 @@ public class InputKeys : MonoBehaviour {
 	}
     //
     //////////////////////
+    // Global Input values that are active throughout the game statuses.
+    private void InputGlobal()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            MouseCursorController.instance.BorderLockState = false;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftAlt))
+        {
+            MouseCursorController.instance.BorderLockState = true;
+        }
+        // For Testing
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            //GameController.instance.addKillPoint();
+            // Testing for switching camera point of view.
+            //GameController.instance.rotateDeathCamera();
+            GameController.instance.errorDisplay_open(MouseCursorController.instance.defaultMouseCursor.name + " // " + Cursor.visible);
+        }
+    }
     //
     public void InputMainMenu()
     {
@@ -69,23 +91,18 @@ public class InputKeys : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, true);
+            MouseCursorController.instance.BorderLockState = false;
         }
         if (Input.GetKeyUp(KeyCode.Tab))
         {
             GameController.instance.changeActiveStatus(GameController.instance.UI_GameUI_ScoreBoard, false);
+            MouseCursorController.instance.BorderLockState = true;
         }
         //
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             this.InputType = "GameMainMenu";
             GameController.instance.changeActiveStatus(GameController.instance.UI_mainMenu);
-        }
-        // For Testing
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            //GameController.instance.addKillPoint();
-            // Testing for switching camera point of view.
-            GameController.instance.rotateDeathCamera();
         }
     }
     public void InputGameDead()

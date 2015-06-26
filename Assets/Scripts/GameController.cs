@@ -957,6 +957,8 @@ public class GameController : Photon.MonoBehaviour
         selectSkyBox(Convert.ToInt32(PhotonNetwork.room.customProperties["sky"]));
         Debug.Log(Convert.ToInt32(PhotonNetwork.room.customProperties["sky"]));
         //
+        // Sets the cursor to border Lock
+        MouseCursorController.instance.BorderLockState = true;
     }
     //
     // Main function for returning from active game to idle main menu
@@ -971,6 +973,8 @@ public class GameController : Photon.MonoBehaviour
             Destroy(GameMode.instantiatedMap.gameObject);
             //
             destroyAllChildGameObjects(UI_GameUI_ScoreBoard_Score);
+            //
+            MouseCursorController.instance.BorderLockState = false;
         }
         else
         {

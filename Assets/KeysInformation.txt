@@ -1,0 +1,21 @@
+All the keys information, this might be implemented to be changed later on, or just created as a how to information in game
+
+Global:
+	- LeftAlt > Enforcers borderless fullscreen
+MainMenu:
+	-
+Game:
+	- Tab > Displays score
+	- Escape > Shows Main Menu
+	- Space > Jumps
+	- A > Moves left
+	- D > Moves right
+	- LeftMouse > Ability 1
+	- RightMouse > Ability 2
+
+Game (Being dead):
+	- Escape > Shows main Menu
+	- Tab > Shows score
+	- LeftMouse > Rotates death camera point of view
+Game (Being in Main Menu):
+	- Escape - Closes Main Menu

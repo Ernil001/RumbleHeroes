@@ -6,6 +6,22 @@ public class MouseCursorController : MonoBehaviour
     //
     public Texture2D defaultMouseCursor;
     //
+    private bool borderLockState;
+    /// <summary>
+    /// Locks the cursor to the borders of the Window
+    /// </summary>
+    public bool BorderLockState
+    {
+        get 
+        {
+            return borderLockState;
+        }
+        set
+        {
+            borderLockState = value;
+        }
+    }
+    //
     public static MouseCursorController instance = null;
     void Awake()
     {
@@ -17,15 +33,14 @@ public class MouseCursorController : MonoBehaviour
     }
     void Start()
     {
-        //defaultMouseCursor.te
-        changeMouseCursor();
-        //Cursor.lockState = CursorLockMode.Confined;
-
+        //changeMouseCursor();
+        BorderLockState = false;
     }
     void Update()
     {
-        //changeMouseCursor();
-        Cursor.lockState = CursorLockMode.Confined;
+        changeMouseCursor();
+        if (BorderLockState) Cursor.lockState = CursorLockMode.Confined;
+        else Cursor.lockState = CursorLockMode.None;
     }
     /// <summary>
     /// Change the cursor used in game to a texture2d
