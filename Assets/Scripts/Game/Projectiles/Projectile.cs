@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -94,7 +94,7 @@ public abstract class Projectile : Ability
         }
     }
 
-    [RPC] public void RemoveProjectileFromGame()
+    [PunRPC] public void RemoveProjectileFromGame()
     {
         // Create EndOfProjectileStatus, AKA. explosion, random animation, etc etc
         //if (projectileHitAnimation != null) Instantiate(projectileHitAnimation, transform.position, Quaternion.identity);

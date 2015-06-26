@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections;
@@ -180,7 +180,7 @@ public class PlayerController : Entity
             StartCoroutine(cd_ability2());
         }
     }
-    [RPC] void defaultAttackAnimation(string AbilityAnimator = "")
+    [PunRPC] void defaultAttackAnimation(string AbilityAnimator = "")
     {
         if(AbilityAnimator != "")
             this.animator.SetTrigger(AbilityAnimator);
@@ -240,13 +240,13 @@ public class PlayerController : Entity
     }
     
     //
-    [RPC] void PlayDeathAnimation(Vector3 pos)
+    [PunRPC] void PlayDeathAnimation(Vector3 pos)
     {
         //Instantiate(deathParticles, pos, Quaternion.identity);
     }
 
     /*positionOfImpact is not needed right now, might be removed later*/
-    [RPC]public void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)
+    [PunRPC]public void ProjectileHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)
     {
         // Projectile only Code IF NEEDED
 
@@ -254,7 +254,7 @@ public class PlayerController : Entity
         //
         AbilityHit(damage, playerHitId, positionOfImpact, projectileOwnerPlayerId);
     }
-    [RPC] public void AbilityHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)
+    [PunRPC] public void AbilityHit(int damage, int playerHitId, Vector3 positionOfImpact, int projectileOwnerPlayerId)
     {
         
         //If I am the player who got hit
@@ -313,7 +313,7 @@ public class PlayerController : Entity
         }
     }
     //
-    [RPC] void FireProjectile(Vector3 pos, Quaternion rot, int ownerId, string projectileName)
+    [PunRPC] void FireProjectile(Vector3 pos, Quaternion rot, int ownerId, string projectileName)
     {
         GameObject tmpProjectile = null;
 

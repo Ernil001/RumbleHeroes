@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Collections;
@@ -438,7 +438,7 @@ public class GameController : Photon.MonoBehaviour
     }
     //
     //////////////////////////////////////// - RoundMatch GameMode RPC calls for Rounds and End check - ////////////////////////////////
-    [RPC] public void GameMode_RoundMatch_RoundEnd()
+    [PunRPC] public void GameMode_RoundMatch_RoundEnd()
     {
         StartCoroutine(GameMode_RoundMatch_PrepareToSpawn());
     }
@@ -464,7 +464,7 @@ public class GameController : Photon.MonoBehaviour
             yield return new WaitForSeconds(3f);
         }
     }
-    [RPC] public void GameMode_RoundMatch_GameEnd()
+    [PunRPC] public void GameMode_RoundMatch_GameEnd()
     {
         StartCoroutine(GameMode_RoundMatch_PrepareToEndGame());
     }
@@ -905,7 +905,7 @@ public class GameController : Photon.MonoBehaviour
     //
     // Main function to go from idle game in main menu and lobbies to an active game with evetything set up.
     //
-    [RPC] public void startGame_client()
+    [PunRPC] public void startGame_client()
     { 
         // All the proccesses here should be synched and displayed only when all players have loaded their side.
         /////////////////////////

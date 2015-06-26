@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Melee : Ability 
@@ -53,7 +53,7 @@ public class Melee : Ability
             }
         }
     }
-    [RPC] public void RemoveItself()
+    [PunRPC] public void RemoveItself()
     {
         this.forceDestroy();
     }

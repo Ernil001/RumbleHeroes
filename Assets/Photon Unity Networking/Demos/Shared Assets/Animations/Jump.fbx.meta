@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: cbb67ab5509bfe24dba7db2d65a9632f
 ModelImporter:
-  serializedVersion: 18
+  serializedVersion: 16
   fileIDToRecycleName:
     100000: l_ankleProxy_geo
     100002: l_middleProxy_01_geo
@@ -535,13 +535,11 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
-    keepQuads: 0
     weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
@@ -1277,5 +1275,3 @@ ModelImporter:
   animationType: 3
   additionalBone: 1
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 

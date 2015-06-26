@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: c387a0e47b4244f2b86c50372341024a
 ModelImporter:
-  serializedVersion: 18
+  serializedVersion: 16
   fileIDToRecycleName:
     100000: LeftEye
     100002: Character_Ctrl:Reference
@@ -681,13 +681,11 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
-    keepQuads: 0
     weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
@@ -1423,5 +1421,3 @@ ModelImporter:
   animationType: 3
   additionalBone: 1
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 
