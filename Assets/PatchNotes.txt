@@ -5,10 +5,11 @@ Dev TODO list:
 	- Creating Install file
 	- Credits
 	- rubberbanding in jumps -  multiplayer sync needs a fix.
-	- Another Hero x2
+	- Another Hero x2 (ONGOING)
 	- Options for resolution
 	- Option for graphic quality (Needed ?)
 	- Loading panel
+	- Fake 3D background scroller.
 New:
 	- Working skybox background in game and MainMenu.
 	- Death camera now works with left mouse button
