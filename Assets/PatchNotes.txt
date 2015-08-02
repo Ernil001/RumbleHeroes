@@ -18,6 +18,7 @@ New:
 	- Create room now allows custom strings for naming the room.
 	- Option for changing fullscreen mode
 	- New mouse cursor
+	- New hero Keira
 Changes:
 	- Hero now properly changes state when dead.
 	- Hero can no longer use skills when dead.

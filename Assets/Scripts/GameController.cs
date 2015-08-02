@@ -955,7 +955,7 @@ public class GameController : Photon.MonoBehaviour
         // Load the skybox - Right now it will be random.
         //UnityEngine.Random.Range(0, skyBox.Length);
         selectSkyBox(Convert.ToInt32(PhotonNetwork.room.customProperties["sky"]));
-        Debug.Log(Convert.ToInt32(PhotonNetwork.room.customProperties["sky"]));
+        //Debug.Log(Convert.ToInt32(PhotonNetwork.room.customProperties["sky"]));
         //
         // Sets the cursor to border Lock
         MouseCursorController.instance.BorderLockState = true;

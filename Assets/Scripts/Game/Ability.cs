@@ -82,7 +82,11 @@ public class Ability : Photon.MonoBehaviour
         // Adopted with base.Update();
 
         // Object Duration
-        if ( /*(secondsToLive != null) && */ (secondsToLive != 0) && (Time.time - timeInstantiated >= secondsToLive))
+
+
+        // This is bad !!!!
+        
+        if ((secondsToLive != 0) && (Time.time - timeInstantiated >= secondsToLive))
         {
             Destroy(gameObject);
         }
